@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="GDC Fire &amp; Security">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF3B30"/>
+      <stop offset="1" stop-color="#C40018"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0E1116"/>
+  <path d="M32 7 51 14v15c0 13-9 20-19 25C22 49 13 42 13 29V14L32 7z" fill="none" stroke="#2A313C" stroke-width="2.5"/>
+  <path d="M32 18c2.6 4.4 7 6.6 7 12.2A7 7 0 0 1 32 37a7 7 0 0 1-7-6.8C25 25 29.4 23 32 18z" fill="url(#g)"/>
+  <path d="M32 27c1.2 1.8 2.6 2.6 2.6 4.6A2.7 2.7 0 0 1 32 34a2.7 2.7 0 0 1-2.6-2.6C29.4 29.4 30.8 28.6 32 27z" fill="#FFD27A"/>
+</svg>
