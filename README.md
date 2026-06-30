@@ -1,41 +1,47 @@
 # GDC Fire &amp; Security — Website
 
-A modern, high-spec marketing website for **GDC Fire &amp; Security (NI) Ltd** — a
-family-run, multi-award-winning fire and security company based in Belfast,
-Northern Ireland, accredited by the **SSAIB** and **BAFE**.
+A modern, corporate rebuild of [gdcfiresec.com](https://www.gdcfiresec.com) for
+**GDC Fire &amp; Security (NI) Ltd** — a family-run, multi-award-winning, SSAIB &amp;
+BAFE accredited fire and security company based in Belfast, Northern Ireland.
 
-A modernised rebuild of [gdcfiresec.com](https://www.gdcfiresec.com), built as a
-fast, dependency-free static site (HTML + CSS + vanilla JS) so it can be hosted
-anywhere — Vercel, Netlify, Cloudflare Pages, GitHub Pages or any basic web host —
-with **zero build step**.
+Built as a fast, dependency-free static site (HTML + CSS + vanilla JS) — host it
+anywhere (Vercel, Netlify, Cloudflare Pages, GitHub Pages) with **zero build step**.
 
 ---
 
-## 🎨 Brand &amp; design direction
+## 🎨 Brand &amp; design
 
-| Token         | Value     | Use                                  |
-|---------------|-----------|--------------------------------------|
-| Safety red    | `#E4002B` | Primary accent, buttons, highlights  |
-| Red (bright)  | `#FF3B30` | Live/alert indicators, glow          |
-| Red (deep)    | `#B00020` | Hover states                         |
-| Graphite ink  | `#0E1116` | Dark sections, hero, footer          |
-| Paper         | `#F7F8FA` | Light background                     |
-| **Headings**  | **Sora**  | Bold display type (Google Fonts)     |
-| **Body**      | **Inter** | Clean, legible body text             |
+Clean, professional **blue &amp; white** corporate identity — restrained, trustworthy
+and easy to scan (no gimmicks).
 
-**2026 styling cues used throughout:**
+| Token        | Value     | Use                                  |
+|--------------|-----------|--------------------------------------|
+| Navy         | `#0A2540` | Top bar, footer, headings, dark panels |
+| Brand blue   | `#0B5CAB` | Primary buttons, links, accents      |
+| Blue (light) | `#2E8BE6` | Highlights on dark                   |
+| Blue tint    | `#EAF2FB` | Icon backgrounds, hero wash          |
+| White / soft | `#FFFFFF` / `#F5F8FC` | Backgrounds              |
+| **Headings** | **Barlow** | Strong, corporate display type      |
+| **Body**     | **Inter**  | Clean, legible body text            |
 
-- Sticky **glassmorphism nav** that blurs &amp; inverts on scroll
-- Bold oversized display type with an animated gradient highlight
-- High-contrast **dark hero** with animated red glow + circuit-trace mask
-- **Bento-style** services grid
-- Split **security** and **fire** feature sections
-- Interactive **live CCTV monitor** demo (4 animated camera feeds, click-to-zoom,
-  live timestamps, snapshot flash)
-- CSS-built **"24 hour CCTV in operation"** warning sign — a visible deterrent
-- **Scroll-reveal** animations + animated stat counters
-- First-visit **security-alert** modal + floating "Free estimate" CTA
-- Accessible: skip link, ARIA, keyboard support, `prefers-reduced-motion`
+### Layout (top → bottom)
+1. **Top utility bar** — accreditation note + phone &amp; email
+2. **Sticky white header** — logo, nav, phone + "Free survey" CTA
+3. **Hero** — split: headline + CTAs on the left, "Why choose GDC?" facts card on the right
+4. **Accreditation strip** — SSAIB · BAFE · award-winning badges
+5. **Services** — clean 6-card grid (intruder, CCTV, fire, access, door entry, monitoring)
+6. **About** — split with media panel + "30+ years" badge
+7. **Sectors** — Residential vs Commercial cards
+8. **Process** — 4-step survey-to-support timeline
+9. **Stats band** (navy) — animated counters
+10. **Testimonials**
+11. **CTA band** (blue) — free survey prompt
+12. **Contact** — details + enquiry form
+13. **Footer** — multi-column corporate footer
+
+Subtle, professional touches only: gentle scroll-reveal, animated stat counters,
+sticky header shadow. Fully responsive + accessible (skip link, ARIA, keyboard,
+`prefers-reduced-motion`).
 
 ---
 
@@ -44,8 +50,8 @@ with **zero build step**.
 ```
 GDC/
 ├── index.html     # All page sections (single page)
-├── styles.css     # Design system + layout + responsive
-├── script.js      # Nav, reveal, counters, CCTV demo, form
+├── styles.css     # Blue/white corporate design system
+├── script.js      # Header, mobile nav, reveal, counters, form
 ├── robots.txt
 ├── sitemap.xml
 ├── vercel.json    # Security headers + asset caching
@@ -53,48 +59,39 @@ GDC/
     └── favicon.svg
 ```
 
-### Page sections
-1. **Nav** — wordmark, links, call/estimate CTAs, mobile menu
-2. **Hero** — headline, value prop, CTAs, trust chips
-3. **Stats** — animated counters (experience, 24/7, accreditations)
-4. **Services** — intruder, CCTV, fire, access control, monitoring (bento grid)
-5. **About** — family-run story
-6. **Security** — feature section (alarms, CCTV, access, monitoring)
-7. **Fire** — feature section (detection, extinguishers, emergency lighting)
-8. **Live CCTV demo** — interactive multi-camera monitor + warning sign
-9. **Why GDC** — trust differentiators
-10. **Accreditations** — SSAIB / BAFE / insured / award-winning strip
-11. **Process** — 4-step journey
-12. **Reviews** — social proof
-13. **FAQ** — accordion (with FAQ structured data)
-14. **Contact** — details + estimate request form
-15. **Footer**
+---
+
+## ⚠️ Assets still to add (from GDC)
+
+The live site blocks automated downloads, so the **official logo and photography
+could not be pulled in automatically**. To finish the brand match, drop these into
+`assets/` and wire them up:
+
+- **Logo** — replace the styled "GDC" wordmark in the header/footer with the
+  official logo (`<img src="assets/logo.svg">`). Confirm the exact brand blue
+  and I'll set it precisely as a CSS variable.
+- **Photography** — the About section has a placeholder media panel marked in
+  `index.html` (search `split__panel`); swap it for a real photo
+  (`<img class="split__panel" src="assets/about.jpg" alt="…">`). A hero photo can
+  be added the same way.
+- **Accreditation logos** — the SSAIB / BAFE badges are styled text; replace with
+  the official badge images when available.
+
+> Contact details already in place: **028 9622 3008** · **info@gdcfiresec.com** ·
+> Belfast, serving NI, ROI &amp; mainland UK.
 
 ---
 
-## ✏️ Customise before launch
-
-Real GDC details are already in place. Remaining items to wire up:
+## ✏️ Other launch steps
 
 - **Contact form** — set a free [Web3Forms](https://web3forms.com) `access_key`
   in `index.html` (search `YOUR_WEB3FORMS_ACCESS_KEY`). Until then the form shows
   a friendly confirmation but does **not** send an enquiry.
-- **Real photography** — drop hero / project images into `assets/` to add a
-  photo gallery or hero background.
-- **Brand logo** — the nav currently uses a styled "GDC" wordmark with a shield
-  mark. Swap in the official logo image if preferred.
 - **Stats** — adjust `data-count` values on `.stat__num` elements.
-- **Address** — add the full registered address under the Contact section /
-  JSON-LD if you'd like it shown.
-
-> Contact details in place: **028 9622 3008** · **info@gdcfiresec.com** · Belfast,
-> serving NI, ROI &amp; mainland UK.
 
 ---
 
 ## 🚀 Run locally
-
-No tooling required — just open `index.html`, or serve it:
 
 ```bash
 cd GDC
@@ -104,16 +101,5 @@ python3 -m http.server 8000
 
 ## 🌐 Deploy
 
-- **Vercel / Netlify / Cloudflare Pages:** point at this folder — no build
-  command, publish/output directory = `GDC`.
-- **GitHub Pages:** push and enable Pages on the branch/folder.
-
----
-
-## 📈 Next steps / ideas
-
-- Add a real project photo gallery (before &amp; after installs).
-- Dedicated service pages for SEO (e.g. `/cctv-belfast`, `/fire-alarms`).
-- Embed real Google reviews + accreditation logos (SSAIB / BAFE).
-- Connect the estimate form to email/CRM and add reCAPTCHA.
-- Analytics + cookie consent before go-live.
+Point Vercel / Netlify / Cloudflare Pages at this folder — no build command,
+output directory = `GDC`.
