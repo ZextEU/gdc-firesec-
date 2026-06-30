@@ -351,7 +351,6 @@ strong { font-weight: 700; }
   color: #fff; font-family: var(--font-head); font-weight: 600; font-size: 1.02rem;
   background: linear-gradient(to top, rgba(10,37,64,.9), rgba(10,37,64,0));
 }
-
 /* ---------------- Reveal (subtle, corporate, staggered) ----------------
    The hidden state only applies once JS adds `.reveal-ready` to <html>, so if
    JS fails or is disabled the content is fully visible (no hidden content).
