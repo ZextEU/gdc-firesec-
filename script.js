@@ -27,14 +27,22 @@
     );
   }
 
-  /* --- Scroll reveal --- */
+  /* --- Scroll reveal (staggered per group) --- */
   const reveals = document.querySelectorAll(".reveal");
+  // Cascade siblings: each .reveal gets an index within its parent, so grids
+  // and lists animate in one-after-another rather than all at once.
+  const counts = new Map();
+  reveals.forEach((el) => {
+    const parent = el.parentElement;
+    const n = counts.get(parent) || 0;
+    counts.set(parent, n + 1);
+    el.style.setProperty("--ri", Math.min(n, 6));
+  });
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e, i) => {
+        entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.style.transitionDelay = Math.min(i * 50, 200) + "ms";
             e.target.classList.add("is-in");
             io.unobserve(e.target);
           }

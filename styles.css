@@ -36,6 +36,10 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 132px; }
 
+/* Accessible focus + on-brand selection */
+:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(11,92,171,.45); border-radius: 4px; }
+::selection { background: var(--blue); color: #fff; }
+
 body {
   font-family: var(--font-body);
   color: var(--ink);
@@ -75,6 +79,7 @@ strong { font-weight: 700; }
 .btn--white:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .btn--outline-w { background: transparent; border-color: rgba(255,255,255,.5); color: #fff; }
 .btn--outline-w:hover { background: rgba(255,255,255,.12); border-color: #fff; }
+.btn:active { transform: translateY(0) scale(.97); }
 
 /* ---------------- Top utility bar ---------------- */
 .topbar { background: var(--navy); color: rgba(255,255,255,.82); font-size: .86rem; }
@@ -185,6 +190,8 @@ strong { font-weight: 700; }
   border: 1px solid var(--line-2); border-radius: 8px; background: #fff;
   font-family: var(--font-head); font-weight: 700; color: var(--navy); font-size: .98rem;
 }
+.badge { transition: border-color .2s, transform .2s var(--ease), box-shadow .2s; }
+.badge:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .badge svg { width: 22px; height: 22px; color: var(--blue); flex: none; }
 .badge small { display: block; font-family: var(--font-body); font-weight: 500; font-size: .72rem; color: var(--slate); letter-spacing: 0; }
 
@@ -197,8 +204,10 @@ strong { font-weight: 700; }
 .svc:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-2); }
 .svc__ico { width: 56px; height: 56px; border-radius: 12px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; margin-bottom: 20px; transition: background .2s, color .2s; }
 .svc__ico svg { width: 28px; height: 28px; }
-.svc:hover .svc__ico { background: var(--blue); color: #fff; }
-.svc h3 { font-size: 1.22rem; margin-bottom: 9px; }
+.svc:hover .svc__ico { background: var(--blue); color: #fff; transform: translateY(-2px); }
+.svc__ico { transition: background .2s, color .2s, transform .2s var(--ease); }
+.svc h3 { font-size: 1.22rem; margin-bottom: 9px; transition: color .2s; }
+.svc:hover h3 { color: var(--blue); }
 .svc p { color: var(--slate); font-size: .98rem; }
 .svc__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-family: var(--font-head); font-weight: 600; font-size: .92rem; color: var(--blue); }
 .svc__link svg { width: 16px; height: 16px; transition: transform .2s var(--ease); }
@@ -268,7 +277,8 @@ strong { font-weight: 700; }
 
 /* ---------------- Testimonials ---------------- */
 .reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.review { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow-sm); }
+.review { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
+.review:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-2); }
 .review__stars { color: #F5A623; letter-spacing: 2px; margin-bottom: 14px; }
 .review blockquote { font-size: 1.04rem; color: var(--ink); }
 .review figcaption { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--slate); font-weight: 600; font-size: .92rem; }
@@ -347,9 +357,22 @@ strong { font-weight: 700; }
   background: linear-gradient(to top, rgba(10,37,64,.9), rgba(10,37,64,0));
 }
 
-/* ---------------- Reveal (subtle, corporate) ---------------- */
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+/* ---------------- Reveal (subtle, corporate, staggered) ----------------
+   --ri (set per-sibling in JS) cascades grid items in as they scroll in. */
+.reveal { opacity: 0; transform: translateY(15px); transition: opacity .55s var(--ease), transform .55s var(--ease); transition-delay: calc(var(--ri, 0) * 70ms); }
 .reveal.is-in { opacity: 1; transform: none; }
+
+/* ---------------- Hero entrance (on load) ---------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__copy > * { opacity: 0; animation: heroIn .7s var(--ease) forwards; }
+  .hero__copy > .hero__eyebrow { animation-delay: .05s; }
+  .hero__copy > h1 { animation-delay: .14s; }
+  .hero__copy > .hero__lead { animation-delay: .24s; }
+  .hero__copy > .hero__actions { animation-delay: .34s; }
+  .hero__copy > .hero__trust { animation-delay: .44s; }
+  .hero__card { opacity: 0; animation: heroIn .75s var(--ease) .34s forwards; }
+}
+@keyframes heroIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
 /* ---------------- Skip link ---------------- */
 .skip-link { position: absolute; left: 12px; top: -60px; z-index: 300; background: var(--blue); color: #fff; padding: 10px 16px; border-radius: 8px; font-family: var(--font-head); font-weight: 700; transition: top .2s var(--ease); }
