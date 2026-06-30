@@ -103,6 +103,14 @@ strong { font-weight: 700; }
 .brand__text strong { font-family: var(--font-head); font-weight: 800; font-size: 1.42rem; color: var(--navy); letter-spacing: .02em; }
 .brand__text small { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); font-weight: 600; margin-top: 4px; }
 
+/* Optional image logo — drop assets/logo/gdc-logo.svg in and it replaces the
+   wordmark automatically (JS adds .is-loaded once the file loads). */
+.brand__logo { display: none; height: 46px; width: auto; }
+.brand__logo.is-loaded { display: block; }
+.brand:has(.brand__logo.is-loaded) .brand__mark,
+.brand:has(.brand__logo.is-loaded) .brand__text { display: none; }
+.brand__logo--footer { height: 52px; }
+
 .nav { display: flex; gap: 30px; margin-left: auto; }
 .nav a { position: relative; font-weight: 500; font-size: .98rem; color: var(--ink); padding: 6px 0; transition: color .2s; }
 .nav a:hover { color: var(--blue); }
@@ -316,6 +324,29 @@ strong { font-weight: 700; }
 .footer__bar a { color: rgba(255,255,255,.7); }
 .footer__bar a:hover { color: #fff; }
 
+/* ---------------- Images & branded placeholders ----------------
+   .ph-img fades in over a branded placeholder once the real file loads
+   (JS adds .is-loaded). No file = no broken image, just the placeholder. */
+.ph-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s var(--ease); z-index: 2; }
+.ph-img.is-loaded { opacity: 1; }
+.split__panel .ph-img { border-radius: inherit; }
+.split__panel-mark { z-index: 0; }
+
+/* Our Work gallery */
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.work { position: relative; margin: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+.ph-wrap { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: linear-gradient(160deg, var(--navy), var(--blue-700)); }
+.ph-wrap::after { content: ""; position: absolute; inset: 0; opacity: .5; background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.10) 1px, transparent 0); background-size: 20px 20px; }
+.ph-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.22); }
+.ph-fallback svg { width: 54px; height: 54px; }
+.work .ph-img { transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.work:hover .ph-img.is-loaded { transform: scale(1.05); }
+.work figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 32px 18px 16px;
+  color: #fff; font-family: var(--font-head); font-weight: 600; font-size: 1.02rem;
+  background: linear-gradient(to top, rgba(10,37,64,.9), rgba(10,37,64,0));
+}
+
 /* ---------------- Reveal (subtle, corporate) ---------------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .reveal.is-in { opacity: 1; transform: none; }
@@ -339,6 +370,7 @@ strong { font-weight: 700; }
   .hero__inner { grid-template-columns: 1fr; gap: 40px; padding: 56px 0 64px; }
   .hero__card { max-width: 520px; }
   .svc-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
   .split { grid-template-columns: 1fr; gap: 40px; }
   .split--rev .split__media { order: 0; }
   .sectors { grid-template-columns: 1fr; }
@@ -350,7 +382,7 @@ strong { font-weight: 700; }
 }
 @media (max-width: 560px) {
   .section { padding: 60px 0; }
-  .svc-grid, .steps, .stats, .footer__grid { grid-template-columns: 1fr; }
+  .svc-grid, .gallery, .steps, .stats, .footer__grid { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
   .hero__actions .btn, .ctaband__actions .btn { flex: 1; }
   .split__badge { left: 0; }
