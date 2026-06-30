@@ -87,16 +87,16 @@
     counters.forEach((c) => co.observe(c));
   }
 
-  /* --- Auto-upgrade images ---
+  /* --- Auto-upgrade photos ---
      Reveal a photo only once its file actually loads; if the file isn't there
      yet, the branded placeholder stays (no broken-image icons). Covers the
-     gallery, the About photo, and the optional image logo. */
+     Our Work gallery and the About photo. */
   const upgrade = (img) => {
     const ok = () => { if (img.naturalWidth > 0) img.classList.add("is-loaded"); };
     if (img.complete) ok();
     img.addEventListener("load", ok);
   };
-  document.querySelectorAll("img[data-img], .brand__logo").forEach(upgrade);
+  document.querySelectorAll("img[data-img]").forEach(upgrade);
 
   /* --- Footer year --- */
   const year = document.getElementById("year");

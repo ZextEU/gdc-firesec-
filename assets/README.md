@@ -11,18 +11,18 @@ image), so it always looks finished.
 
 ---
 
-## 1. Logo  → `assets/logo/`
+## 1. Logo  ✓ added  → `assets/logo/`
 
-| File | What it is | Recommended |
-|------|-----------|-------------|
-| `logo/gdc-logo.svg` *(or `.png`)* | Main logo, shown in the header & footer | SVG preferred, or PNG ~480×120, transparent background |
+The official GDC logo is integrated. The supplied artwork was background-removed
+into transparent PNGs and the site's brand blue is set to match it (`#457BBB`).
 
-The header currently shows a styled **"GDC"** wordmark. As soon as `logo/gdc-logo.svg`
-exists it replaces the wordmark automatically. If your logo is a PNG, name it
-`logo/gdc-logo.png` and tell me (or change the `src` in `index.html`).
+| File | What it is |
+|------|-----------|
+| `logo/gdc-mark.png` | The lion-shield mark — used as the header & footer icon |
+| `logo/gdc-logo.png` | The full stacked lockup — used on the social-share image |
 
-> If you can confirm your **exact brand blue** (hex or Pantone), send it over and
-> I'll set the site's blue to match precisely.
+If you'd like a higher-resolution or vector (SVG) version swapped in, send it over
+and I'll replace these (same filenames).
 
 ---
 
@@ -75,12 +75,12 @@ strip.
 
 | File | What it is |
 |------|-----------|
-| `favicon.svg` | Browser tab icon (blue shield + GDC) |
+| `favicon-64.png` | Browser tab icon (GDC lion mark) |
 | `apple-touch-icon.png` | Home-screen icon for iOS/Android |
 | `og-image.png` | Social-share preview (1200×630) shown when the site is linked on Facebook, LinkedIn, WhatsApp, etc. |
 
-These are clean, on-brand placeholders generated for launch — swap them for
-official artwork any time (keep the same filenames).
+These are all generated from the official GDC logo. Swap them for updated
+artwork any time (keep the same filenames).
 
 ---
 

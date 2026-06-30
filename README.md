@@ -16,13 +16,17 @@ and easy to scan (no gimmicks).
 
 | Token        | Value     | Use                                  |
 |--------------|-----------|--------------------------------------|
+| Logo blue    | `#457BBB` | The GDC wordmark — matches the logo  |
 | Navy         | `#0A2540` | Top bar, footer, headings, dark panels |
-| Brand blue   | `#0B5CAB` | Primary buttons, links, accents      |
+| Primary blue | `#0B5CAB` | Buttons, links, accents (AA-contrast) |
 | Blue (light) | `#2E8BE6` | Highlights on dark                   |
 | Blue tint    | `#EAF2FB` | Icon backgrounds, hero wash          |
 | White / soft | `#FFFFFF` / `#F5F8FC` | Backgrounds              |
 | **Headings** | **Barlow** | Strong, corporate display type      |
 | **Body**     | **Inter**  | Clean, legible body text            |
+
+The official GDC lion-shield logo is used in the header and footer (and on the
+favicon, app icon and social-share image).
 
 ### Layout (top → bottom)
 1. **Top utility bar** — accreditation note + phone &amp; email
@@ -56,26 +60,24 @@ GDC/
 ├── sitemap.xml
 ├── vercel.json    # Security headers + asset caching
 └── assets/
-    └── favicon.svg
+    ├── favicon-64.png · apple-touch-icon.png · og-image.png
+    ├── logo/        # gdc-mark.png, gdc-logo.png (official logo)
+    └── photos/      # work/ gallery + about.jpg (drop-in slots)
 ```
+
+See **`assets/README.md`** for the full drop-in guide.
 
 ---
 
-## ⚠️ Assets still to add (from GDC)
+## ⚠️ Still to add (from GDC)
 
-The live site blocks automated downloads, so the **official logo and photography
-could not be pulled in automatically**. To finish the brand match, drop these into
-`assets/` and wire them up:
+The official **logo is integrated** and the brand blue is matched. Remaining:
 
-- **Logo** — replace the styled "GDC" wordmark in the header/footer with the
-  official logo (`<img src="assets/logo.svg">`). Confirm the exact brand blue
-  and I'll set it precisely as a CSS variable.
-- **Photography** — the About section has a placeholder media panel marked in
-  `index.html` (search `split__panel`); swap it for a real photo
-  (`<img class="split__panel" src="assets/about.jpg" alt="…">`). A hero photo can
-  be added the same way.
-- **Accreditation logos** — the SSAIB / BAFE badges are styled text; replace with
-  the official badge images when available.
+- **Photography** — the Our Work gallery and About section have drop-in image
+  slots (`assets/photos/...`). Add correctly-named files and they appear
+  automatically; until then an on-brand placeholder shows. See `assets/README.md`.
+- **Accreditation logos** — the SSAIB / BAFE badges are styled text; can swap in
+  the official badge images if you have them.
 
 > Contact details already in place: **028 9622 3008** · **info@gdcfiresec.com** ·
 > Belfast, serving NI, ROI &amp; mainland UK.

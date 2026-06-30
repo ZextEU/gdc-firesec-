@@ -13,6 +13,7 @@
   --blue-300:  #2E8BE6;
   --blue-50:   #EAF2FB;   /* light tint */
   --blue-25:   #F4F8FD;
+  --brand:     #457BBB;   /* exact blue from the GDC logo */
 
   --ink:       #14202B;
   --slate:     #51637A;   /* muted body text */
@@ -101,20 +102,11 @@ strong { font-weight: 700; }
 .header.is-stuck { box-shadow: var(--shadow-sm); }
 .header__inner { display: flex; align-items: center; gap: 28px; min-height: 76px; }
 
-.brand { display: flex; align-items: center; gap: 12px; }
-.brand__mark { width: 44px; height: 44px; flex: none; border-radius: 10px; background: var(--navy); display: grid; place-items: center; }
-.brand__mark svg { width: 26px; height: 26px; color: var(--blue-300); }
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand__mark-img { height: 42px; width: auto; flex: none; }
 .brand__text { display: flex; flex-direction: column; line-height: 1; }
-.brand__text strong { font-family: var(--font-head); font-weight: 800; font-size: 1.42rem; color: var(--navy); letter-spacing: .02em; }
-.brand__text small { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); font-weight: 600; margin-top: 4px; }
-
-/* Optional image logo — drop assets/logo/gdc-logo.svg in and it replaces the
-   wordmark automatically (JS adds .is-loaded once the file loads). */
-.brand__logo { display: none; height: 46px; width: auto; }
-.brand__logo.is-loaded { display: block; }
-.brand:has(.brand__logo.is-loaded) .brand__mark,
-.brand:has(.brand__logo.is-loaded) .brand__text { display: none; }
-.brand__logo--footer { height: 52px; }
+.brand__text strong { font-family: var(--font-head); font-weight: 800; font-size: 1.42rem; color: var(--brand); letter-spacing: .02em; }
+.brand__text small { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--slate); font-weight: 600; margin-top: 4px; }
 
 .nav { display: flex; gap: 30px; margin-left: auto; }
 .nav a { position: relative; font-weight: 500; font-size: .98rem; color: var(--ink); padding: 6px 0; transition: color .2s; }
@@ -324,7 +316,8 @@ strong { font-weight: 700; }
 .footer { background: var(--navy); color: rgba(255,255,255,.72); padding: 64px 0 28px; }
 .footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.1fr; gap: 36px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.1); }
 .footer__brand .brand__text strong { color: #fff; }
-.footer__brand .brand__mark { background: rgba(255,255,255,.08); }
+.footer__brand .brand__text small { color: rgba(255,255,255,.55); }
+.footer__brand .brand__mark-img--footer { height: 52px; }
 .footer__brand p { margin-top: 16px; font-size: .94rem; max-width: 320px; }
 .footer__col h4 { color: #fff; font-family: var(--font-head); font-size: 1rem; letter-spacing: .04em; margin-bottom: 16px; }
 .footer__col ul { list-style: none; display: grid; gap: 10px; }
