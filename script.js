@@ -27,18 +27,24 @@
     );
   }
 
-  /* --- Scroll reveal (staggered per group) --- */
+  /* --- Scroll reveal (staggered per group) ---
+     Only opt in to the hidden-then-reveal behaviour when JS is running, motion
+     is allowed and IntersectionObserver exists. Otherwise content stays visible
+     (the hidden state is gated behind `.reveal-ready` on <html>). */
   const reveals = document.querySelectorAll(".reveal");
-  // Cascade siblings: each .reveal gets an index within its parent, so grids
-  // and lists animate in one-after-another rather than all at once.
-  const counts = new Map();
-  reveals.forEach((el) => {
-    const parent = el.parentElement;
-    const n = counts.get(parent) || 0;
-    counts.set(parent, n + 1);
-    el.style.setProperty("--ri", Math.min(n, 6));
-  });
-  if ("IntersectionObserver" in window) {
+  const prefersReduced =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reveals.length && !prefersReduced && "IntersectionObserver" in window) {
+    // Cascade siblings: each .reveal gets an index within its parent, so grids
+    // and lists animate in one-after-another rather than all at once.
+    const counts = new Map();
+    reveals.forEach((el) => {
+      const parent = el.parentElement;
+      const n = counts.get(parent) || 0;
+      counts.set(parent, n + 1);
+      el.style.setProperty("--ri", Math.min(n, 6));
+    });
+    document.documentElement.classList.add("reveal-ready");
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -51,8 +57,6 @@
       { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
     );
     reveals.forEach((el) => io.observe(el));
-  } else {
-    reveals.forEach((el) => el.classList.add("is-in"));
   }
 
   /* --- Animated stat counters --- */
@@ -72,7 +76,10 @@
     };
     requestAnimationFrame(tick);
   };
-  if ("IntersectionObserver" in window) {
+  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
+    // Start from 0 for JS users, then count up when scrolled into view.
+    // (Without JS the real numbers stay in the HTML — never a misleading "0".)
+    counters.forEach((c) => { if (c.firstChild) c.firstChild.textContent = "0"; });
     const co = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) { animate(e.target); co.unobserve(e.target); } }),
       { threshold: 0.6 }

@@ -71,6 +71,19 @@ strip.
 
 ---
 
+## Already included (replaceable)
+
+| File | What it is |
+|------|-----------|
+| `favicon.svg` | Browser tab icon (blue shield + GDC) |
+| `apple-touch-icon.png` | Home-screen icon for iOS/Android |
+| `og-image.png` | Social-share preview (1200×630) shown when the site is linked on Facebook, LinkedIn, WhatsApp, etc. |
+
+These are clean, on-brand placeholders generated for launch — swap them for
+official artwork any time (keep the same filenames).
+
+---
+
 ### How to add files
 - **GitHub:** open this folder, choose *Add file → Upload files*, drag them in.
 - Or send them to me here and I'll commit them for you.
