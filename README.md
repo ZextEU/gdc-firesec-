@@ -28,21 +28,19 @@ and easy to scan (no gimmicks).
 The official GDC lion-shield logo is used in the header and footer (and on the
 favicon, app icon and social-share image).
 
-### Layout (top → bottom)
-1. **Top utility bar** — accreditation note + phone &amp; email
-2. **Sticky white header** — logo, nav, phone + "Free survey" CTA
-3. **Hero** — split: headline + CTAs on the left, "Why choose GDC?" facts card on the right
-4. **Accreditation strip** — SSAIB · BAFE · award-winning badges
-5. **Services** — clean 6-card grid (intruder, CCTV, fire, access, door entry, monitoring)
-6. **About** — split with media panel + "30+ years" badge
-7. **Projects** — 6 mini case-study cards (photo, service tag, summary, deliverables)
-8. **Sectors** — Residential vs Commercial cards
-9. **Process** — 4-step survey-to-support timeline
-10. **Stats band** (navy) — animated counters
-11. **Testimonials**
-12. **CTA band** (blue) — free survey prompt
-13. **Contact** — details + enquiry form
-14. **Footer** — multi-column corporate footer
+### Pages
+| Page | URL | Contents |
+|------|-----|----------|
+| **Home** | `/` | Hero + facts card, accreditation strip, services overview, about teaser, 3 featured projects, sectors, stats band, testimonials, CTA |
+| **Services** | `/services` | Detail panel per service (intruder, CCTV, fire, access, door entry, monitoring) with "what's included" lists + 4-step process |
+| **About** | `/about` | Story split, values grid, SSAIB/BAFE accreditation cards, stats band |
+| **Projects** | `/projects` | 6 mini case-study cards (photo, service tag, summary, deliverables) + process |
+| **Contact** | `/contact` | Contact details, enquiry form, FAQ accordion (with FAQPage schema) |
+
+Every page shares the top utility bar, sticky header (with active-page nav
+state), CTA band and multi-column footer. URLs are extensionless via Vercel's
+`cleanUrls` (`vercel.json`); each page has its own title, description,
+canonical and Open Graph tags, and all pages are listed in `sitemap.xml`.
 
 Subtle, professional touches only: gentle scroll-reveal, animated stat counters,
 sticky header shadow. Fully responsive + accessible (skip link, ARIA, keyboard,
@@ -54,12 +52,16 @@ sticky header shadow. Fully responsive + accessible (skip link, ARIA, keyboard,
 
 ```
 GDC/
-├── index.html     # All page sections (single page)
+├── index.html     # Home
+├── services.html  # Services (detail per service + process)
+├── about.html     # About (story, values, accreditations)
+├── projects.html  # Projects (mini case studies)
+├── contact.html   # Contact (form + FAQ)
 ├── styles.css     # Blue/white corporate design system
 ├── script.js      # Header, mobile nav, reveal, counters, form
 ├── robots.txt
 ├── sitemap.xml
-├── vercel.json    # Security headers + asset caching
+├── vercel.json    # cleanUrls + security headers + asset caching
 └── assets/
     ├── favicon-64.png · apple-touch-icon.png · og-image.png
     ├── logo/        # gdc-mark.png, gdc-logo.png (official logo)
@@ -96,10 +98,12 @@ The official **logo is integrated** and the brand blue is matched. Remaining:
 
 ## 🚀 Run locally
 
+Internal links use clean URLs (`/services`, `/about`, …), so use a server that
+resolves them to the matching `.html` file (as Vercel does in production):
+
 ```bash
-cd GDC
-python3 -m http.server 8000
-# visit http://localhost:8000
+npx serve GDC
+# visit http://localhost:3000
 ```
 
 ## 🌐 Deploy
