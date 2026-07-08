@@ -28,8 +28,8 @@ and I'll replace these (same filenames).
 
 ## 2. Photos of your work  → `assets/photos/work/`
 
-Shown in the **"Our Work"** gallery. Add up to six — fewer is fine, empty slots
-just show a branded placeholder.
+Shown in the **"Projects"** case-study cards. Add up to six — fewer is fine,
+empty slots just show a branded placeholder.
 
 | File | Suggested subject |
 |------|-------------------|
@@ -42,7 +42,7 @@ just show a branded placeholder.
 
 Recommended: ~1200×800px landscape, ~200–400 KB each.
 
-The captions in the gallery (e.g. "CCTV installation") can be edited in
+Each project card's title, summary and "what we delivered" tags can be edited in
 `index.html` — search for `work-1.jpg` to find them.
 
 ---

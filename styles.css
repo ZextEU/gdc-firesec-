@@ -337,20 +337,34 @@ strong { font-weight: 700; }
 .split__panel .ph-img { border-radius: inherit; }
 .split__panel-mark { z-index: 0; }
 
-/* Our Work gallery */
-.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-.work { position: relative; margin: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+/* Projects — mini case studies */
+.projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.project {
+  display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s;
+}
+.project:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-2); }
 .ph-wrap { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: linear-gradient(160deg, var(--navy), var(--blue-700)); }
 .ph-wrap::after { content: ""; position: absolute; inset: 0; opacity: .5; background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.10) 1px, transparent 0); background-size: 20px 20px; }
 .ph-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.22); }
 .ph-fallback svg { width: 54px; height: 54px; }
-.work .ph-img { transition: opacity .5s var(--ease), transform .5s var(--ease); }
-.work:hover .ph-img.is-loaded { transform: scale(1.05); }
-.work figcaption {
-  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 32px 18px 16px;
-  color: #fff; font-family: var(--font-head); font-weight: 600; font-size: 1.02rem;
-  background: linear-gradient(to top, rgba(10,37,64,.9), rgba(10,37,64,0));
+.project__media { flex: none; }
+.project .ph-img { transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.project:hover .ph-img.is-loaded { transform: scale(1.04); }
+.project__tag {
+  position: absolute; top: 14px; left: 14px; z-index: 3;
+  font-family: var(--font-head); font-weight: 700; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--blue-700); background: #fff; padding: 6px 13px; border-radius: 999px; box-shadow: var(--shadow-sm);
 }
+.project__body { display: flex; flex-direction: column; flex: 1; padding: 24px 26px 26px; }
+.project__meta { font-family: var(--font-head); font-weight: 600; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+.project__body h3 { font-size: 1.2rem; margin-bottom: 9px; }
+.project__body > p { color: var(--slate); font-size: .95rem; flex: 1; }
+.project__scope { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.project__scope li { font-family: var(--font-head); font-weight: 600; font-size: .8rem; color: var(--navy); background: var(--blue-50); border-radius: 999px; padding: 5px 13px; }
+.projects__cta { margin-top: 48px; display: grid; place-items: center; gap: 18px; text-align: center; }
+.projects__cta p { color: var(--slate); font-weight: 500; }
 /* ---------------- Reveal (subtle, corporate, staggered) ----------------
    The hidden state only applies once JS adds `.reveal-ready` to <html>, so if
    JS fails or is disabled the content is fully visible (no hidden content).
@@ -389,7 +403,7 @@ strong { font-weight: 700; }
   .hero__inner { grid-template-columns: 1fr; gap: 40px; padding: 56px 0 64px; }
   .hero__card { max-width: 520px; }
   .svc-grid { grid-template-columns: repeat(2, 1fr); }
-  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .projects { grid-template-columns: repeat(2, 1fr); }
   .split { grid-template-columns: 1fr; gap: 40px; }
   .split--rev .split__media { order: 0; }
   .sectors { grid-template-columns: 1fr; }
@@ -401,7 +415,7 @@ strong { font-weight: 700; }
 }
 @media (max-width: 560px) {
   .section { padding: 60px 0; }
-  .svc-grid, .gallery, .steps, .stats, .footer__grid { grid-template-columns: 1fr; }
+  .svc-grid, .projects, .steps, .stats, .footer__grid { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
   .hero__actions .btn, .ctaband__actions .btn { flex: 1; }
   .split__badge { left: 0; }

@@ -90,7 +90,7 @@
   /* --- Auto-upgrade photos ---
      Reveal a photo only once its file actually loads; if the file isn't there
      yet, the branded placeholder stays (no broken-image icons). Covers the
-     Our Work gallery and the About photo. */
+     Projects cards and the About photo. */
   const upgrade = (img) => {
     const ok = () => { if (img.naturalWidth > 0) img.classList.add("is-loaded"); };
     if (img.complete) ok();

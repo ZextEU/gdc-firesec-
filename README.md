@@ -35,13 +35,14 @@ favicon, app icon and social-share image).
 4. **Accreditation strip** — SSAIB · BAFE · award-winning badges
 5. **Services** — clean 6-card grid (intruder, CCTV, fire, access, door entry, monitoring)
 6. **About** — split with media panel + "30+ years" badge
-7. **Sectors** — Residential vs Commercial cards
-8. **Process** — 4-step survey-to-support timeline
-9. **Stats band** (navy) — animated counters
-10. **Testimonials**
-11. **CTA band** (blue) — free survey prompt
-12. **Contact** — details + enquiry form
-13. **Footer** — multi-column corporate footer
+7. **Projects** — 6 mini case-study cards (photo, service tag, summary, deliverables)
+8. **Sectors** — Residential vs Commercial cards
+9. **Process** — 4-step survey-to-support timeline
+10. **Stats band** (navy) — animated counters
+11. **Testimonials**
+12. **CTA band** (blue) — free survey prompt
+13. **Contact** — details + enquiry form
+14. **Footer** — multi-column corporate footer
 
 Subtle, professional touches only: gentle scroll-reveal, animated stat counters,
 sticky header shadow. Fully responsive + accessible (skip link, ARIA, keyboard,
@@ -62,7 +63,7 @@ GDC/
 └── assets/
     ├── favicon-64.png · apple-touch-icon.png · og-image.png
     ├── logo/        # gdc-mark.png, gdc-logo.png (official logo)
-    └── photos/      # work/ gallery + about.jpg (drop-in slots)
+    └── photos/      # work/ project photos + about.jpg (drop-in slots)
 ```
 
 See **`assets/README.md`** for the full drop-in guide.
@@ -73,7 +74,7 @@ See **`assets/README.md`** for the full drop-in guide.
 
 The official **logo is integrated** and the brand blue is matched. Remaining:
 
-- **Photography** — the Our Work gallery and About section have drop-in image
+- **Photography** — the Projects section and About section have drop-in image
   slots (`assets/photos/...`). Add correctly-named files and they appear
   automatically; until then an on-brand placeholder shows. See `assets/README.md`.
 - **Accreditation logos** — the SSAIB / BAFE badges are styled text; can swap in
