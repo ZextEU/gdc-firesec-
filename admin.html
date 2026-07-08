@@ -87,6 +87,11 @@
     .adm-status.err { color: #c0392b; font-weight: 600; }
     [data-theme="dark"] .adm-status.ok { color: #4ecb84; }
     [data-theme="dark"] .adm-status.err { color: #f1705f; }
+    .adm-powered { margin-top: 40px; text-align: center; font-size: .88rem; color: var(--slate); }
+    .adm-powered a { display: inline-flex; align-items: center; gap: 7px; color: var(--slate); transition: color .2s; }
+    .adm-powered img { height: 14px; width: auto; }
+    .adm-powered strong { font-family: var(--font-head); color: var(--head); }
+    .adm-powered a:hover, .adm-powered a:hover strong { color: var(--blue); }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -130,6 +135,11 @@
       <div class="adm-tabs" id="tabs"></div>
       <div id="panel"></div>
     </div>
+
+    <p class="adm-powered">
+      <a href="https://pixrweb.com" target="_blank" rel="noopener noreferrer">Powered by
+        <img src="assets/logo/pixrweb-mark.png" alt="" width="17" height="14" /> <strong>Pixrweb</strong></a>
+    </p>
   </div>
 
   <div class="adm-savebar hidden" id="savebar">

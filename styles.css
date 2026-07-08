@@ -482,9 +482,16 @@ strong { font-weight: 700; }
 .footer__col a:hover { color: var(--blue-300); }
 .footer__col .row { display: flex; align-items: flex-start; gap: 10px; }
 .footer__col .row svg { width: 16px; height: 16px; color: var(--blue-300); flex: none; margin-top: 3px; }
-.footer__bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 22px; font-size: .86rem; color: rgba(255,255,255,.55); }
+.footer__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-top: 22px; font-size: .86rem; color: rgba(255,255,255,.55); }
 .footer__bar a { color: rgba(255,255,255,.7); }
 .footer__bar a:hover { color: #fff; }
+
+/* "Powered by Pixrweb" badge */
+.powered { display: inline-flex; align-items: center; gap: 7px; }
+.powered img { height: 15px; width: auto; flex: none; transition: transform .2s var(--ease); }
+.powered strong { font-family: var(--font-head); font-weight: 700; letter-spacing: .02em; color: rgba(255,255,255,.85); transition: color .2s; }
+.powered:hover strong { color: #fff; }
+.powered:hover img { transform: translateX(1px) scale(1.06); }
 
 /* ---------------- Images & branded placeholders ----------------
    .ph-img fades in over a branded placeholder once the real file loads
