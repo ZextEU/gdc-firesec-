@@ -486,6 +486,9 @@ strong { font-weight: 700; }
 .footer__bar a { color: rgba(255,255,255,.7); }
 .footer__bar a:hover { color: #fff; }
 
+.footer__admin { color: rgba(255,255,255,.45); transition: color .2s; }
+.footer__admin:hover { color: #fff; }
+
 /* "Powered by Pixrweb" badge */
 .powered { display: inline-flex; align-items: center; gap: 7px; }
 .powered img { height: 15px; width: auto; flex: none; transition: transform .2s var(--ease); }
