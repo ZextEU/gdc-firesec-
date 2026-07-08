@@ -98,8 +98,16 @@
     setStatus(loginStatus, "Checking key…");
     const res = await gh(`/repos/${OWNER}/${REPO}`);
     if (!res.ok) {
+      const why =
+        res.status === 401
+          ? "GitHub says the key itself is invalid or expired (401). Check it was copied in full, with no spaces, and hasn't passed its expiry date."
+          : res.status === 404
+          ? "The key works, but it can't see the website repository (404). When creating the token, set Resource owner to “" + OWNER + "” and pick “" + REPO + "” under Repository access → Only select repositories."
+          : res.status === 403
+          ? "GitHub refused access (403) — the repository owner may need to approve fine-grained tokens, or the token lacks access to this repository."
+          : "GitHub returned an unexpected error (" + res.status + "). Please try again or contact Pixrweb.";
       token = "";
-      return setStatus(loginStatus, "That key doesn't work — check it was copied fully and has access to the website repository.", "err");
+      return setStatus(loginStatus, why, "err");
     }
     try { localStorage.setItem("gdc-admin-token", token); } catch (e) {}
     setStatus(loginStatus, "Loading pages…");
