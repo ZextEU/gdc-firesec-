@@ -94,6 +94,35 @@ The official **logo is integrated** and the brand blue is matched. Remaining:
 
 ---
 
+## 🛠 Client editing — `/admin`
+
+The site ships with its own lightweight CMS at **`/admin`** (hidden — not linked
+anywhere, `noindex` + blocked in `robots.txt`). No server, no database: the
+editor reads the live HTML from GitHub, presents it as simple form fields, and
+commits changes back — Vercel republishes automatically (~1 min).
+
+The client can:
+- edit **every heading, paragraph, quote and chip** on all five pages (grouped by section)
+- edit each page's **Google title & description**
+- **add / remove / edit** projects, testimonials, FAQs and area chips
+  (FAQ edits also re-sync the FAQPage schema automatically)
+- **replace any photo** — images are auto-resized (max 1600px) and converted to JPEG
+
+### Access setup (one-off, done by Pixrweb)
+1. Create a GitHub **fine-grained personal access token**: Settings →
+   Developer settings → Fine-grained tokens → *Only select repositories* →
+   this repo → Repository permissions → **Contents: Read and write** (nothing else).
+2. Give the token to the client — they paste it once at `/admin` (stored in
+   their browser only).
+
+> ⚠️ **Security note:** a Contents token grants write access to the *whole
+> repository*. While GDC lives in this multi-site repo, only hand the token to
+> trusted clients — or better, move `GDC/` to its own repository (update
+> `OWNER`/`REPO`/`BASE` at the top of `admin.js`) so the client token can only
+> ever touch their own site. Tokens can be revoked/rotated any time on GitHub.
+
+---
+
 ## ✏️ Other launch steps
 
 - **Contact form** — set a free [Web3Forms](https://web3forms.com) `access_key`
