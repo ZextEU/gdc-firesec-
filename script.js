@@ -13,6 +13,27 @@
     onScroll();
   }
 
+  /* --- Theme toggle (light / dark) ---
+     The current theme is applied to <html data-theme> by an inline snippet in
+     <head> (before first paint, from localStorage or the system preference).
+     This button just flips it and remembers the choice. */
+  const themeBtn = document.getElementById("themeToggle");
+  if (themeBtn) {
+    const root = document.documentElement;
+    const label = () =>
+      themeBtn.setAttribute(
+        "aria-label",
+        root.getAttribute("data-theme") === "dark" ? "Switch to light mode" : "Switch to dark mode"
+      );
+    label();
+    themeBtn.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("gdc-theme", next); } catch (e) { /* private mode */ }
+      label();
+    });
+  }
+
   /* --- Mobile menu --- */
   if (header && burger) {
     burger.addEventListener("click", () => {

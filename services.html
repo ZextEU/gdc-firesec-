@@ -28,6 +28,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply saved/system theme before first paint to avoid a flash */
+    (function () { try {
+      var t = localStorage.getItem("gdc-theme") ||
+        (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {} })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org", "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.gdcfiresec.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.gdcfiresec.com/services" }
+    ]
+  }
+  </script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -65,6 +83,11 @@
         <a href="tel:+442896223008" class="btn btn--ghost">028 9622 3008</a>
         <a href="/contact" class="btn btn--primary">Free survey</a>
       </div>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode">
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.9 4.9 1.4 1.4"/><path d="m17.7 17.7 1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m4.9 19.1 1.4-1.4"/><path d="m17.7 6.3 1.4-1.4"/></svg>
+      </button>
 
       <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -269,6 +292,7 @@
             <li><a href="/about">About us</a></li>
             <li><a href="/projects">Projects</a></li>
             <li><a href="/#sectors">Sectors</a></li>
+            <li><a href="/#areas">Areas we cover</a></li>
             <li><a href="/#reviews">Testimonials</a></li>
             <li><a href="/contact">Contact</a></li>
           </ul>

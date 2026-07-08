@@ -12,7 +12,9 @@ anywhere (Vercel, Netlify, Cloudflare Pages, GitHub Pages) with **zero build ste
 ## 🎨 Brand &amp; design
 
 Clean, professional **blue &amp; white** corporate identity — restrained, trustworthy
-and easy to scan (no gimmicks).
+and easy to scan (no gimmicks). Includes a matching **dark theme**: it follows the
+visitor's system preference automatically and can be toggled from the header
+(choice remembered in `localStorage`, applied before first paint so there's no flash).
 
 | Token        | Value     | Use                                  |
 |--------------|-----------|--------------------------------------|
@@ -42,9 +44,14 @@ state), CTA band and multi-column footer. URLs are extensionless via Vercel's
 `cleanUrls` (`vercel.json`); each page has its own title, description,
 canonical and Open Graph tags, and all pages are listed in `sitemap.xml`.
 
-Subtle, professional touches only: gentle scroll-reveal, animated stat counters,
-sticky header shadow. Fully responsive + accessible (skip link, ARIA, keyboard,
-`prefers-reduced-motion`).
+Subtle, professional touches only: gentle scroll-reveal, hero &amp; page-header
+entrance cascades, animated stat counters, card hover lifts, sticky header
+shadow, FAQ accordion. Fully responsive + accessible (skip link, ARIA, keyboard,
+`prefers-reduced-motion` disables all motion).
+
+**Local SEO**: per-page titles/descriptions/canonicals, LocalBusiness schema with
+the NI towns served, BreadcrumbList schema on inner pages, FAQPage schema on
+Contact, an "Areas we cover" section on the home page, and a full sitemap.
 
 ---
 
