@@ -40,7 +40,15 @@ favicon, app icon and social-share image).
 | **Contact** | `/contact` | Contact details, enquiry form, FAQ accordion (with FAQPage schema) |
 
 Every page shares the top utility bar, sticky header (with active-page nav
-state), CTA band and multi-column footer. URLs are extensionless via Vercel's
+state), CTA band, multi-column footer, and the **quick-contact system**: a
+"Contact us" side tab (desktop) / floating button (mobile) opening a pop-up
+panel with call/email actions, a mini quote form (same Web3Forms delivery as
+the main form) and a **"Quick answers" assistant** — an instant, on-page bot
+that answers questions about services, pricing, coverage, accreditations and
+hours from a built-in knowledge base and routes everything else to a call or
+the form (no external AI service, no data leaves the page). A gentle
+"Need a free quote?" nudge appears once per session, and mobile gets a sticky
+Call / Free quote action bar. URLs are extensionless via Vercel's
 `cleanUrls` (`vercel.json`); each page has its own title, description,
 canonical and Open Graph tags, and all pages are listed in `sitemap.xml`.
 

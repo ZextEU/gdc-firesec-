@@ -31,6 +31,8 @@
     { page: "index.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "index.html", selector: ".areas", item: "li", label: "Areas we cover", name: "Area", insertBefore: ".areas__more" },
     { page: "projects.html", selector: ".projects", item: "article.project", label: "Project cards", name: "Project" },
+    { page: "projects.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
+    { page: "about.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "contact.html", selector: ".faq", item: "details", label: "FAQs", name: "FAQ" },
   ];
 

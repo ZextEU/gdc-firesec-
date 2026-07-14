@@ -119,6 +119,155 @@
   };
   document.querySelectorAll("img[data-img]").forEach(upgrade);
 
+  /* --- Quick contact: side tab, FAB, pop-up panel + assistant --- */
+  const cPanel = document.getElementById("contactPanel");
+  if (cPanel) {
+    const fab = document.getElementById("fabBtn");
+    const sideTab = document.getElementById("sideTab");
+    const nudge = document.getElementById("fabNudge");
+    const nudgeClose = document.getElementById("fabNudgeClose");
+    const seen = (k) => { try { return sessionStorage.getItem(k); } catch (e) { return "1"; } };
+    const mark = (k) => { try { sessionStorage.setItem(k, "1"); } catch (e) {} };
+    const hideNudge = () => { if (nudge) nudge.hidden = true; };
+
+    const setOpen = (open) => {
+      cPanel.hidden = !open;
+      fab.classList.toggle("is-open", open);
+      fab.setAttribute("aria-expanded", String(open));
+      if (sideTab) sideTab.setAttribute("aria-expanded", String(open));
+      if (open) { hideNudge(); mark("gdc-nudged"); }
+    };
+    const toggle = () => setOpen(cPanel.hidden);
+    fab.addEventListener("click", toggle);
+    if (sideTab) sideTab.addEventListener("click", toggle);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !cPanel.hidden) setOpen(false); });
+
+    /* gentle one-time nudge bubble (per browsing session) */
+    if (nudge && !seen("gdc-nudged")) {
+      setTimeout(() => { if (cPanel.hidden && !seen("gdc-nudged")) nudge.hidden = false; }, 12000);
+      nudgeClose.addEventListener("click", (e) => { e.stopPropagation(); hideNudge(); mark("gdc-nudged"); });
+      nudge.addEventListener("click", () => setOpen(true));
+    }
+
+    /* panel tabs */
+    const tabQuote = document.getElementById("ctabQuote");
+    const tabChat = document.getElementById("ctabChat");
+    const paneQuote = document.getElementById("cpaneQuote");
+    const paneChat = document.getElementById("cpaneChat");
+    const pick = (chat) => {
+      tabQuote.classList.toggle("is-active", !chat);
+      tabChat.classList.toggle("is-active", chat);
+      paneQuote.hidden = chat;
+      paneChat.hidden = !chat;
+      if (chat) bootChat();
+    };
+    tabQuote.addEventListener("click", () => pick(false));
+    tabChat.addEventListener("click", () => pick(true));
+
+    /* mini quote form — same delivery as the main contact form */
+    const mini = document.getElementById("miniQuote");
+    const mqNote = document.getElementById("mqNote");
+    mini.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = mini.name.value.trim();
+      const phoneNo = mini.phone.value.trim();
+      mqNote.className = "cpanel__note";
+      if (!name || !phoneNo) { mqNote.textContent = "Please add your name and number."; mqNote.classList.add("is-err"); return; }
+      const key = mini.querySelector('[name="access_key"]');
+      const configured = key && key.value && key.value.indexOf("YOUR_WEB3FORMS") === -1;
+      if (!configured) {
+        mqNote.textContent = "Thanks " + name + "! We'll call you back shortly.";
+        mqNote.classList.add("is-ok");
+        mini.reset();
+        console.warn("[GDC] Quick-quote form is not configured: set a Web3Forms access_key.");
+        return;
+      }
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", { method: "POST", headers: { Accept: "application/json" }, body: new FormData(mini) });
+        const data = await res.json();
+        mqNote.textContent = data.success ? "Thanks " + name + "! We'll call you back shortly." : "Sorry — something went wrong. Please call " + PHONE + ".";
+        mqNote.classList.add(data.success ? "is-ok" : "is-err");
+        if (data.success) mini.reset();
+      } catch (err) {
+        mqNote.textContent = "Network error — please call " + PHONE + ".";
+        mqNote.classList.add("is-err");
+      }
+    });
+
+    /* assistant — instant answers from a small on-page knowledge base.
+       No external AI service: answers are limited to facts already on
+       the site, and anything else is routed to a call or the form. */
+    const ANSWERS = [
+      { re: /(hello|^hi\b|^hey|good (morning|afternoon|evening))/i, text: "Hello! Ask me about our services, prices, coverage or accreditations — or tap a question below." },
+      { re: /(price|cost|how much|quote|estimate|expensive)/i, text: "Every property is different, so we start with a free, no-obligation survey and give you a clear written quote — no pressure, no hidden costs.", link: ["/contact", "Request a free survey"] },
+      { re: /(area|cover|where|location|travel|belfast|lisburn|derry|newry|bangor)/i, text: "We're based in Belfast and cover all of Northern Ireland, the Republic of Ireland and mainland UK." },
+      { re: /(accredit|ssaib|bafe|certif|qualified|standard)/i, text: "We're SSAIB accredited for intruder alarms, CCTV and access control, and BAFE accredited for fire alarm systems — every installation is certificated." },
+      { re: /(hour|open|what time|weekend)/i, text: "Office hours are Mon–Fri 8:30–17:00, and monitoring & emergency support runs 24/7, 365 days a year." },
+      { re: /(emergency|urgent|fault|broken|not working|going off)/i, text: "For urgent help, call us right away — support is available 24 hours a day.", tel: true },
+      { re: /(fire|smoke|detector)/i, text: "We design, install, commission and certify BAFE-accredited fire alarm systems, with servicing to keep you compliant.", link: ["/services#fire-alarms", "Fire alarm systems"] },
+      { re: /(cctv|camera|surveillance)/i, text: "We install HD CCTV with night vision and secure remote viewing from your phone — cameras, recording and tidy cabling all handled.", link: ["/services#cctv", "CCTV & surveillance"] },
+      { re: /(intruder|burglar|alarm)/i, text: "We fit wired and wireless SSAIB-certificated intruder alarms, with monitored options for total peace of mind.", link: ["/services#intruder-alarms", "Intruder alarms"] },
+      { re: /(access|fob|keypad|door|intercom|entry|lock)/i, text: "We install access control, smart locks and audio/video door entry for homes, apartments and businesses.", link: ["/services#access-control", "Access control"] },
+      { re: /(monitoring|maintenance|servicing|call-?out|repair)/i, text: "We offer 24/7 monitoring, scheduled servicing and rapid call-outs to keep your systems live and compliant.", link: ["/services#monitoring", "Monitoring & maintenance"] },
+      { re: /(services|what do you (do|offer)|help with)/i, text: "We supply, install and maintain intruder alarms, CCTV, fire alarms, access control, door entry and 24/7 monitoring.", link: ["/services", "See all services"] },
+      { re: /(human|person|someone|speak|talk|phone|call|ring)/i, text: "Of course — call us now, or pop your number in the “Get a quote” tab and we'll ring you back.", tel: true },
+      { re: /(thank|cheers|great|perfect)/i, text: "You're welcome! Anything else I can help with?" },
+    ];
+    const log = document.getElementById("chatLog");
+    const chipsBox = document.getElementById("chatChips");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const CHIPS = ["What services do you offer?", "How much will it cost?", "What areas do you cover?", "Are you accredited?"];
+    let booted = false;
+
+    const say = (who, text, link, tel) => {
+      const m = document.createElement("div");
+      m.className = "msg msg--" + who;
+      m.textContent = text;
+      if (tel) {
+        m.appendChild(document.createTextNode(" "));
+        const a = document.createElement("a");
+        a.href = "tel:+442896223008";
+        a.textContent = "Call " + PHONE;
+        m.appendChild(a);
+      }
+      if (link) {
+        m.appendChild(document.createTextNode(" "));
+        const a = document.createElement("a");
+        a.href = link[0];
+        a.textContent = link[1] + " →";
+        m.appendChild(a);
+      }
+      log.appendChild(m);
+      log.scrollTop = log.scrollHeight;
+    };
+    const answer = (q) => {
+      const hit = ANSWERS.find((a) => a.re.test(q));
+      if (hit) say("bot", hit.text, hit.link, hit.tel);
+      else say("bot", "I'm best with questions about our services, coverage, accreditations and quotes. For anything else, give us a call or request a free survey.", ["/contact", "Request a survey"], true);
+    };
+    const ask = (q) => { say("user", q); setTimeout(() => answer(q), 350); };
+    const bootChat = () => {
+      if (booted) return;
+      booted = true;
+      say("bot", "Hi! I'm the GDC assistant. Ask me anything about protecting your property — or tap a question:");
+      CHIPS.forEach((c) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = c;
+        b.addEventListener("click", () => ask(c));
+        chipsBox.appendChild(b);
+      });
+    };
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = chatInput.value.trim();
+      if (!q) return;
+      chatInput.value = "";
+      ask(q);
+    });
+  }
+
   /* --- Footer year --- */
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
