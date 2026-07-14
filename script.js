@@ -272,6 +272,18 @@
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
 
+  /* --- Preselect the contact-form service from a ?service= link
+         (e.g. the footer's "Log a service call") --- */
+  const svcSelect = document.getElementById("service");
+  if (svcSelect) {
+    const want = new URLSearchParams(location.search).get("service");
+    if (want) {
+      const needle = want.replace(/-/g, " ").toLowerCase();
+      const opt = [...svcSelect.options].find((o) => o.textContent.toLowerCase().includes(needle));
+      if (opt) svcSelect.value = opt.value || opt.textContent;
+    }
+  }
+
   /* --- Quote form: validate + submit to Web3Forms --- */
   const form = document.getElementById("quoteForm");
   const note = document.getElementById("formNote");

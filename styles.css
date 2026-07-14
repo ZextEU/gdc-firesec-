@@ -288,6 +288,13 @@ strong { font-weight: 700; }
 
 /* ---------------- Service detail panels (services page) ---------------- */
 .svc-details { display: grid; gap: 22px; }
+.svc-group {
+  display: flex; align-items: center; gap: 16px; margin-top: 30px;
+  font-size: 1rem; letter-spacing: .14em; text-transform: uppercase; color: var(--blue);
+}
+.svc-group:first-child { margin-top: 0; }
+.svc-group::after { content: ""; height: 1px; flex: 1; background: var(--line-2); }
+[data-theme="dark"] .svc-group { color: var(--blue-300); }
 .svc-detail {
   display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: start;
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
