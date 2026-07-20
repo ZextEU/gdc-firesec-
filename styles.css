@@ -691,11 +691,21 @@ strong { font-weight: 700; }
 .hero--photo::before { display: none; }
 
 /* ---------------- Accreditation & partner logo strips ---------------- */
-.logo-badge { height: 58px; width: auto; background: #fff; border-radius: 8px; padding: 6px 12px; border: 1px solid var(--line); }
+.logo-badge { height: 66px; width: 156px; object-fit: contain; background: #fff; border-radius: 8px; padding: 8px 14px; border: 1px solid var(--line); }
 .partners { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 18px 28px; }
-.partners img { height: 64px; width: auto; background: #fff; border-radius: 10px; padding: 8px 14px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s; }
+.partners img { height: 72px; width: 178px; object-fit: contain; background: #fff; border-radius: 10px; padding: 8px 14px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s; }
 .partners img:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .accred__logo { height: 62px; width: auto; background: #fff; border-radius: 8px; padding: 6px 10px; border: 1px solid var(--line); margin-bottom: 14px; }
+
+@media (max-width: 760px) {
+  .trustbar__inner { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 22px 20px; }
+  .trustbar__label { grid-column: 1 / -1; text-align: center; margin-bottom: 2px; }
+  .logo-badge { width: 100%; height: 64px; }
+  .logo-badge:last-child:nth-child(even) { grid-column: 1 / -1; justify-self: center; width: 50%; }
+  .partners { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .partners img { width: 100%; height: 64px; }
+  .partners img:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: 50%; }
+}
 
 /* ---------------- Sector cards ---------------- */
 .sector-links { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
