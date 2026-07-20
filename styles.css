@@ -14,6 +14,7 @@
   --blue-50:   #EAF2FB;   /* light tint */
   --blue-25:   #F4F8FD;
   --brand:     #457BBB;   /* exact blue from the GDC logo */
+  --gold:      #E3C158;   /* gold from the GDC logo — secondary accent */
 
   --bg:        #FFFFFF;   /* page background */
   --surface:   #FFFFFF;   /* cards, panels, header */
@@ -34,7 +35,7 @@
   --shadow-lg: 0 24px 60px -24px rgba(10,37,64,.30);
 
   --container: 1180px;
-  --font-head: 'Barlow', system-ui, -apple-system, sans-serif;
+  --font-head: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --ease: cubic-bezier(.22,1,.36,1);
 }
@@ -95,7 +96,7 @@ body {
   transition: background-color .25s, color .25s;
 }
 
-h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.12; letter-spacing: -.01em; color: var(--head); font-weight: 700; }
+h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.1; letter-spacing: .005em; color: var(--head); font-weight: 700; }
 a { color: inherit; text-decoration: none; }
 img, svg { display: block; max-width: 100%; }
 strong { font-weight: 700; }
@@ -196,7 +197,8 @@ strong { font-weight: 700; }
 }
 [data-theme="dark"] .eyebrow { color: var(--blue-300); }
 .section--navy .eyebrow { color: var(--blue-300); }
-.section__head h2 { font-size: clamp(1.9rem, 4vw, 2.7rem); }
+.section__head h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+.section__head h2::after { content: ""; display: block; width: 54px; height: 3px; background: var(--gold); border-radius: 2px; margin: 14px auto 0; }
 .section__head p { color: var(--slate); margin-top: 14px; font-size: 1.08rem; }
 .section--navy .section__head h2 { color: #fff; }
 .section--navy .section__head p { color: rgba(255,255,255,.78); }
@@ -227,6 +229,7 @@ strong { font-weight: 700; }
   padding: 7px 15px; border-radius: 999px; box-shadow: var(--shadow-sm); margin-bottom: 22px;
 }
 .hero__eyebrow svg { width: 16px; height: 16px; color: var(--blue); }
+.hero--photo .hero__eyebrow { border-color: var(--gold); }
 .hero h1 { font-size: clamp(2.3rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.08; }
 .hero h1 span { color: var(--blue); }
 .hero__lead { font-size: clamp(1.05rem, 2vw, 1.22rem); color: var(--slate); max-width: 560px; margin: 22px 0 30px; }
@@ -407,7 +410,7 @@ strong { font-weight: 700; }
 /* ---------------- Stats band ---------------- */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
 .stat__num { font-family: var(--font-head); font-weight: 800; font-size: clamp(2.4rem, 5vw, 3.4rem); color: #fff; line-height: 1; }
-.stat__num .suf { color: var(--blue-300); }
+.stat__num .suf { color: var(--gold); }
 .stat p { color: rgba(255,255,255,.74); margin-top: 8px; font-size: .96rem; }
 [data-theme="dark"] .section--navy { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 
@@ -671,6 +674,50 @@ strong { font-weight: 700; }
 
 /* prominent CTA inside service detail panels */
 .svc-detail__cta { margin-top: 8px; }
+
+
+/* ---------------- Photo hero (Belfast skyline) ---------------- */
+.hero--photo { border-bottom: 0; }
+.hero__bg { position: absolute; inset: 0; }
+.hero__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(7,22,40,.88) 0%, rgba(7,22,40,.72) 45%, rgba(7,22,40,.45) 100%); }
+.hero__bg img { width: 100%; height: 100%; object-fit: cover; }
+.hero--photo .hero__inner { position: relative; z-index: 1; }
+.hero--photo h1, .hero--photo .hero__trust li { color: #fff; }
+.hero--photo h1 span { color: var(--gold); }
+.hero--photo .hero__lead { color: rgba(255,255,255,.85); }
+.hero--photo .hero__trust svg { color: var(--gold); }
+.hero--photo .btn--ghost { border-color: rgba(255,255,255,.55); color: #fff; }
+.hero--photo .btn--ghost:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,.1); }
+.hero--photo::before { display: none; }
+
+/* ---------------- Accreditation & partner logo strips ---------------- */
+.logo-badge { height: 58px; width: auto; background: #fff; border-radius: 8px; padding: 6px 12px; border: 1px solid var(--line); }
+.partners { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 18px 28px; }
+.partners img { height: 64px; width: auto; background: #fff; border-radius: 10px; padding: 8px 14px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s; }
+.partners img:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.accred__logo { height: 62px; width: auto; background: #fff; border-radius: 8px; padding: 6px 10px; border: 1px solid var(--line); margin-bottom: 14px; }
+
+/* ---------------- Sector cards ---------------- */
+.sector-links { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.sector-links a { display: inline-block; font-family: var(--font-head); font-weight: 600; font-size: .85rem; color: var(--blue); background: var(--blue-50); border-radius: 999px; padding: 5px 13px; transition: background .2s, color .2s; }
+.sector-links a:hover { background: var(--blue); color: #fff; }
+[data-theme="dark"] .sector-links a { color: var(--blue-300); }
+[data-theme="dark"] .sector-links a:hover { background: var(--blue); color: #fff; }
+
+/* ---------------- Legal prose ---------------- */
+.legal { max-width: 760px; }
+.legal h2 { font-size: 1.35rem; margin: 30px 0 10px; }
+.legal h2:first-child { margin-top: 0; }
+.legal p { color: var(--slate); margin-bottom: 12px; }
+
+/* ---------------- Page transitions (cross-fade between pages) ---------------- */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation-duration: .18s; }
+  ::view-transition-new(root) { animation-duration: .28s; }
+  body { animation: pageIn .35s var(--ease); } /* fallback for browsers without view transitions */
+}
+@keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------------- Skip link ---------------- */
 .skip-link { position: absolute; left: 12px; top: -60px; z-index: 300; background: var(--blue); color: #fff; padding: 10px 16px; border-radius: 8px; font-family: var(--font-head); font-weight: 700; transition: top .2s var(--ease); }

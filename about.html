@@ -26,7 +26,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script>
     /* Apply saved/system theme before first paint to avoid a flash */
@@ -75,8 +75,10 @@
       <nav class="nav" aria-label="Primary">
         <a href="/">Home</a>
         <a href="/services">Services</a>
+        <a href="/sectors">Sectors</a>
         <a href="/about" aria-current="page">About</a>
         <a href="/projects">Projects</a>
+        <a href="/news">News</a>
         <a href="/contact">Contact</a>
       </nav>
 
@@ -178,14 +180,46 @@
         </header>
         <div class="accreds">
           <article class="accred reveal">
-            <div class="accred__badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 8 9 8 9s8-4 8-9V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg> SSAIB</div>
+            <img class="accred__logo" src="assets/accreditations/ssaib-ukas.png" alt="SSAIB Certificated — UKAS product certification 131" loading="lazy" />
             <p class="accred__scope">Intruder alarms · CCTV · Access control</p>
             <p>The SSAIB is a leading certification body for security service providers in the UK and Ireland. Our SSAIB registration means our intruder alarm, CCTV and access control installations are independently inspected against recognised security standards.</p>
           </article>
           <article class="accred reveal">
-            <div class="accred__badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1.6 4 5 6 5 10.5A5 5 0 0 1 12 18a5 5 0 0 1-5-5.5C7 8 10.4 6 12 2z"/><path d="M10 21h4"/></svg> BAFE</div>
+            <img class="accred__logo" src="assets/accreditations/bafe.png" alt="BAFE Fire Safety Register" loading="lazy" />
             <p class="accred__scope">Fire alarm systems · Registered ID 302579</p>
             <p>BAFE is the independent register of quality fire safety service providers. Our BAFE registration covers the design, installation, commissioning and maintenance of fire detection and alarm systems — so your premises stay safe and compliant.</p>
+          </article>
+        </div>
+        <div class="partners reveal" style="margin-top: 34px;">
+          <img src="assets/accreditations/psa.png" alt="Licensed by the Private Security Authority — licence 13183" loading="lazy" />
+          <img src="assets/accreditations/ifsm.png" alt="Institute of Fire Safety Managers Associate" loading="lazy" />
+          <img src="assets/accreditations/fia.png" alt="Fire Industry Association — F-Gas certified" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AWARDS & COMMUNITY ============ -->
+    <section class="section section--soft" id="awards">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="eyebrow">Awards &amp; community</p>
+          <h2>Proud of our work, proud of our people</h2>
+        </header>
+        <div class="svc-grid">
+          <article class="svc reveal">
+            <div class="svc__ico svc__ico--gold"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M17 5h3a2 2 0 0 1-2 4h-1"/><path d="M7 5H4a2 2 0 0 0 2 4h1"/></svg></div>
+            <h3>NI Electrical Awards</h3>
+            <p>Proud to be recognised at the NI Electrical Awards — a mark of the quality and care our engineers bring to every installation.</p>
+          </article>
+          <article class="svc reveal">
+            <div class="svc__ico svc__ico--gold"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.3l7.8-7.8 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+            <h3>Backing local talent</h3>
+            <p>Proud sponsor of Belfast MMA athlete James Wallace — supporting local sport and the community we work in every day.</p>
+          </article>
+          <article class="svc reveal">
+            <div class="svc__ico svc__ico--gold"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <h3>Invested in our team</h3>
+            <p>From first-aid certification to manufacturer training with Pyronix, Hikvision, Dahua and Paxton — our engineers never stop learning.</p>
           </article>
         </div>
       </div>
@@ -277,7 +311,9 @@
           <ul>
             <li><a href="/about">About us</a></li>
             <li><a href="/projects">Projects</a></li>
-            <li><a href="/#sectors">Sectors</a></li>
+            <li><a href="/sectors">Sectors</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/faq">FAQs</a></li>
             <li><a href="/#areas">Areas we cover</a></li>
             <li><a href="/#reviews">Testimonials</a></li>
             <li><a href="/contact">Contact</a></li>
@@ -294,7 +330,7 @@
       </div>
       <div class="footer__bar">
         <p>© <span id="year"></span> GDC Fire &amp; Security (NI) Ltd. All rights reserved. · <a class="footer__admin" href="/admin">Admin login</a></p>
-        <p>SSAIB certified · BAFE registered (ID 302579)</p>
+        <p><a href="/terms">Terms &amp; conditions</a> · <a href="/privacy">Privacy &amp; GDPR</a> · <a href="https://ssaib.org" target="_blank" rel="noopener noreferrer">SSAIB</a> · <a href="https://www.bafe.org.uk" target="_blank" rel="noopener noreferrer">BAFE (ID 302579)</a></p>
         <a class="powered" href="https://pixrweb.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by Pixrweb — visit pixrweb.com"><span>Powered by</span> <img src="assets/logo/pixrweb-mark-white.png" alt="" width="19" height="16" loading="lazy" /> <strong>Pixrweb</strong></a>
       </div>
     </div>

@@ -34,7 +34,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script>
     /* Apply saved/system theme before first paint to avoid a flash */
@@ -108,8 +108,10 @@
       <nav class="nav" aria-label="Primary">
         <a href="/" aria-current="page">Home</a>
         <a href="/services">Services</a>
+        <a href="/sectors">Sectors</a>
         <a href="/about">About</a>
         <a href="/projects">Projects</a>
+        <a href="/news">News</a>
         <a href="/contact">Contact</a>
       </nav>
 
@@ -129,11 +131,12 @@
 
   <main id="main">
     <!-- ============ HERO ============ -->
-    <section class="hero">
+    <section class="hero hero--photo">
+      <div class="hero__bg" aria-hidden="true"><img src="assets/photos/hero.jpg" alt="" fetchpriority="high" /></div>
       <div class="container hero__inner">
         <div class="hero__copy">
-          <span class="hero__eyebrow"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 8 9 8 9s8-4 8-9V5l-8-3z"/></svg> Protecting Northern Ireland for 30+ years</span>
-          <h1>Fire &amp; security systems <span>you can trust</span></h1>
+          <span class="hero__eyebrow"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 8 9 8 9s8-4 8-9V5l-8-3z"/></svg> Professional with a personal touch</span>
+          <h1>Your trusted fire &amp; security <span>partner across Northern Ireland</span></h1>
           <p class="hero__lead">
             GDC Fire &amp; Security is a family-run, multi-award-winning specialist in intruder
             alarms, CCTV, fire alarms and access control — protecting homes and businesses
@@ -180,9 +183,11 @@
     <section class="trustbar" aria-label="Accreditations">
       <div class="container trustbar__inner">
         <span class="trustbar__label">Accredited &amp; approved by</span>
-        <span class="badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 8 9 8 9s8-4 8-9V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg> SSAIB <small>Intruder · CCTV · Access</small></span>
-        <span class="badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 8 9 8 9s8-4 8-9V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg> BAFE <small>Fire alarm systems</small></span>
-        <span class="badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21l2.3-7.4-6-4.6h7.6z"/></svg> Multi-award-winning</span>
+        <img class="logo-badge" src="assets/accreditations/ssaib.png" alt="SSAIB Certificated" loading="lazy" />
+        <img class="logo-badge" src="assets/accreditations/bafe.png" alt="BAFE Fire Safety Register — ID 302579" loading="lazy" />
+        <img class="logo-badge" src="assets/accreditations/psa.png" alt="Licensed by the Private Security Authority — licence 13183" loading="lazy" />
+        <img class="logo-badge" src="assets/accreditations/ifsm.png" alt="Institute of Fire Safety Managers Associate" loading="lazy" />
+        <img class="logo-badge" src="assets/accreditations/fia.png" alt="Fire Industry Association — F-Gas certified" loading="lazy" />
       </div>
     </section>
 
@@ -347,13 +352,13 @@
             <div class="sector__ico"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10.5 9-7.5 9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></div>
             <h3>Residential</h3>
             <p>Intruder alarms, CCTV, smart door entry and fire safety to keep your home and family secure — discreetly installed and easy to use.</p>
-            <a href="/contact" class="sector__link">Protect my home <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            <a href="/sectors" class="sector__link">Protect my home <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
           </article>
           <article class="sector sector--commercial reveal">
             <div class="sector__ico"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01"/></svg></div>
             <h3>Commercial</h3>
             <p>Compliant fire alarm systems, access control, monitored CCTV and maintenance contracts for offices, retail, industrial and licensed premises.</p>
-            <a href="/contact" class="sector__link">Secure my business <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            <a href="/sectors" class="sector__link">Secure my business <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
           </article>
         </div>
       </div>
@@ -431,6 +436,23 @@
       </div>
     </section>
 
+    <!-- ============ APPROVED INSTALLER PARTNERS ============ -->
+    <section class="section" id="partners">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="eyebrow">Trusted technology</p>
+          <h2>Approved installers for leading manufacturers</h2>
+        </header>
+        <div class="partners reveal">
+          <img src="assets/partners/pyronix.png" alt="Pyronix approved installer" loading="lazy" />
+          <img src="assets/partners/hikvision.png" alt="Hikvision authorised value added solution partner" loading="lazy" />
+          <img src="assets/partners/dahua.png" alt="Dahua Technology approved installer" loading="lazy" />
+          <img src="assets/partners/paxton.png" alt="Paxton registered installer" loading="lazy" />
+          <img src="assets/partners/csl.png" alt="CSL Connected Partner" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
     <!-- ============ CTA BAND ============ -->
     <section class="ctaband">
       <div class="container ctaband__inner">
@@ -473,7 +495,9 @@
           <ul>
             <li><a href="/about">About us</a></li>
             <li><a href="/projects">Projects</a></li>
-            <li><a href="/#sectors">Sectors</a></li>
+            <li><a href="/sectors">Sectors</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/faq">FAQs</a></li>
             <li><a href="/#areas">Areas we cover</a></li>
             <li><a href="/#reviews">Testimonials</a></li>
             <li><a href="/contact">Contact</a></li>
@@ -490,7 +514,7 @@
       </div>
       <div class="footer__bar">
         <p>© <span id="year"></span> GDC Fire &amp; Security (NI) Ltd. All rights reserved. · <a class="footer__admin" href="/admin">Admin login</a></p>
-        <p>SSAIB certified · BAFE registered (ID 302579)</p>
+        <p><a href="/terms">Terms &amp; conditions</a> · <a href="/privacy">Privacy &amp; GDPR</a> · <a href="https://ssaib.org" target="_blank" rel="noopener noreferrer">SSAIB</a> · <a href="https://www.bafe.org.uk" target="_blank" rel="noopener noreferrer">BAFE (ID 302579)</a></p>
         <a class="powered" href="https://pixrweb.com" target="_blank" rel="noopener noreferrer" aria-label="Powered by Pixrweb — visit pixrweb.com"><span>Powered by</span> <img src="assets/logo/pixrweb-mark-white.png" alt="" width="19" height="16" loading="lazy" /> <strong>Pixrweb</strong></a>
       </div>
     </div>

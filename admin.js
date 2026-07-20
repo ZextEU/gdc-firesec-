@@ -20,6 +20,9 @@
     { file: "services.html", label: "Services" },
     { file: "about.html", label: "About" },
     { file: "projects.html", label: "Projects" },
+    { file: "sectors.html", label: "Sectors" },
+    { file: "news.html", label: "News" },
+    { file: "faq.html", label: "FAQs" },
     { file: "contact.html", label: "Contact" },
   ];
 
@@ -35,6 +38,8 @@
     { page: "about.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "services.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "contact.html", selector: ".faq", item: "details", label: "FAQs", name: "FAQ" },
+    { page: "faq.html", selector: ".faq", item: "details", label: "FAQs", name: "FAQ" },
+    { page: "news.html", selector: ".projects", item: "article.project", label: "News posts", name: "Post" },
   ];
 
   /* Elements whose text the client may edit (inside <main> only —
@@ -457,7 +462,7 @@
       for (const p of dirty) {
         setStatus(saveStatus, "Publishing " + p.label + "…");
         const d = docs[p.file];
-        if (p.file === "contact.html") syncFaqSchema(d.doc);
+        if (p.file === "contact.html" || p.file === "faq.html") syncFaqSchema(d.doc);
         const result = await saveFile(BASE + p.file, b64encode(serialise(d.doc)), d.sha, "Update " + p.label + " page via site editor");
         d.sha = result.content.sha;
         d.dirty = false;
