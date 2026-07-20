@@ -548,6 +548,7 @@ strong { font-weight: 700; }
 
 /* Projects — mini case studies */
 .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.projects--two { grid-template-columns: repeat(2, 1fr); max-width: 900px; margin-inline: auto; }
 .project {
   display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); text-decoration: none; color: inherit;

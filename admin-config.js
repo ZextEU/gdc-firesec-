@@ -18,6 +18,7 @@ window.PIXRWEB_EDITOR = {
     { file: "fire-safety.html", label: "Fire safety" },
     { file: "security-systems.html", label: "Security" },
     { file: "fire-alarm-systems.html", label: "Fire alarm syste" },
+    { file: "smoke-alarm-testing.html", label: "Smoke alarm test" },
     { file: "fire-extinguishers.html", label: "Fire extinguishe" },
     { file: "emergency-lighting.html", label: "Emergency lighti" },
     { file: "fire-risk-assessments.html", label: "Fire risk assess" },
