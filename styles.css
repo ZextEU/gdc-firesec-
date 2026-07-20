@@ -822,10 +822,13 @@ strong { font-weight: 700; }
   /* -------- mobile declutter: calmer rhythm, fewer walls of text -------- */
   .container { padding: 0 18px; }
 
-  /* section headers: less gap above content, tighter lead */
-  .section__head { margin-bottom: 30px; }
-  .section__head p { font-size: 1rem; margin-top: 10px; }
-  .section__head h2::after { margin-top: 11px; }
+  /* section headers: compact on mobile (GEO-style rhythm) */
+  .section__head { margin-bottom: 26px; }
+  .section__head h2 { font-size: clamp(1.55rem, 6.5vw, 2rem); }
+  .section__head p { font-size: .98rem; margin-top: 9px; }
+  .section__head h2::after { margin-top: 10px; }
+  .section { padding: 44px 0; }
+  .section--soft + .section, .section + .section--soft { border-top: 1px solid var(--line); }
 
   /* hero: give the copy room, calm the facts card */
   .hero__inner { padding: 40px 0 46px; gap: 30px; }
