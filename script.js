@@ -43,7 +43,8 @@
      IntersectionObserver pauses it while it's scrolled out of view and it pauses
      on hidden tabs, so it never wastes CPU, battery or bandwidth. */
   const heroVideo = document.querySelector(".hero__video");
-  if (heroVideo && heroVideo.dataset.src) {
+  const heroSources = heroVideo ? heroVideo.querySelectorAll("source[data-src]") : [];
+  if (heroVideo && heroSources.length) {
     const conn = navigator.connection || {};
     const allowed =
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
@@ -51,9 +52,13 @@
       !/(^|-)2g$/.test(conn.effectiveType || "");
 
     if (allowed) {
+      let started = false;
       const startLoad = () => {
-        if (heroVideo.src) return;
-        heroVideo.src = heroVideo.dataset.src;
+        if (started) return;
+        started = true;
+        // Promote each <source> data-src -> src, then let the browser pick the
+        // best format (WebM/VP9 where supported, MP4/H.264 fallback) and fetch.
+        heroSources.forEach((s) => { s.src = s.dataset.src; });
         heroVideo.load();
         heroVideo.addEventListener(
           "canplay",
@@ -72,7 +77,7 @@
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
-              if (!heroVideo.src) return;
+              if (!started) return;
               if (e.isIntersecting) heroVideo.play().catch(() => {});
               else heroVideo.pause();
             });
@@ -82,7 +87,7 @@
         io.observe(heroVideo);
       }
       document.addEventListener("visibilitychange", () => {
-        if (!heroVideo.src) return;
+        if (!started) return;
         if (document.hidden) heroVideo.pause();
         else heroVideo.play().catch(() => {});
       });
