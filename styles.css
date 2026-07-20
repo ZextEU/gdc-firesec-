@@ -756,7 +756,7 @@ strong { font-weight: 700; }
   .hero--photo .hero__bg::after { background: linear-gradient(180deg, rgba(7,22,40,.45) 0%, rgba(7,22,40,.55) 55%, #081627 97%); }
   .hero__card { max-width: 520px; }
   .svc-grid, .svc-grid--four { grid-template-columns: repeat(2, 1fr); }
-  .projects { grid-template-columns: repeat(2, 1fr); }
+  .projects, .projects--two { grid-template-columns: repeat(2, 1fr); }
   .svc-detail { grid-template-columns: 1fr; gap: 26px; padding: 30px 28px; }
   .svc-detail, .svc-detail__copy, .svc-detail__list { min-width: 0; }
   .svc-detail .btn { white-space: normal; text-align: center; }
@@ -771,11 +771,64 @@ strong { font-weight: 700; }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 }
 @media (max-width: 560px) {
-  .section { padding: 60px 0; }
+  .section { padding: 48px 0; }
   .svc-grid, .svc-grid--four, .projects, .steps, .stats, .footer__grid { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
   .hero__actions .btn, .ctaband__actions .btn { flex: 1; }
   .split__badge { left: 0; }
+
+  /* -------- mobile declutter: calmer rhythm, fewer walls of text -------- */
+  .container { padding: 0 18px; }
+
+  /* section headers: less gap above content, tighter lead */
+  .section__head { margin-bottom: 30px; }
+  .section__head p { font-size: 1rem; margin-top: 10px; }
+  .section__head h2::after { margin-top: 11px; }
+
+  /* hero: give the copy room, calm the facts card */
+  .hero__inner { padding: 40px 0 46px; gap: 30px; }
+  .hero__lead { margin: 16px 0 24px; }
+  .hero__trust { gap: 8px 18px; margin-top: 24px; }
+  .hero__card-top { padding: 18px 20px; }
+  .hero__facts { padding: 6px 20px 8px; }
+  .hero__facts li { padding: 13px 0; gap: 12px; }
+  .hero__card-cta { padding: 14px 20px 20px; }
+  .page-hero__inner { padding: 44px 0 40px; }
+
+  /* cards: consistent, roomier internal padding, comfortable gaps */
+  .svc-grid, .svc-grid--four, .projects, .reviews, .accreds, .sectors, .steps { gap: 14px; }
+  .svc { padding: 26px 22px; }
+  .svc__ico { width: 48px; height: 48px; margin-bottom: 16px; }
+  .project__body { padding: 20px 22px 22px; }
+  .review { padding: 24px 22px; }
+  .svc-detail { padding: 26px 22px; }
+  .svc-detail__list { padding: 22px 22px; }
+
+  /* about split: tighten the media/badge stack */
+  .split { gap: 28px; }
+  .split__list { margin: 18px 0 22px; }
+
+  /* stats: 2-up stays denser than 1-up here */
+  .stats { grid-template-columns: repeat(2, 1fr); gap: 26px 18px; }
+
+  /* areas chips + partner logos: calmer wrapping */
+  .areas { gap: 8px; }
+  .areas li { padding: 7px 14px; font-size: .85rem; }
+
+  /* CTA band: stack cleanly with breathing room */
+  .ctaband__inner { padding: 40px 0; gap: 20px; }
+  .ctaband h2 { font-size: 1.5rem; }
+
+  /* footer: generous separation so columns don't merge */
+  .footer { padding: 48px 0 24px; }
+  .footer__grid { gap: 28px; padding-bottom: 30px; }
+  .footer__bar { gap: 8px 18px; }
+
+  /* projects CTA prose shouldn't run edge to edge */
+  .projects__cta p { font-size: .96rem; }
+
+  /* services hub family cards: full width so the photo + copy breathe */
+  .projects--two { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto; }
