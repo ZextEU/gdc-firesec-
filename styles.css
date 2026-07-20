@@ -737,8 +737,13 @@ strong { font-weight: 700; }
   .header__inner { position: relative; }
   .header.is-open .nav a { padding: 13px 0; border-bottom: 1px solid var(--line); }
   .hero__inner { grid-template-columns: 1fr; gap: 40px; padding: 56px 0 64px; }
-  .hero__bg img { object-position: center 78%; } /* narrow screens crop harder — pin to the skyline */
-  .hero__bg::after { background: linear-gradient(180deg, rgba(7,22,40,.82), rgba(7,22,40,.68)); }
+  /* phones: show the skyline as a photo band that fades into navy,
+     instead of stretching the wide photo behind the whole hero
+     (which left only sky visible) */
+  .hero--photo { background: #081627; }
+  .hero--photo .hero__bg { height: min(46vh, 430px); }
+  .hero--photo .hero__bg img { object-position: center 62%; }
+  .hero--photo .hero__bg::after { background: linear-gradient(180deg, rgba(7,22,40,.45) 0%, rgba(7,22,40,.55) 55%, #081627 97%); }
   .hero__card { max-width: 520px; }
   .svc-grid, .svc-grid--four { grid-template-columns: repeat(2, 1fr); }
   .projects { grid-template-columns: repeat(2, 1fr); }
