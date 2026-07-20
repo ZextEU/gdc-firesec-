@@ -22,6 +22,9 @@ window.PIXRWEB_EDITOR = {
     { file: "sectors.html", label: "Sectors" },
     { file: "news.html", label: "News" },
     { file: "faq.html", label: "FAQs" },
+    { file: "project-ramada-hotel.html", label: "Case: Ramada" },
+    { file: "project-redeemer-central.html", label: "Case: Redeemer" },
+    { file: "project-queens-quarters.html", label: "Case: Queens Qtr" },
     { file: "contact.html", label: "Contact" },
   ],
 
