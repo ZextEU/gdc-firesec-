@@ -35,6 +35,11 @@ window.PIXRWEB_EDITOR = {
     { file: "project-ramada-hotel.html", label: "Case: Ramada" },
     { file: "project-redeemer-central.html", label: "Case: Redeemer" },
     { file: "project-queens-quarters.html", label: "Case: Queens Qtr" },
+    { file: "project-deichmann.html", label: "Case: Deichmann" },
+    { file: "project-castleridge.html", label: "Case: Castleridge " },
+    { file: "project-mellon.html", label: "Case: Mellon Prope" },
+    { file: "project-kme.html", label: "Case: KME Steel" },
+    { file: "project-branniff.html", label: "Case: Branniff Joi" },
     { file: "contact.html", label: "Contact" },
   ],
 
