@@ -15,6 +15,8 @@ window.PIXRWEB_EDITOR = {
   pages: [
     { file: "index.html", label: "Home" },
     { file: "services.html", label: "Services" },
+    { file: "fire-safety.html", label: "Fire safety" },
+    { file: "security-systems.html", label: "Security" },
     { file: "about.html", label: "About" },
     { file: "projects.html", label: "Projects" },
     { file: "sectors.html", label: "Sectors" },
