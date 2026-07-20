@@ -713,6 +713,10 @@ strong { font-weight: 700; }
 .hero__bg { position: absolute; inset: 0; }
 .hero__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(7,22,40,.88) 0%, rgba(7,22,40,.72) 45%, rgba(7,22,40,.45) 100%); }
 .hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 68%; } /* keep the skyline, not the sky, in frame */
+/* Looping skyline video sits over the poster image and fades in once it can play.
+   It is lazy-loaded from JS (see script.js) so it never blocks first paint / LCP. */
+.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 68%; opacity: 0; transition: opacity .8s var(--ease); pointer-events: none; }
+.hero__video.is-playing { opacity: 1; }
 .hero--photo .hero__inner { position: relative; z-index: 1; }
 .hero--photo h1, .hero--photo .hero__trust li { color: #fff; }
 .hero--photo h1 span { color: var(--gold); }
@@ -798,7 +802,8 @@ strong { font-weight: 700; }
      (which left only sky visible) */
   .hero--photo { background: #081627; }
   .hero--photo .hero__bg { height: min(46vh, 430px); }
-  .hero--photo .hero__bg img { object-position: center 62%; }
+  .hero--photo .hero__bg img,
+  .hero--photo .hero__bg .hero__video { object-position: center 62%; }
   .hero--photo .hero__bg::after { background: linear-gradient(180deg, rgba(7,22,40,.45) 0%, rgba(7,22,40,.55) 55%, #081627 97%); }
   .hero__card { max-width: 520px; }
   .svc-grid, .svc-grid--four { grid-template-columns: repeat(2, 1fr); }
