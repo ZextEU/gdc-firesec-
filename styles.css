@@ -520,6 +520,10 @@ strong { font-weight: 700; }
 .footer__col a:hover { color: var(--blue-300); }
 .footer__col .row { display: flex; align-items: flex-start; gap: 10px; }
 .footer__col .row svg { width: 16px; height: 16px; color: var(--blue-300); flex: none; margin-top: 3px; }
+.footer__areas { padding: 22px 0 4px; border-top: 1px solid rgba(255,255,255,.1); }
+.footer__areas h4 { color: #fff; font-family: var(--font-head); font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+.footer__areas p { color: rgba(255,255,255,.6); font-size: .88rem; line-height: 1.7; max-width: 900px; }
+.clients__lead { text-align: center; font-family: var(--font-head); font-weight: 600; color: var(--slate); margin: 40px 0 18px; letter-spacing: .02em; }
 .footer__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-top: 22px; font-size: .86rem; color: rgba(255,255,255,.55); }
 .footer__bar a { color: rgba(255,255,255,.7); }
 .footer__bar a:hover { color: #fff; }
