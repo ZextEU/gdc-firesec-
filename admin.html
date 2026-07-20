@@ -98,6 +98,19 @@
     .adm-powered img { height: 14px; width: auto; }
     .adm-powered strong { font-family: var(--font-head); color: var(--head); }
     .adm-powered a:hover, .adm-powered a:hover strong { color: var(--blue); }
+    .adm-mini--accent { border-color: var(--blue); color: var(--blue); }
+    .adm-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(7,18,32,.62); display: grid; place-items: center; padding: 18px; }
+    .adm-modal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: min(1100px, 100%); max-height: calc(100vh - 36px); display: flex; flex-direction: column; padding: 18px 20px; }
+    .adm-modal__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .adm-modal__head strong { font-family: var(--font-head); font-size: 1.05rem; color: var(--head); }
+    .adm-modal__note { font-size: .88rem; color: var(--slate); margin-bottom: 10px; }
+    .adm-modal__frame { width: 100%; flex: 1; min-height: 60vh; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .adm-modal__list { list-style: none; display: grid; gap: 6px; margin: 6px 0 16px; }
+    .adm-modal__list li { font-weight: 600; color: var(--head); font-size: .95rem; }
+    .adm-confirm { display: flex; gap: 10px; align-items: flex-start; font-size: .92rem; color: var(--ink); margin-bottom: 16px; cursor: pointer; }
+    .adm-confirm input { margin-top: 3px; width: 17px; height: 17px; accent-color: var(--blue); }
+    .adm-modal__actions { display: flex; gap: 10px; align-items: center; }
+    .adm-modal__actions .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
     .hidden { display: none !important; }
   </style>
 </head>

@@ -200,6 +200,7 @@
     wrap.appendChild(input);
     input.addEventListener("input", () => {
       node.nodeValue = lead + input.value + trail; // original spacing preserved
+      if (node.parentElement) node.parentElement.setAttribute("data-pixr-edited", "");
       markDirty(file);
     });
     return wrap;
@@ -261,6 +262,10 @@
       openTab(file);
     });
     bar.appendChild(discard);
+    const prev = el("button", "adm-mini adm-mini--accent", "Preview changes");
+    prev.type = "button";
+    prev.addEventListener("click", () => openPreview(file));
+    bar.appendChild(prev);
     panel.appendChild(bar);
     const lists = LISTS.filter((l) => l.page === file);
     const listContainers = lists.map((l) => doc.querySelector(l.selector)).filter(Boolean);
@@ -275,7 +280,7 @@
     const titleInput = document.createElement("input");
     titleInput.type = "text";
     titleInput.value = doc.title;
-    titleInput.addEventListener("input", () => { doc.title = titleInput.value; markDirty(file); tTick(); });
+    titleInput.addEventListener("input", () => { doc.title = titleInput.value; docs[file].seoEdited = true; markDirty(file); tTick(); });
     titleWrap.appendChild(titleInput);
     titleWrap.appendChild(tCount); tTick();
     seo.appendChild(titleWrap);
@@ -287,7 +292,7 @@
       dInput.value = metaDesc.getAttribute("content") || "";
       const dCount = el("small", "adm-count");
       const dTick = () => { dCount.textContent = dInput.value.length + " characters — aim for 120–160"; dCount.classList.toggle("over", dInput.value.length > 160); };
-      dInput.addEventListener("input", () => { metaDesc.setAttribute("content", dInput.value); markDirty(file); dTick(); });
+      dInput.addEventListener("input", () => { metaDesc.setAttribute("content", dInput.value); docs[file].seoEdited = true; markDirty(file); dTick(); });
       dWrap.appendChild(dInput);
       dWrap.appendChild(dCount); dTick();
       seo.appendChild(dWrap);
@@ -343,6 +348,7 @@
       add.addEventListener("click", () => {
         const source = container.querySelector(":scope > " + list.item + (list.insertBefore ? ":not(" + list.insertBefore + ")" : ""));
         const clone = source.cloneNode(true);
+        clone.setAttribute("data-pixr-edited", "");
         const img = clone.querySelector("img[data-img]");
         if (img) {
           const slot = nextPhotoSlot();
@@ -476,22 +482,90 @@
     });
   }
 
-  function serialise(doc) {
+  function changeCount(file) {
+    const d = docs[file];
+    return d.doc.querySelectorAll("[data-pixr-edited]").length + (d.seoEdited ? 1 : 0);
+  }
+
+  function serialise(doc, forSave) {
+    if (forSave) doc.querySelectorAll("[data-pixr-edited]").forEach((n) => n.removeAttribute("data-pixr-edited"));
     return "<!DOCTYPE html>\n" + doc.documentElement.outerHTML + "\n";
   }
 
-  $("#saveBtn").addEventListener("click", async () => {
+  /* ---- preview: renders the edited page with every change highlighted ---- */
+  function overlay(titleText) {
+    const ov = el("div", "adm-overlay");
+    const modal = el("div", "adm-modal");
+    const head = el("div", "adm-modal__head");
+    head.appendChild(el("strong", null, titleText));
+    const close = el("button", "adm-mini", "Close");
+    close.type = "button";
+    close.addEventListener("click", () => ov.remove());
+    head.appendChild(close);
+    modal.appendChild(head);
+    ov.appendChild(modal);
+    ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+    document.body.appendChild(ov);
+    return { ov, modal };
+  }
+
+  function openPreview(file) {
+    const { modal } = overlay("Preview — " + (PAGES.find((p) => p.file === file) || {}).label + " · " + changeCount(file) + " highlighted change(s)");
+    const note = el("p", "adm-modal__note", "This is a private preview — nothing is live yet. Your edits are outlined in amber.");
+    modal.appendChild(note);
+    const frame = document.createElement("iframe");
+    frame.className = "adm-modal__frame";
+    frame.setAttribute("sandbox", "allow-same-origin");
+    let html = serialise(docs[file].doc);
+    html = html.replace("</head>", '<base href="/" /><style>[data-pixr-edited]{outline:3px dashed #F5A623 !important;outline-offset:3px;background:rgba(245,166,35,.12) !important;}</style></head>');
+    frame.srcdoc = html;
+    modal.appendChild(frame);
+  }
+
+  /* ---- publish confirmation: summary + required tick ---- */
+  function confirmPublish(dirty, onConfirm) {
+    const { ov, modal } = overlay("Ready to publish?");
+    const list = el("ul", "adm-modal__list");
+    dirty.forEach((p) => list.appendChild(el("li", null, p.label + " — " + changeCount(p.file) + " change(s)")));
+    modal.appendChild(list);
+    const lab = el("label", "adm-confirm");
+    const tick = document.createElement("input");
+    tick.type = "checkbox";
+    lab.appendChild(tick);
+    lab.appendChild(document.createTextNode(" I'm happy for these changes to go live on the real website. Once published they can't be undone from this editor."));
+    modal.appendChild(lab);
+    const row = el("div", "adm-modal__actions");
+    const go = el("button", "btn btn--primary", "Publish now");
+    go.type = "button";
+    go.disabled = true;
+    tick.addEventListener("change", () => { go.disabled = !tick.checked; });
+    go.addEventListener("click", () => { ov.remove(); onConfirm(); });
+    const cancel = el("button", "adm-mini", "Keep editing");
+    cancel.type = "button";
+    cancel.addEventListener("click", () => ov.remove());
+    row.appendChild(go);
+    row.appendChild(cancel);
+    modal.appendChild(row);
+  }
+
+  $("#saveBtn").addEventListener("click", () => {
     const dirty = PAGES.filter((p) => docs[p.file].dirty);
     if (!dirty.length) return setStatus(saveStatus, "Nothing to save — no changes made.");
+    confirmPublish(dirty, () => publish(dirty));
+  });
+
+  async function publish(dirty) {
     $("#saveBtn").disabled = true;
     try {
       for (const p of dirty) {
         setStatus(saveStatus, "Publishing " + p.label + "…");
         const d = docs[p.file];
         if (p.file === "contact.html" || p.file === "faq.html") syncFaqSchema(d.doc);
-        const result = await saveFile(BASE + p.file, b64encode(serialise(d.doc)), d.sha, "Update " + p.label + " page via site editor");
+        const result = await saveFile(BASE + p.file, b64encode(serialise(d.doc, true)), d.sha, "Update " + p.label + " page via site editor");
         d.sha = result.content.sha;
         d.dirty = false;
+        d.seoEdited = false;
+        d.original = serialise(d.doc);
       }
       refreshTabs();
       setStatus(saveStatus, "Published! The live site updates in about a minute.", "ok");
@@ -500,7 +574,7 @@
     } finally {
       $("#saveBtn").disabled = false;
     }
-  });
+  }
 
   window.addEventListener("beforeunload", (e) => {
     if (PAGES.some((p) => docs[p.file] && docs[p.file].dirty)) { e.preventDefault(); e.returnValue = ""; }
