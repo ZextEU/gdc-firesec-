@@ -34,6 +34,61 @@
     });
   }
 
+  /* --- Hero skyline video (lazy-loaded, performance-guarded) ---
+     The poster image (hero.jpg) paints instantly and drives LCP; the video is
+     never part of the critical path. We only fetch it *after* the page has
+     loaded and the browser is idle, and we skip it entirely when it wouldn't be
+     welcome: reduced-motion users, data-saver mode, and slow (2g) connections.
+     Once it can play it fades in over the poster and loops silently. An
+     IntersectionObserver pauses it while it's scrolled out of view and it pauses
+     on hidden tabs, so it never wastes CPU, battery or bandwidth. */
+  const heroVideo = document.querySelector(".hero__video");
+  if (heroVideo && heroVideo.dataset.src) {
+    const conn = navigator.connection || {};
+    const allowed =
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      !conn.saveData &&
+      !/(^|-)2g$/.test(conn.effectiveType || "");
+
+    if (allowed) {
+      const startLoad = () => {
+        if (heroVideo.src) return;
+        heroVideo.src = heroVideo.dataset.src;
+        heroVideo.load();
+        heroVideo.addEventListener(
+          "canplay",
+          () => {
+            heroVideo.classList.add("is-playing");
+            heroVideo.play().catch(() => {});
+          },
+          { once: true }
+        );
+      };
+      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+      if (document.readyState === "complete") idle(startLoad);
+      else window.addEventListener("load", () => idle(startLoad), { once: true });
+
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (!heroVideo.src) return;
+              if (e.isIntersecting) heroVideo.play().catch(() => {});
+              else heroVideo.pause();
+            });
+          },
+          { threshold: 0.1 }
+        );
+        io.observe(heroVideo);
+      }
+      document.addEventListener("visibilitychange", () => {
+        if (!heroVideo.src) return;
+        if (document.hidden) heroVideo.pause();
+        else heroVideo.play().catch(() => {});
+      });
+    }
+  }
+
   /* --- Mobile menu --- */
   if (header && burger) {
     burger.addEventListener("click", () => {
