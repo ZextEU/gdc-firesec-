@@ -511,15 +511,24 @@
 
   function openPreview(file) {
     const { modal } = overlay("Preview — " + (PAGES.find((p) => p.file === file) || {}).label + " · " + changeCount(file) + " highlighted change(s)");
-    const note = el("p", "adm-modal__note", "This is a private preview — nothing is live yet. Your edits are outlined in amber.");
+    const note = el("p", "adm-modal__note", "This is a private preview — nothing is live yet. Left: the site as it is now. Right: after your edits, outlined in amber.");
     modal.appendChild(note);
-    const frame = document.createElement("iframe");
-    frame.className = "adm-modal__frame";
-    frame.setAttribute("sandbox", "allow-same-origin");
-    let html = serialise(docs[file].doc);
-    html = html.replace("</head>", '<base href="/" /><style>[data-pixr-edited]{outline:3px dashed #F5A623 !important;outline-offset:3px;background:rgba(245,166,35,.12) !important;}</style></head>');
-    frame.srcdoc = html;
-    modal.appendChild(frame);
+    const wrap = el("div", "adm-compare");
+    const pane = (label, html, highlight) => {
+      const fig = el("figure", "adm-compare__pane");
+      fig.appendChild(el("figcaption", highlight ? "after" : "before", label));
+      const frame = document.createElement("iframe");
+      frame.className = "adm-modal__frame";
+      frame.setAttribute("sandbox", "allow-same-origin");
+      html = html.replace("</head>", '<base href="/" />' +
+        (highlight ? '<style>[data-pixr-edited]{outline:3px dashed #F5A623 !important;outline-offset:3px;background:rgba(245,166,35,.12) !important;}</style>' : "") + "</head>");
+      frame.srcdoc = html;
+      fig.appendChild(frame);
+      return fig;
+    };
+    wrap.appendChild(pane("Before — live now", docs[file].original, false));
+    wrap.appendChild(pane("After — with your edits", serialise(docs[file].doc), true));
+    modal.appendChild(wrap);
   }
 
   /* ---- publish confirmation: summary + required tick ---- */

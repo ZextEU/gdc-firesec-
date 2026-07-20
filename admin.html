@@ -111,6 +111,13 @@
     .adm-confirm input { margin-top: 3px; width: 17px; height: 17px; accent-color: var(--blue); }
     .adm-modal__actions { display: flex; gap: 10px; align-items: center; }
     .adm-modal__actions .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+    .adm-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 60vh; }
+    .adm-compare__pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; }
+    .adm-compare__pane figcaption { font-family: var(--font-head); font-weight: 700; font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; padding: 6px 2px 8px; }
+    .adm-compare__pane figcaption.before { color: var(--slate); }
+    .adm-compare__pane figcaption.after { color: #C8901A; }
+    .adm-compare .adm-modal__frame { min-height: 0; }
+    @media (max-width: 900px) { .adm-compare { grid-template-columns: 1fr; } .adm-compare .adm-modal__frame { min-height: 40vh; } }
     .hidden { display: none !important; }
   </style>
 </head>
