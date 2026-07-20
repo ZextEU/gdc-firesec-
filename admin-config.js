@@ -40,6 +40,13 @@ window.PIXRWEB_EDITOR = {
     { file: "project-mellon.html", label: "Case: Mellon Prope" },
     { file: "project-kme.html", label: "Case: KME Steel" },
     { file: "project-branniff.html", label: "Case: Branniff Joi" },
+    { file: "project-tobar-mhuire.html", label: "Case: Tobar Mhuire" },
+    { file: "project-wing-it.html", label: "Case: Wing It NI" },
+    { file: "project-applegreen.html", label: "Case: Applegreen N" },
+    { file: "project-blackline.html", label: "Case: Blackline Pe" },
+    { file: "project-diamond-complex.html", label: "Case: The Diamond " },
+    { file: "project-r-kings.html", label: "Case: R-Kings" },
+    { file: "project-branch-road.html", label: "Case: Branch Road " },
     { file: "contact.html", label: "Contact" },
   ],
 
