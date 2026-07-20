@@ -53,6 +53,24 @@
 
     if (allowed) {
       let started = false;
+      // iOS/Safari only honour muted autoplay when muted is set as a *property*
+      // (the HTML attribute alone is unreliable) and the element is inline.
+      heroVideo.muted = true;
+      heroVideo.setAttribute("muted", "");
+      heroVideo.playsInline = true;
+      // Reveal + play. The first play() after canplay is often rejected on iOS
+      // until the media is buffered a little more, so we retry on the later
+      // readiness events instead of giving up (which used to leave the poster
+      // showing until a scroll re-triggered play via the observer).
+      const tryPlay = () => {
+        heroVideo.muted = true;
+        const p = heroVideo.play();
+        if (p && typeof p.then === "function") {
+          p.then(() => heroVideo.classList.add("is-playing")).catch(() => {});
+        } else {
+          heroVideo.classList.add("is-playing");
+        }
+      };
       const startLoad = () => {
         if (started) return;
         started = true;
@@ -60,25 +78,29 @@
         // best format (WebM/VP9 where supported, MP4/H.264 fallback) and fetch.
         heroSources.forEach((s) => { s.src = s.dataset.src; });
         heroVideo.load();
-        heroVideo.addEventListener(
-          "canplay",
-          () => {
-            heroVideo.classList.add("is-playing");
-            heroVideo.play().catch(() => {});
-          },
-          { once: true }
+        // Keep attempting across every readiness milestone until one sticks.
+        ["loadeddata", "canplay", "canplaythrough"].forEach((ev) =>
+          heroVideo.addEventListener(ev, tryPlay)
+        );
+        heroVideo.addEventListener("playing", () =>
+          heroVideo.classList.add("is-playing")
         );
       };
-      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 800));
       if (document.readyState === "complete") idle(startLoad);
       else window.addEventListener("load", () => idle(startLoad), { once: true });
+      // A first touch/scroll counts as a user gesture — guarantees playback even
+      // where muted autoplay is blocked (e.g. iOS Low Power Mode).
+      ["touchstart", "scroll"].forEach((ev) =>
+        window.addEventListener(ev, () => { startLoad(); tryPlay(); }, { once: true, passive: true })
+      );
 
       if ("IntersectionObserver" in window) {
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
               if (!started) return;
-              if (e.isIntersecting) heroVideo.play().catch(() => {});
+              if (e.isIntersecting) tryPlay();
               else heroVideo.pause();
             });
           },
@@ -89,7 +111,7 @@
       document.addEventListener("visibilitychange", () => {
         if (!started) return;
         if (document.hidden) heroVideo.pause();
-        else heroVideo.play().catch(() => {});
+        else tryPlay();
       });
     }
   }
