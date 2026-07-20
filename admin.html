@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Site editor — GDC Fire &amp; Security</title>
+  <title>Pixrweb Site Editor</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -87,6 +87,12 @@
     .adm-status.err { color: #c0392b; font-weight: 600; }
     [data-theme="dark"] .adm-status.ok { color: #4ecb84; }
     [data-theme="dark"] .adm-status.err { color: #f1705f; }
+    .adm-toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .adm-search { flex: 1; min-width: 180px; padding: 8px 13px; border: 1.5px solid var(--line-2); border-radius: 999px; font-family: inherit; font-size: .9rem; background: var(--field-bg); color: var(--ink); }
+    .adm-search:focus { outline: none; border-color: var(--blue); }
+    .adm-count { display: block; margin-top: 4px; font-size: .76rem; color: var(--slate); }
+    .adm-count.over { color: #c0392b; font-weight: 600; }
+    .adm-photo.is-drop { outline: 2px dashed var(--blue); outline-offset: 3px; }
     .adm-powered { margin-top: 40px; text-align: center; font-size: .88rem; color: var(--slate); }
     .adm-powered a { display: inline-flex; align-items: center; gap: 7px; color: var(--slate); transition: color .2s; }
     .adm-powered img { height: 14px; width: auto; }
@@ -99,8 +105,8 @@
   <div class="adm-wrap">
     <div class="adm-top">
       <div>
-        <h1>GDC site editor</h1>
-        <p class="sub">Edit text, projects, FAQs &amp; photos — changes go live in about a minute.</p>
+        <h1><span id="siteName">Site</span> editor</h1>
+        <p class="sub">Change any text or photo — your edits go live in about a minute. Nothing you do here can break the site.</p>
       </div>
       <div class="adm-top__actions">
         <a class="adm-mini" href="/" target="_blank" rel="noopener">Open site ↗</a>
@@ -149,6 +155,7 @@
     </div>
   </div>
 
+  <script src="admin-config.js"></script>
   <script src="admin.js" defer></script>
 </body>
 </html>

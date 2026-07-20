@@ -102,7 +102,32 @@ The official **logo is integrated** and the brand blue is matched. Remaining:
 
 ---
 
-## 🛠 Client editing — `/admin`
+## 🛠 Client editing — `/admin` (Pixrweb Site Editor)
+
+The editor is now a **reusable Pixrweb product** in three files:
+
+| File | Role |
+|------|------|
+| `admin.html` | UI shell — identical on every site |
+| `admin.js`   | Engine — identical on every site |
+| `admin-config.js` | **Per-site config** — the only file you edit |
+
+### Adding the editor to any Pixrweb static site
+1. Copy `admin.html`, `admin.js` and `admin-config.js` into the site folder.
+2. Edit `admin-config.js`: `siteName`, `owner`/`repo`/`branch`/`base`,
+   the `pages` list, any add/removable `lists`, and the `editable` selector.
+3. Add `Disallow: /admin` to robots.txt. Done — `/admin` works.
+
+### Foolproof features
+- Search box to find any text on a page; SEO title/description length guides
+- Per-page **Discard changes** (restores the loaded version), unsaved-change
+  dots on tabs, leave-page warning
+- **View this page ↗** link per tab; drag-and-drop or click photo replacement
+  with automatic resize/compression
+- Plain-language errors (sign-in explains exactly what's wrong with a key)
+
+### Original notes
+
 
 The site ships with its own lightweight CMS at **`/admin`** (hidden — not linked
 anywhere, `noindex` + blocked in `robots.txt`). No server, no database: the

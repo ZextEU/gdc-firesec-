@@ -1,5 +1,6 @@
 /* =========================================================
-   GDC site editor
+   Pixrweb Site Editor — generic engine (same on every site;
+   per-site settings live in admin-config.js)
    Reads the live HTML pages from GitHub, presents the text as
    simple form fields (plus photo upload slots), and commits
    edits straight back to the repository — Vercel then
@@ -8,47 +9,23 @@
 (function () {
   "use strict";
 
-  /* ---- repository this editor writes to ---- */
-  const OWNER = "ZextEU";
-  const REPO = "Pixrweb";
-  const BRANCH = "main";
-  const BASE = "GDC/"; // site lives in this folder of the repo
+  /* ---- all per-site settings live in admin-config.js ---- */
+  const CFG = window.PIXRWEB_EDITOR || {};
+  const OWNER = CFG.owner, REPO = CFG.repo, BRANCH = CFG.branch || "main", BASE = CFG.base || "";
+  const PAGES = CFG.pages || [], LISTS = CFG.lists || [], EDITABLE = CFG.editable || "h1, h2, h3, p";
   const API = "https://api.github.com";
+  if (CFG.siteName) {
+    const t = document.getElementById("siteName");
+    if (t) t.textContent = CFG.siteName;
+  }
 
-  const PAGES = [
-    { file: "index.html", label: "Home" },
-    { file: "services.html", label: "Services" },
-    { file: "about.html", label: "About" },
-    { file: "projects.html", label: "Projects" },
-    { file: "sectors.html", label: "Sectors" },
-    { file: "news.html", label: "News" },
-    { file: "faq.html", label: "FAQs" },
-    { file: "contact.html", label: "Contact" },
-  ];
 
   /* Repeatable groups the client can add / remove items in.
      `insertBefore` keeps trailing chips (e.g. "…and everywhere
      in between") at the end when new items are added. */
-  const LISTS = [
-    { page: "index.html", selector: ".projects", item: "article.project", label: "Featured projects", name: "Project" },
-    { page: "index.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
-    { page: "index.html", selector: ".areas", item: "li", label: "Areas we cover", name: "Area", insertBefore: ".areas__more" },
-    { page: "projects.html", selector: ".projects", item: "article.project", label: "Project cards", name: "Project" },
-    { page: "projects.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
-    { page: "about.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
-    { page: "services.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
-    { page: "contact.html", selector: ".faq", item: "details", label: "FAQs", name: "FAQ" },
-    { page: "faq.html", selector: ".faq", item: "details", label: "FAQs", name: "FAQ" },
-    { page: "news.html", selector: ".projects", item: "article.project", label: "News posts", name: "Post" },
-  ];
 
   /* Elements whose text the client may edit (inside <main> only —
      nav, buttons and links stay hands-off so nothing can break). */
-  const EDITABLE =
-    "h1, h2, h3, summary, p, blockquote, figcaption, " +
-    ".project__tag, .project__scope li, .areas li, " +
-    ".svc-detail__list li, .split__list li, .hero__trust li, " +
-    ".hero__facts strong, .hero__facts span, .contact__details strong, .contact__details span.v";
 
   /* ---- state ---- */
   let token = "";
@@ -123,8 +100,10 @@
       for (const p of PAGES) {
         const data = await loadFile(BASE + p.file);
         if (!data) throw new Error(p.file + " not found");
+        const html = b64decode(data.content);
         docs[p.file] = {
-          doc: new DOMParser().parseFromString(b64decode(data.content), "text/html"),
+          doc: new DOMParser().parseFromString(html, "text/html"),
+          original: html,
           sha: data.sha,
           dirty: false,
         };
@@ -248,6 +227,41 @@
 
   function buildPagePanel(panel, file) {
     const doc = docs[file].doc;
+
+    /* toolbar: preview link · field search · discard */
+    const bar = el("div", "adm-toolbar");
+    const view = el("a", "adm-mini", "View this page ↗");
+    view.href = "/" + file.replace("index.html", "").replace(".html", "");
+    view.target = "_blank"; view.rel = "noopener";
+    bar.appendChild(view);
+    const search = document.createElement("input");
+    search.type = "search"; search.placeholder = "Find text on this page…"; search.className = "adm-search";
+    search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      panel.querySelectorAll(".adm-field").forEach((f) => {
+        const hit = !q || f.textContent.toLowerCase().includes(q) ||
+          (f.querySelector("input,textarea") || {}).value?.toLowerCase().includes(q);
+        f.style.display = hit ? "" : "none";
+      });
+      panel.querySelectorAll(".adm-group").forEach((g) => {
+        const any = [...g.querySelectorAll(".adm-field")].some((f) => f.style.display !== "none");
+        g.style.display = any ? "" : "none";
+      });
+    });
+    bar.appendChild(search);
+    const discard = el("button", "adm-mini adm-mini--danger", "Discard changes");
+    discard.type = "button";
+    discard.addEventListener("click", () => {
+      if (!docs[file].dirty) return setStatus(saveStatus, "Nothing to discard on this page.");
+      if (!confirm("Throw away your unsaved changes on this page?")) return;
+      docs[file].doc = new DOMParser().parseFromString(docs[file].original, "text/html");
+      docs[file].dirty = false;
+      refreshTabs();
+      setStatus(saveStatus, "Changes discarded — page restored.");
+      openTab(file);
+    });
+    bar.appendChild(discard);
+    panel.appendChild(bar);
     const lists = LISTS.filter((l) => l.page === file);
     const listContainers = lists.map((l) => doc.querySelector(l.selector)).filter(Boolean);
 
@@ -256,11 +270,14 @@
     seo.appendChild(el("h3", null, "Search result (SEO)"));
     const titleWrap = el("div", "adm-field");
     titleWrap.appendChild(el("label", null, "Browser / Google title"));
+    const tCount = el("small", "adm-count");
+    const tTick = () => { tCount.textContent = titleInput.value.length + " characters — aim for under 60"; tCount.classList.toggle("over", titleInput.value.length > 60); };
     const titleInput = document.createElement("input");
     titleInput.type = "text";
     titleInput.value = doc.title;
-    titleInput.addEventListener("input", () => { doc.title = titleInput.value; markDirty(file); });
+    titleInput.addEventListener("input", () => { doc.title = titleInput.value; markDirty(file); tTick(); });
     titleWrap.appendChild(titleInput);
+    titleWrap.appendChild(tCount); tTick();
     seo.appendChild(titleWrap);
     const metaDesc = doc.querySelector('meta[name="description"]');
     if (metaDesc) {
@@ -268,8 +285,11 @@
       dWrap.appendChild(el("label", null, "Google description"));
       const dInput = document.createElement("textarea");
       dInput.value = metaDesc.getAttribute("content") || "";
-      dInput.addEventListener("input", () => { metaDesc.setAttribute("content", dInput.value); markDirty(file); });
+      const dCount = el("small", "adm-count");
+      const dTick = () => { dCount.textContent = dInput.value.length + " characters — aim for 120–160"; dCount.classList.toggle("over", dInput.value.length > 160); };
+      dInput.addEventListener("input", () => { metaDesc.setAttribute("content", dInput.value); markDirty(file); dTick(); });
       dWrap.appendChild(dInput);
+      dWrap.appendChild(dCount); dTick();
       seo.appendChild(dWrap);
     }
     panel.appendChild(seo);
@@ -394,6 +414,12 @@
       btn.appendChild(fileInput);
       meta.appendChild(btn);
       card.appendChild(meta);
+      ["dragover", "dragleave", "drop"].forEach((ev) =>
+        card.addEventListener(ev, (e) => {
+          e.preventDefault();
+          card.classList.toggle("is-drop", ev === "dragover");
+          if (ev === "drop" && e.dataTransfer.files[0]) uploadPhoto(e.dataTransfer.files[0], src, img, ph, btn);
+        }));
       grid.appendChild(card);
     }
     panel.appendChild(grid);
