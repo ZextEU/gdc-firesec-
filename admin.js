@@ -491,12 +491,22 @@
   function setPay(msg, kind) { const n = $("#payStatus"); if (n) { n.textContent = msg; n.className = "adm-status" + (kind ? " " + kind : ""); } }
   function setPaywallText() {
     $("#payName").textContent = SITE;
-    if (ACCESS.priceLabel) { $("#payPrice").textContent = ACCESS.priceLabel; $("#subPrice").textContent = ACCESS.priceLabel; }
+    if (ACCESS.priceLabel) $("#payPrice").textContent = ACCESS.priceLabel;
     if (ACCESS.blurb) $("#payBlurb").textContent = ACCESS.blurb;
-    const sub = $("#subscribeBtn");
-    const linkReady = ACCESS.subscribeUrl && !/YOUR_PAYMENT_LINK/.test(ACCESS.subscribeUrl);
-    if (linkReady) sub.href = ACCESS.subscribeUrl;
-    else sub.addEventListener("click", (e) => { e.preventDefault(); setPay("Payment isn't switched on yet — please contact Pixrweb for your unlock code.", "err"); });
+    const mount = $("#subscribeMount");
+    const st = ACCESS.stripe || {};
+    if (st.buyButtonId && st.publishableKey && !/YOUR_/.test(st.buyButtonId)) {
+      const bb = document.createElement("stripe-buy-button");
+      bb.setAttribute("buy-button-id", st.buyButtonId);
+      bb.setAttribute("publishable-key", st.publishableKey);
+      mount.appendChild(bb);
+    } else if (ACCESS.subscribeUrl && !/YOUR_/.test(ACCESS.subscribeUrl)) {
+      const a = eln("a", "adm-btn adm-btn--primary", "Subscribe & unlock — " + (ACCESS.priceLabel || ""));
+      a.href = ACCESS.subscribeUrl; a.target = "_blank"; a.rel = "noopener";
+      a.style.cssText = "width:100%;justify-content:center;text-decoration:none"; mount.appendChild(a);
+    } else {
+      mount.appendChild(eln("p", "adm-status err", "Payment isn't switched on yet — please contact Pixrweb for your unlock code."));
+    }
   }
   async function tryUnlock() {
     const code = ($("#codeInput").value || "").trim();

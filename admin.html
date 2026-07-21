@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
   <script>
     (function () { try {
       var t = localStorage.getItem("gdc-theme") ||
@@ -157,7 +158,7 @@
           <li>🛟 You can't break anything — undo &amp; preview built in</li>
           <li>♾️ Unlimited changes, whenever you like</li>
         </ul>
-        <a class="adm-btn adm-btn--primary" id="subscribeBtn" href="#" target="_blank" rel="noopener" style="width:100%;justify-content:center;text-decoration:none">Subscribe &amp; unlock — <span id="subPrice">£40 / month</span></a>
+        <div id="subscribeMount" style="min-height:44px"></div>
         <div class="adm-field" style="margin-top:20px">
           <label for="codeInput">Already subscribed, or have a Pixrweb unlock code?</label>
           <div class="adm-keyrow">

@@ -81,8 +81,11 @@ window.PIXRWEB_EDITOR = {
     enabled: true,
     priceLabel: "£40 / month",
     blurb: "Unlock the website editor to change your own text and photos anytime, as often as you like.",
-    // Your Stripe Payment Link (Recurring, £40/month). Replace this:
-    subscribeUrl: "https://buy.stripe.com/YOUR_PAYMENT_LINK",
+    // Stripe Buy Button (publishable key + button id are safe to be public):
+    stripe: {
+      buyButtonId: "buy_btn_1TvjcRKRT809tSnE8DpzwehM",
+      publishableKey: "pk_live_51KnSxCKRT809tSnEx4JAmKAxUNT4QRNXEhB98ffN6jz9YNp1nA7oioRbpvc6WfxJ3I9M75jsaEUrfpvARczlzVAB00Gq8OCjJk",
+    },
     // SHA-256 hashes of accepted unlock codes:
     unlockHashes: [
       "349084cdbb3e9f3d0e21f2cad3fb48f662921ef0461124848a3dffabafdeaaf5", // Pixrweb override (change me)
