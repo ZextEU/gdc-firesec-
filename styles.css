@@ -911,9 +911,14 @@ a.project { cursor: pointer; }
           mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .clients-track { display: flex; gap: 18px; width: max-content; animation: clients-scroll 46s linear infinite; }
 .clients-carousel:hover .clients-track { animation-play-state: paused; }
-.client-logo { flex: none; display: grid; place-items: center; height: 96px; width: 210px;
-  background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow-sm);
-  font-family: var(--font-head); font-weight: 700; font-size: 1.02rem; color: var(--navy); text-align: center; line-height: 1.15; }
+.client-logo { flex: none; display: grid; place-items: center; height: 112px; width: 216px;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 22px; box-shadow: var(--shadow-sm);
+  transition: transform .2s var(--ease), box-shadow .2s; }
+.client-logo:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.client-logo__name { font-family: var(--font-head); font-weight: 700; font-size: 1.04rem; color: var(--navy);
+  text-align: center; line-height: 1.14; letter-spacing: .01em; }
+.client-logo__name::after { content: ""; display: block; width: 26px; height: 3px; border-radius: 2px;
+  background: var(--gold); margin: 9px auto 0; }
 .client-logo img { max-height: 100%; max-width: 100%; object-fit: contain; }
 @keyframes clients-scroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 9px)); } }
 @media (prefers-reduced-motion: reduce) { .clients-track { animation: none; flex-wrap: wrap; justify-content: center; } }
