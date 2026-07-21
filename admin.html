@@ -47,6 +47,7 @@
     .adm-help summary { cursor: pointer; font-weight: 600; color: var(--blue); font-size: .92rem; }
     [data-theme="dark"] .adm-help summary { color: var(--blue-300); }
     .adm-help ol { margin: 12px 0 0 20px; color: var(--slate); font-size: .9rem; display: grid; gap: 6px; }
+    .adm-help p { margin: 12px 0 0; color: var(--slate); font-size: .9rem; line-height: 1.5; }
     .adm-help a { color: var(--blue); text-decoration: underline; }
     .adm-status { font-size: .92rem; color: var(--slate); min-height: 1.2em; margin-top: 12px; line-height: 1.4; }
     .adm-status.ok { color: #1f8a4c; font-weight: 600; }
@@ -207,13 +208,7 @@
         <p class="adm-status" id="loginStatus" role="status"></p>
         <details class="adm-help">
           <summary>Where do I get an access key?</summary>
-          <ol>
-            <li><strong>Easiest:</strong> ask Pixrweb and we'll set one up for you and send it over.</li>
-            <li>Or, in GitHub: <em>Settings → Developer settings → Fine-grained tokens → Generate new token</em>.</li>
-            <li>Resource owner: your website's account. Repository access: <strong>Only select repositories</strong> → the website repo.</li>
-            <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong>. Nothing else.</li>
-            <li>Generate, copy the key, paste it above.</li>
-          </ol>
+          <p>Ask the Pixrweb admin team for your key, or check your email — we'll have sent it to you.</p>
         </details>
       </div>
       <p class="adm-powered">
