@@ -954,3 +954,18 @@ a.project { cursor: pointer; }
 .accreds-strip:hover .accreds-track { animation-play-state: paused; }
 .accreds-track img { height: 62px; width: auto; object-fit: contain; flex: none; }
 @media (prefers-reduced-motion: reduce) { .accreds-track { animation: none; flex-wrap: wrap; justify-content: center; } }
+
+/* Sectors page — icon-led rows, no bubble cards or pill links */
+.sectors-detailed { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 48px; }
+.sector-detail { display: flex; gap: 18px; padding: 28px 0; border-top: 1px solid var(--line); }
+.sector-detail__ico { flex: none; width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; background: var(--blue-50); color: var(--blue); }
+[data-theme="dark"] .sector-detail__ico { background: rgba(255,255,255,.06); color: var(--blue-300); }
+.sector-detail__ico svg { width: 28px; height: 28px; }
+.sector-detail__body { min-width: 0; }
+.sector-detail h3 { font-size: 1.22rem; margin: 3px 0 8px; }
+.sector-detail p { color: var(--slate); font-size: .95rem; margin: 0 0 12px; }
+.sector-detail .sector-links { border-top: 0; margin-top: 0; padding-top: 0; gap: 6px 18px; }
+.sector-detail .sector-links a { background: none; padding: 0; border-radius: 0; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.sector-detail .sector-links a:hover { background: none; color: var(--navy); }
+[data-theme="dark"] .sector-detail .sector-links a:hover { color: #fff; }
+@media (max-width: 760px) { .sectors-detailed { grid-template-columns: 1fr; } }
