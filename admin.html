@@ -144,8 +144,50 @@
 </head>
 <body>
 
+  <!-- ============ PAYWALL (paid add-on gate) ============ -->
+  <div class="adm-signin" id="paywall" style="display:none">
+    <div>
+      <div class="adm-card">
+        <div class="brandrow"><img src="assets/logo/gdc-mark.png" alt="" /><strong id="payName">Your</strong></div>
+        <h2>Website editor <span id="payPrice" style="color:var(--blue);font-size:1rem">£40 / month</span></h2>
+        <p id="payBlurb">Unlock the website editor to change your own text and photos anytime, as often as you like.</p>
+        <ul style="list-style:none;display:grid;gap:9px;margin:0 0 20px;font-size:.93rem;color:var(--ink)">
+          <li>✏️ Edit any text and swap any photo yourself</li>
+          <li>🚀 Changes go live in about a minute</li>
+          <li>🛟 You can't break anything — undo &amp; preview built in</li>
+          <li>♾️ Unlimited changes, whenever you like</li>
+        </ul>
+        <a class="adm-btn adm-btn--primary" id="subscribeBtn" href="#" target="_blank" rel="noopener" style="width:100%;justify-content:center;text-decoration:none">Subscribe &amp; unlock — <span id="subPrice">£40 / month</span></a>
+        <div class="adm-field" style="margin-top:20px">
+          <label for="codeInput">Already subscribed, or have a Pixrweb unlock code?</label>
+          <div class="adm-keyrow">
+            <input type="text" id="codeInput" autocomplete="off" placeholder="Enter unlock code" />
+            <button class="adm-btn" id="unlockBtn" type="button">Unlock</button>
+          </div>
+        </div>
+        <p class="adm-status" id="payStatus" role="status"></p>
+        <p style="font-size:.82rem;color:var(--slate);margin-top:10px">After subscribing we'll email you your unlock code. Questions? <a href="https://pixrweb.com" target="_blank" rel="noopener" style="color:var(--blue)">Contact Pixrweb</a>.</p>
+      </div>
+      <p class="adm-powered">
+        <a href="https://pixrweb.com" target="_blank" rel="noopener noreferrer">Powered by
+          <img src="assets/logo/pixrweb-mark.png" alt="" width="17" height="14" /> <strong>Pixrweb</strong></a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ============ CODE HASH HELPER (/admin?codes) ============ -->
+  <div class="adm-signin" id="codegen" style="display:none">
+    <div class="adm-card">
+      <div class="brandrow"><img src="assets/logo/pixrweb-mark.png" alt="" /><strong>Pixrweb — unlock-code tool</strong></div>
+      <h2>Generate an unlock-code hash</h2>
+      <p>Type a code, copy its hash into <code>admin-config.js</code> → <code>access.unlockHashes</code>. Never store the plain code in the site.</p>
+      <div class="adm-field"><label for="genInput">New unlock code</label><input type="text" id="genInput" autocomplete="off" placeholder="e.g. a long random code" /></div>
+      <div class="adm-field"><label for="genOut">SHA-256 hash (paste into config)</label><input type="text" id="genOut" readonly onclick="this.select()" placeholder="hash appears here" /></div>
+    </div>
+  </div>
+
   <!-- ============ SIGN IN ============ -->
-  <div class="adm-signin" id="signin">
+  <div class="adm-signin" id="signin" style="display:none">
     <div>
       <div class="adm-card">
         <div class="brandrow"><img src="assets/logo/gdc-mark.png" alt="" /><strong id="siteName">Your</strong></div>

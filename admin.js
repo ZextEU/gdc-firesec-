@@ -472,7 +472,60 @@
     root.appendChild(card); document.body.appendChild(root);
   }
 
-  /* ---------- auto sign-in ---------- */
-  let saved = ""; try { saved = localStorage.getItem(TKEY) || ""; } catch (e) {}
-  if (saved) { $("#tokenInput").value = saved; signIn(saved, true); }
+  /* ---------- paid add-on gate ---------- */
+  const ACCESS = CFG.access || {};
+  const UKEY = "pixr-unlock";
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  function showOnly(id) {
+    ["paywall", "signin", "codegen"].forEach((x) => { const n = $("#" + x); if (n) n.style.display = x === id ? "" : "none"; });
+    $("#app").classList.remove("on");
+  }
+  function isUnlocked() {
+    if (!ACCESS.enabled) return true;
+    let s = ""; try { s = localStorage.getItem(UKEY) || ""; } catch (e) {}
+    return !!s && (ACCESS.unlockHashes || []).includes(s);
+  }
+  function setPay(msg, kind) { const n = $("#payStatus"); if (n) { n.textContent = msg; n.className = "adm-status" + (kind ? " " + kind : ""); } }
+  function setPaywallText() {
+    $("#payName").textContent = SITE;
+    if (ACCESS.priceLabel) { $("#payPrice").textContent = ACCESS.priceLabel; $("#subPrice").textContent = ACCESS.priceLabel; }
+    if (ACCESS.blurb) $("#payBlurb").textContent = ACCESS.blurb;
+    const sub = $("#subscribeBtn");
+    const linkReady = ACCESS.subscribeUrl && !/YOUR_PAYMENT_LINK/.test(ACCESS.subscribeUrl);
+    if (linkReady) sub.href = ACCESS.subscribeUrl;
+    else sub.addEventListener("click", (e) => { e.preventDefault(); setPay("Payment isn't switched on yet — please contact Pixrweb for your unlock code.", "err"); });
+  }
+  async function tryUnlock() {
+    const code = ($("#codeInput").value || "").trim();
+    if (!code) return setPay("Enter your unlock code.", "err");
+    setPay("Checking…");
+    let hash; try { hash = await sha256(code); } catch (e) { return setPay("This browser can't verify the code — make sure you're on the https version of the site.", "err"); }
+    if ((ACCESS.unlockHashes || []).includes(hash)) {
+      try { localStorage.setItem(UKEY, hash); } catch (e) {}
+      setPay("Unlocked!", "ok"); startSignin();
+    } else setPay("That code isn't right. Check it, or contact Pixrweb.", "err");
+  }
+  function startSignin() {
+    showOnly("signin");
+    let saved = ""; try { saved = localStorage.getItem(TKEY) || ""; } catch (e) {}
+    if (saved) { $("#tokenInput").value = saved; signIn(saved, true); }
+  }
+
+  /* ---------- boot: code helper → gate → sign-in ---------- */
+  (function boot() {
+    if (/[?&]codes(\b|=)/.test(location.search)) {
+      showOnly("codegen");
+      const gi = $("#genInput"), go = $("#genOut");
+      gi.addEventListener("input", async () => { go.value = gi.value ? await sha256(gi.value) : ""; });
+      return;
+    }
+    if (isUnlocked()) return startSignin();
+    setPaywallText();
+    showOnly("paywall");
+    $("#unlockBtn").addEventListener("click", tryUnlock);
+    $("#codeInput").addEventListener("keydown", (e) => { if (e.key === "Enter") tryUnlock(); });
+  })();
 })();

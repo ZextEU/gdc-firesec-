@@ -67,4 +67,26 @@ window.PIXRWEB_EDITOR = {
     ".project__tag, .project__scope li, .areas li, " +
     ".svc-detail__list li, .split__list li, .hero__trust li, " +
     ".hero__facts strong, .hero__facts span, .contact__details strong, .contact__details span.v",
+
+  /* -----------------------------------------------------------------
+     Paid add-on gate. The editor is a £40/month option — clients must
+     subscribe (Stripe) to unlock, or enter an unlock code Pixrweb
+     issues after payment. The Pixrweb override code always works.
+
+     Codes are stored as SHA-256 hashes (never plain text). Remove a
+     client's hash below to re-lock them; the override stays.
+     To add/change a code: open /admin?codes to hash a new one.
+     ----------------------------------------------------------------- */
+  access: {
+    enabled: true,
+    priceLabel: "£40 / month",
+    blurb: "Unlock the website editor to change your own text and photos anytime, as often as you like.",
+    // Your Stripe Payment Link (Recurring, £40/month). Replace this:
+    subscribeUrl: "https://buy.stripe.com/YOUR_PAYMENT_LINK",
+    // SHA-256 hashes of accepted unlock codes:
+    unlockHashes: [
+      "349084cdbb3e9f3d0e21f2cad3fb48f662921ef0461124848a3dffabafdeaaf5", // Pixrweb override (change me)
+      "bfc3461ac0f1c8f57863c4d43e854ff89d92805585c641a4a4e9461bee7cc569", // GDC client unlock code
+    ],
+  },
 };
