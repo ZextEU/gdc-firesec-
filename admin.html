@@ -24,7 +24,8 @@
     body { overflow: hidden; }
 
     /* ---------- sign-in ---------- */
-    .adm-signin { min-height: 100dvh; display: grid; place-items: center; padding: 20px; overflow: auto; }
+    .adm-signin { min-height: 100dvh; display: flex; padding: 20px; overflow: auto; }
+    .adm-signin > * { margin: auto; width: min(460px, 100%); }
     .adm-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); width: min(460px, 100%); }
     .adm-card .brandrow { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
     .adm-card .brandrow img { height: 40px; width: auto; }
