@@ -51,11 +51,10 @@ window.PIXRWEB_EDITOR = {
   ],
 
   lists: [
-    { page: "index.html", selector: ".projects", item: "article.project", label: "Featured projects", name: "Project" },
-    { page: "index.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
+    { page: "index.html", selector: ".projects", item: "a.project", label: "Featured projects", name: "Project" },
+    { page: "index.html", selector: ".reviews-carousel", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "index.html", selector: ".areas", item: "li", label: "Areas we cover", name: "Area", insertBefore: ".areas__more" },
-    { page: "projects.html", selector: ".projects", item: "article.project", label: "Project cards", name: "Project" },
-    { page: "projects.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
+    { page: "projects.html", selector: ".pgrid", item: "a.pcard", label: "Project cards", name: "Project" },
     { page: "about.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "services.html", selector: ".reviews", item: "figure.review", label: "Testimonials", name: "Testimonial" },
     { page: "contact.html", selector: ".faq", item: "details", label: "FAQs", name: "FAQ" },

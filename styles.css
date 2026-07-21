@@ -969,3 +969,24 @@ a.project { cursor: pointer; }
 .sector-detail .sector-links a:hover { background: none; color: var(--navy); }
 [data-theme="dark"] .sector-detail .sector-links a:hover { color: #fff; }
 @media (max-width: 760px) { .sectors-detailed { grid-template-columns: 1fr; } }
+
+/* ============ Projects listing — streamlined cards, hover to click in ============ */
+.pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.pcard { display: block; text-decoration: none; color: inherit; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s, border-color .2s; }
+.pcard:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-2); }
+.pcard__media { position: relative; aspect-ratio: 3 / 2; }
+.pcard .ph-img { transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.pcard:hover .ph-img.is-loaded { transform: scale(1.05); }
+.pcard__overlay { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center;
+  background: linear-gradient(0deg, rgba(10,37,64,.74), rgba(10,37,64,.28)); opacity: 0; transition: opacity .25s var(--ease); }
+.pcard:hover .pcard__overlay, .pcard:focus-visible .pcard__overlay { opacity: 1; }
+.pcard__overlay span { font-family: var(--font-head); font-weight: 700; color: #fff; font-size: 1rem;
+  display: inline-flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,.9); border-radius: 999px; padding: 11px 22px; }
+.pcard__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 22px; }
+.pcard__bar h3 { font-size: 1.12rem; margin: 0; }
+.pcard__arrow { color: var(--blue); flex: none; transition: transform .2s var(--ease); }
+[data-theme="dark"] .pcard__arrow { color: var(--blue-300); }
+.pcard:hover .pcard__arrow { transform: translateX(4px); }
+.pcard__arrow svg { width: 20px; height: 20px; display: block; }
+@media (max-width: 900px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .pgrid { grid-template-columns: 1fr; } }
