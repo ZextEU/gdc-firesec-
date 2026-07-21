@@ -893,3 +893,64 @@ a.project { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto; }
 }
+
+/* ============================================================
+   Homepage rework — motto, XL CTA, carousels, sector list
+   ============================================================ */
+
+/* Hero motto / tagline — prominent, not a tiny eyebrow */
+.hero__motto { font-family: var(--font-head); font-weight: 600; font-style: italic; font-size: clamp(1.4rem, 3.4vw, 2.05rem); line-height: 1.15; color: var(--gold); margin: 2px 0 18px; letter-spacing: .01em; }
+
+/* Larger single contact CTA */
+.btn--xl { padding: 20px 42px; font-size: 1.14rem; border-radius: 14px; }
+@media (max-width: 560px) { .btn--xl { width: 100%; justify-content: center; padding: 17px 18px; font-size: 1rem; } }
+
+/* --- Clients carousel: continuous auto-scroll marquee --- */
+.clients-carousel { position: relative; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+.clients-track { display: flex; gap: 18px; width: max-content; animation: clients-scroll 46s linear infinite; }
+.clients-carousel:hover .clients-track { animation-play-state: paused; }
+.client-logo { flex: none; display: grid; place-items: center; height: 96px; width: 210px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow-sm);
+  font-family: var(--font-head); font-weight: 700; font-size: 1.02rem; color: var(--navy); text-align: center; line-height: 1.15; }
+.client-logo img { max-height: 100%; max-width: 100%; object-fit: contain; }
+@keyframes clients-scroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 9px)); } }
+@media (prefers-reduced-motion: reduce) { .clients-track { animation: none; flex-wrap: wrap; justify-content: center; } }
+
+/* --- Testimonials carousel: swipeable scroll-snap track + arrows --- */
+.reviews-carousel { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 4px 2px 14px; scrollbar-width: none; scroll-behavior: smooth; }
+.reviews-carousel::-webkit-scrollbar { display: none; }
+.reviews-carousel .review { flex: 0 0 min(430px, 84%); scroll-snap-align: center; margin: 0; }
+.carousel-nav { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+.carousel-nav button { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line-2);
+  background: var(--surface); color: var(--head); display: grid; place-items: center; cursor: pointer;
+  transition: background .2s, transform .2s, border-color .2s; }
+.carousel-nav button:hover { background: var(--blue-50); border-color: var(--blue); transform: translateY(-2px); }
+.carousel-nav svg { width: 20px; height: 20px; }
+
+/* --- Sectors list view (Specialised-style rows) --- */
+.sectors-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; margin-top: 8px; }
+.sector-row { display: flex; align-items: center; gap: 18px; padding: 22px 4px; border-top: 1px solid var(--line); text-decoration: none; color: inherit; transition: padding-left .2s var(--ease); }
+.sector-row:hover { padding-left: 12px; }
+.sector-row__ico { flex: none; width: 52px; height: 52px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--blue-50); color: var(--blue); }
+[data-theme="dark"] .sector-row__ico { background: rgba(255,255,255,.06); color: var(--blue-300); }
+.sector-row__ico svg { width: 26px; height: 26px; }
+.sector-row__body { flex: 1; min-width: 0; }
+.sector-row__body h3 { font-size: 1.18rem; margin: 0 0 3px; }
+.sector-row__body p { color: var(--slate); font-size: .93rem; margin: 0; }
+.sector-row__arrow { flex: none; color: var(--blue); opacity: 0; transform: translateX(-6px); transition: opacity .2s, transform .2s; }
+.sector-row:hover .sector-row__arrow { opacity: 1; transform: translateX(0); }
+.sector-row__arrow svg { width: 22px; height: 22px; }
+@media (max-width: 760px) { .sectors-list { grid-template-columns: 1fr; gap: 0; } }
+
+/* --- Accreditations strip (no rounded boxes) — one clean band, marquee --- */
+.accreds-strip { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 26px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.accreds-track { display: flex; align-items: center; gap: 56px; width: max-content; animation: clients-scroll 38s linear infinite; padding: 0 28px; }
+.accreds-strip:hover .accreds-track { animation-play-state: paused; }
+.accreds-track img { height: 62px; width: auto; object-fit: contain; flex: none; }
+@media (prefers-reduced-motion: reduce) { .accreds-track { animation: none; flex-wrap: wrap; justify-content: center; } }

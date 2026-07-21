@@ -419,4 +419,18 @@
       }
     });
   }
+
+  /* --- Testimonials / generic carousel arrows --- */
+  document.querySelectorAll("[data-carousel]").forEach((track) => {
+    const scope = track.closest("section") || document;
+    const prev = scope.querySelector("[data-carousel-prev]");
+    const next = scope.querySelector("[data-carousel-next]");
+    const step = () => {
+      const card = track.querySelector(":scope > *");
+      const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 20;
+      return card ? card.getBoundingClientRect().width + gap : track.clientWidth * 0.8;
+    };
+    if (prev) prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+    if (next) next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+  });
 })();
