@@ -990,3 +990,12 @@ a.project { cursor: pointer; }
 .pcard__arrow svg { width: 20px; height: 20px; display: block; }
 @media (max-width: 900px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .pgrid { grid-template-columns: 1fr; } }
+
+/* ============ Case study — two feature photos + photo grid ============ */
+.cs-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.cs-duo .ph-wrap { aspect-ratio: 4 / 3; }
+.cs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.cs-grid .ph-wrap { aspect-ratio: 4 / 3; }
+@media (max-width: 760px) { .cs-duo { grid-template-columns: 1fr; } .cs-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.split--top { align-items: start; }
