@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Pixrweb Site Editor</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script>
-    /* Apply saved/system theme before first paint to avoid a flash */
     (function () { try {
       var t = localStorage.getItem("gdc-theme") ||
         (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
@@ -19,161 +18,200 @@
     } catch (e) {} })();
   </script>
   <style>
-    /* ---- editor-only styles (built on the site's design tokens) ---- */
-    .adm-wrap { max-width: 880px; margin: 0 auto; padding: 32px 24px 96px; }
-    .adm-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
-    .adm-top h1 { font-size: 1.6rem; }
-    .adm-top .sub { color: var(--slate); font-size: .94rem; margin-top: 2px; }
-    .adm-top__actions { display: flex; gap: 10px; }
+    :root { --adm-amber: #F5A623; --adm-bar-h: 60px; }
+    html, body { height: 100%; }
+    body { overflow: hidden; }
 
-    .adm-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); }
-    .adm-card h2 { font-size: 1.25rem; margin-bottom: 6px; }
+    /* ---------- sign-in ---------- */
+    .adm-signin { min-height: 100dvh; display: grid; place-items: center; padding: 20px; overflow: auto; }
+    .adm-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); width: min(460px, 100%); }
+    .adm-card .brandrow { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+    .adm-card .brandrow img { height: 40px; width: auto; }
+    .adm-card .brandrow strong { font-family: var(--font-head); font-weight: 800; font-size: 1.15rem; color: var(--head); }
+    .adm-card h2 { font-size: 1.35rem; margin-bottom: 6px; }
     .adm-card > p { color: var(--slate); font-size: .95rem; margin-bottom: 18px; }
+    .adm-field { margin-bottom: 14px; }
+    .adm-field label { display: block; font-size: .8rem; font-weight: 600; color: var(--slate); margin-bottom: 5px; }
+    .adm-keyrow { display: flex; gap: 8px; }
+    .adm-field input[type="text"], .adm-field input[type="password"], .adm-field textarea {
+      width: 100%; padding: 11px 13px; border: 1.5px solid var(--line-2); border-radius: 9px;
+      font-family: inherit; font-size: .95rem; background: var(--field-bg); color: var(--ink);
+    }
+    .adm-field input:focus, .adm-field textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,92,171,.15); }
+    .adm-eye { flex: none; border: 1.5px solid var(--line-2); background: var(--surface); border-radius: 9px; padding: 0 13px; cursor: pointer; color: var(--slate); font-size: .82rem; font-weight: 600; }
+    .adm-remember { display: flex; align-items: center; gap: 8px; font-size: .88rem; color: var(--slate); margin: 4px 0 16px; cursor: pointer; }
+    .adm-remember input { width: 17px; height: 17px; accent-color: var(--blue); }
     .adm-help { margin-top: 18px; }
     .adm-help summary { cursor: pointer; font-weight: 600; color: var(--blue); font-size: .92rem; }
     [data-theme="dark"] .adm-help summary { color: var(--blue-300); }
-    .adm-help ol { margin: 12px 0 0 20px; color: var(--slate); font-size: .92rem; display: grid; gap: 6px; }
+    .adm-help ol { margin: 12px 0 0 20px; color: var(--slate); font-size: .9rem; display: grid; gap: 6px; }
     .adm-help a { color: var(--blue); text-decoration: underline; }
-
-    .adm-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 26px 0 18px; }
-    .adm-tab {
-      font-family: var(--font-head); font-weight: 600; font-size: .92rem; color: var(--head);
-      background: var(--surface); border: 1.5px solid var(--line-2); border-radius: 999px;
-      padding: 8px 18px; cursor: pointer; transition: border-color .2s, color .2s, background .2s;
-    }
-    .adm-tab:hover { border-color: var(--blue); color: var(--blue); }
-    .adm-tab.is-active { background: var(--blue); border-color: var(--blue); color: #fff; }
-    .adm-tab .dot { display: none; margin-left: 6px; }
-    .adm-tab.is-dirty .dot { display: inline; color: #F5A623; }
-    .adm-tab.is-active.is-dirty .dot { color: #fff; }
-
-    .adm-group { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 16px; }
-    .adm-group > h3 { font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; }
-    [data-theme="dark"] .adm-group > h3 { color: var(--blue-300); }
-    .adm-field { margin-bottom: 14px; }
-    .adm-field:last-child { margin-bottom: 0; }
-    .adm-field label { display: block; font-size: .8rem; font-weight: 600; color: var(--slate); margin-bottom: 5px; }
-    .adm-field input[type="text"], .adm-field textarea {
-      width: 100%; padding: 10px 13px; border: 1.5px solid var(--line-2); border-radius: 8px;
-      font-family: inherit; font-size: .95rem; background: var(--field-bg); color: var(--ink);
-      transition: border-color .15s, box-shadow .15s;
-    }
-    .adm-field input:focus, .adm-field textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,92,171,.15); }
-    .adm-field textarea { resize: vertical; min-height: 74px; }
-
-    .adm-item { border: 1px dashed var(--line-2); border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 12px; position: relative; }
-    .adm-item__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .adm-item__bar strong { font-family: var(--font-head); font-size: .9rem; color: var(--head); }
-    .adm-mini { font-family: var(--font-head); font-weight: 600; font-size: .82rem; padding: 6px 13px; border-radius: 999px; border: 1.5px solid var(--line-2); background: var(--surface); color: var(--head); cursor: pointer; transition: border-color .2s, color .2s; }
-    .adm-mini:hover { border-color: var(--blue); color: var(--blue); }
-    .adm-mini--danger:hover { border-color: #c0392b; color: #c0392b; }
-
-    .adm-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
-    .adm-photo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
-    .adm-photo .ph { aspect-ratio: 3/2; background: linear-gradient(160deg, var(--navy), var(--blue-700)); position: relative; }
-    .adm-photo .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .adm-photo .meta { padding: 12px 14px 14px; }
-    .adm-photo .meta code { font-size: .78rem; color: var(--slate); display: block; margin-bottom: 3px; word-break: break-all; }
-    .adm-photo .meta small { color: var(--slate); display: block; margin-bottom: 10px; }
-    .adm-photo .adm-mini { width: 100%; text-align: center; display: inline-block; }
-
-    .adm-savebar {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-      background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgba(10,37,64,.08);
-    }
-    .adm-savebar__inner { max-width: 880px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .adm-status { font-size: .92rem; color: var(--slate); min-height: 1.2em; }
+    .adm-status { font-size: .92rem; color: var(--slate); min-height: 1.2em; margin-top: 12px; line-height: 1.4; }
     .adm-status.ok { color: #1f8a4c; font-weight: 600; }
     .adm-status.err { color: #c0392b; font-weight: 600; }
     [data-theme="dark"] .adm-status.ok { color: #4ecb84; }
     [data-theme="dark"] .adm-status.err { color: #f1705f; }
-    .adm-toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-    .adm-search { flex: 1; min-width: 180px; padding: 8px 13px; border: 1.5px solid var(--line-2); border-radius: 999px; font-family: inherit; font-size: .9rem; background: var(--field-bg); color: var(--ink); }
-    .adm-search:focus { outline: none; border-color: var(--blue); }
-    .adm-count { display: block; margin-top: 4px; font-size: .76rem; color: var(--slate); }
-    .adm-count.over { color: #c0392b; font-weight: 600; }
-    .adm-photo.is-drop { outline: 2px dashed var(--blue); outline-offset: 3px; }
-    .adm-powered { margin-top: 40px; text-align: center; font-size: .88rem; color: var(--slate); }
-    .adm-powered a { display: inline-flex; align-items: center; gap: 7px; color: var(--slate); transition: color .2s; }
-    .adm-powered img { height: 14px; width: auto; }
-    .adm-powered strong { font-family: var(--font-head); color: var(--head); }
-    .adm-powered a:hover, .adm-powered a:hover strong { color: var(--blue); }
-    .adm-mini--accent { border-color: var(--blue); color: var(--blue); }
-    .adm-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(7,18,32,.62); display: grid; place-items: center; padding: 18px; }
-    .adm-modal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: min(1100px, 100%); max-height: calc(100vh - 36px); display: flex; flex-direction: column; padding: 18px 20px; }
+
+    /* ---------- editor app ---------- */
+    .adm-app { display: none; flex-direction: column; height: 100dvh; }
+    .adm-app.on { display: flex; }
+    .adm-bar { flex: none; height: var(--adm-bar-h); background: var(--surface); border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: 10px; padding: 0 14px; box-shadow: var(--shadow-sm); z-index: 20; }
+    .adm-bar__brand { display: flex; align-items: center; gap: 9px; font-family: var(--font-head); font-weight: 800; color: var(--head); font-size: 1rem; }
+    .adm-bar__brand img { height: 30px; width: auto; }
+    .adm-bar__brand span { color: var(--slate); font-weight: 600; font-size: .82rem; }
+    .adm-pagesel { font-family: var(--font-head); font-weight: 600; font-size: .92rem; color: var(--head);
+      background: var(--field-bg); border: 1.5px solid var(--line-2); border-radius: 9px; padding: 8px 12px; cursor: pointer; max-width: 210px; }
+    .adm-spacer { flex: 1; }
+    .adm-btn { font-family: var(--font-head); font-weight: 700; font-size: .9rem; padding: 9px 16px; border-radius: 9px;
+      border: 1.5px solid var(--line-2); background: var(--surface); color: var(--head); cursor: pointer; white-space: nowrap;
+      transition: border-color .15s, color .15s, background .15s, opacity .15s; display: inline-flex; align-items: center; gap: 7px; }
+    .adm-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .adm-btn svg { width: 17px; height: 17px; }
+    .adm-btn--primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .adm-btn--primary:hover { background: var(--blue-700); border-color: var(--blue-700); color: #fff; }
+    .adm-btn--primary[disabled] { opacity: .5; cursor: default; }
+    .adm-btn[disabled] { opacity: .4; cursor: default; }
+    .adm-btn.is-dirty::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--adm-amber); }
+    .adm-iconbtn { flex: none; width: 40px; height: 40px; border-radius: 9px; border: 1.5px solid var(--line-2); background: var(--surface);
+      color: var(--head); cursor: pointer; display: grid; place-items: center; }
+    .adm-iconbtn:hover { border-color: var(--blue); color: var(--blue); }
+    .adm-iconbtn[disabled] { opacity: .35; cursor: default; }
+    .adm-iconbtn svg { width: 19px; height: 19px; }
+
+    .adm-stage { flex: 1; position: relative; background: var(--bg-soft, #eef2f7); overflow: hidden; }
+    [data-theme="dark"] .adm-stage { background: #0c1420; }
+    .adm-frame { width: 100%; height: 100%; border: 0; background: #fff; display: block; }
+    .adm-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--slate); font-weight: 600; gap: 10px; }
+    .adm-spin { width: 34px; height: 34px; border: 3px solid var(--line-2); border-top-color: var(--blue); border-radius: 50%; animation: adm-spin 1s linear infinite; margin: 0 auto 10px; }
+    @keyframes adm-spin { to { transform: rotate(360deg); } }
+
+    /* toast / status */
+    .adm-toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); opacity: 0;
+      background: var(--head); color: #fff; padding: 12px 20px; border-radius: 999px; font-weight: 600; font-size: .92rem;
+      box-shadow: var(--shadow-lg); z-index: 300; transition: opacity .25s, transform .25s; pointer-events: none; max-width: 90vw; text-align: center; }
+    .adm-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .adm-toast.ok { background: #1f8a4c; } .adm-toast.err { background: #c0392b; }
+
+    /* draft restore banner */
+    .adm-banner { position: absolute; left: 12px; right: 12px; top: 12px; z-index: 15; background: #fff7e6; border: 1px solid #f0d089;
+      color: #7a5b12; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow); font-size: .92rem; }
+    [data-theme="dark"] .adm-banner { background: #2a2410; border-color: #5a4a1e; color: #f0d089; }
+    .adm-banner .grow { flex: 1; }
+
+    /* modal (preview + publish) */
+    .adm-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(7,18,32,.62); display: grid; place-items: center; padding: 18px; }
+    .adm-modal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-lg);
+      width: min(1100px, 100%); max-height: calc(100dvh - 36px); display: flex; flex-direction: column; padding: 18px 20px; }
     .adm-modal__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
     .adm-modal__head strong { font-family: var(--font-head); font-size: 1.05rem; color: var(--head); }
-    .adm-modal__note { font-size: .88rem; color: var(--slate); margin-bottom: 10px; }
-    .adm-modal__frame { width: 100%; flex: 1; min-height: 60vh; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .adm-modal__note { font-size: .88rem; color: var(--slate); margin-bottom: 12px; }
     .adm-modal__list { list-style: none; display: grid; gap: 6px; margin: 6px 0 16px; }
     .adm-modal__list li { font-weight: 600; color: var(--head); font-size: .95rem; }
     .adm-confirm { display: flex; gap: 10px; align-items: flex-start; font-size: .92rem; color: var(--ink); margin-bottom: 16px; cursor: pointer; }
-    .adm-confirm input { margin-top: 3px; width: 17px; height: 17px; accent-color: var(--blue); }
-    .adm-modal__actions { display: flex; gap: 10px; align-items: center; }
-    .adm-modal__actions .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
-    .adm-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 60vh; }
-    .adm-compare__pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; }
-    .adm-compare__pane figcaption { font-family: var(--font-head); font-weight: 700; font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; padding: 6px 2px 8px; }
-    .adm-compare__pane figcaption.before { color: var(--slate); }
-    .adm-compare__pane figcaption.after { color: #C8901A; }
-    .adm-compare .adm-modal__frame { min-height: 0; }
-    @media (max-width: 900px) { .adm-compare { grid-template-columns: 1fr; } .adm-compare .adm-modal__frame { min-height: 40vh; } }
+    .adm-confirm input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--blue); flex: none; }
+    .adm-modal__actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .adm-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 58vh; }
+    .adm-compare figure { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; }
+    .adm-compare figcaption { font-family: var(--font-head); font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 5px 2px 7px; }
+    .adm-compare figcaption.before { color: var(--slate); } .adm-compare figcaption.after { color: #C8901A; }
+    .adm-compare iframe { width: 100%; flex: 1; min-height: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    @media (max-width: 860px) { .adm-compare { grid-template-columns: 1fr; } .adm-compare iframe { min-height: 40vh; } }
+
+    /* guided tour */
+    .adm-tour { position: fixed; inset: 0; z-index: 500; }
+    .adm-tour__scrim { position: absolute; inset: 0; background: rgba(7,18,32,.55); }
+    .adm-tour__card { position: absolute; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow-lg);
+      padding: 18px 20px; width: min(320px, 90vw); }
+    .adm-tour__card h4 { font-size: 1.05rem; margin-bottom: 6px; color: var(--head); }
+    .adm-tour__card p { font-size: .92rem; color: var(--slate); margin-bottom: 14px; }
+    .adm-tour__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .adm-tour__dots { display: flex; gap: 6px; } .adm-tour__dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-2); }
+    .adm-tour__dots i.on { background: var(--blue); }
+
     .hidden { display: none !important; }
+    .adm-powered { text-align: center; font-size: .86rem; color: var(--slate); margin-top: 22px; }
+    .adm-powered a { display: inline-flex; align-items: center; gap: 7px; color: var(--slate); }
+    .adm-powered img { height: 14px; } .adm-powered strong { font-family: var(--font-head); color: var(--head); }
+
+    @media (max-width: 720px) {
+      .adm-bar { gap: 7px; padding: 0 10px; }
+      .adm-bar__brand span, .adm-btn--label { display: none; }
+      .adm-pagesel { max-width: 130px; font-size: .86rem; padding: 7px 9px; }
+      .adm-btn { padding: 9px 12px; }
+    }
   </style>
 </head>
 <body>
-  <div class="adm-wrap">
-    <div class="adm-top">
-      <div>
-        <h1><span id="siteName">Site</span> editor</h1>
-        <p class="sub">Change any text or photo — your edits go live in about a minute. Nothing you do here can break the site.</p>
-      </div>
-      <div class="adm-top__actions">
-        <a class="adm-mini" href="/" target="_blank" rel="noopener">Open site ↗</a>
-        <button class="adm-mini adm-mini--danger hidden" id="logoutBtn" type="button">Log out</button>
-      </div>
-    </div>
 
-    <!-- ============ LOGIN ============ -->
-    <div class="adm-card" id="loginCard">
-      <h2>Sign in</h2>
-      <p>Paste your editor access key. It's saved on this device only, so you won't need it again here.</p>
-      <div class="adm-field">
-        <label for="tokenInput">Access key</label>
-        <input type="text" id="tokenInput" autocomplete="off" placeholder="github_pat_…" />
+  <!-- ============ SIGN IN ============ -->
+  <div class="adm-signin" id="signin">
+    <div>
+      <div class="adm-card">
+        <div class="brandrow"><img src="assets/logo/gdc-mark.png" alt="" /><strong id="siteName">Your</strong></div>
+        <h2>Website editor</h2>
+        <p>Sign in to change any text or photo on your site. Your edits go live in about a minute, and nothing you do here can break the site.</p>
+        <div class="adm-field">
+          <label for="tokenInput">Access key</label>
+          <div class="adm-keyrow">
+            <input type="password" id="tokenInput" autocomplete="off" placeholder="github_pat_…" />
+            <button class="adm-eye" id="eyeBtn" type="button" aria-label="Show or hide key">Show</button>
+          </div>
+        </div>
+        <label class="adm-remember"><input type="checkbox" id="rememberChk" checked /> Keep me signed in on this device</label>
+        <button class="adm-btn adm-btn--primary" id="loginBtn" type="button" style="width:100%;justify-content:center">Sign in</button>
+        <p class="adm-status" id="loginStatus" role="status"></p>
+        <details class="adm-help">
+          <summary>Where do I get an access key?</summary>
+          <ol>
+            <li><strong>Easiest:</strong> ask Pixrweb and we'll set one up for you and send it over.</li>
+            <li>Or, in GitHub: <em>Settings → Developer settings → Fine-grained tokens → Generate new token</em>.</li>
+            <li>Resource owner: your website's account. Repository access: <strong>Only select repositories</strong> → the website repo.</li>
+            <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong>. Nothing else.</li>
+            <li>Generate, copy the key, paste it above.</li>
+          </ol>
+        </details>
       </div>
-      <button class="btn btn--primary" id="loginBtn" type="button">Sign in</button>
-      <p class="adm-status" id="loginStatus" role="status"></p>
-      <details class="adm-help">
-        <summary>Where do I get an access key?</summary>
-        <ol>
-          <li>Ask Pixrweb — we'll send you one, or:</li>
-          <li>Sign in to GitHub → <em>Settings → Developer settings → Fine-grained tokens → Generate new token</em>.</li>
-          <li>Repository access: <strong>Only select repositories</strong> → choose the website repository.</li>
-          <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong>. Everything else: no access.</li>
-          <li>Generate, copy the key and paste it above.</li>
-        </ol>
-      </details>
+      <p class="adm-powered">
+        <a href="https://pixrweb.com" target="_blank" rel="noopener noreferrer">Powered by
+          <img src="assets/logo/pixrweb-mark.png" alt="" width="17" height="14" /> <strong>Pixrweb</strong></a>
+      </p>
     </div>
-
-    <!-- ============ EDITOR ============ -->
-    <div id="editor" class="hidden">
-      <div class="adm-tabs" id="tabs"></div>
-      <div id="panel"></div>
-    </div>
-
-    <p class="adm-powered">
-      <a href="https://pixrweb.com" target="_blank" rel="noopener noreferrer">Powered by
-        <img src="assets/logo/pixrweb-mark.png" alt="" width="17" height="14" /> <strong>Pixrweb</strong></a>
-    </p>
   </div>
 
-  <div class="adm-savebar hidden" id="savebar">
-    <div class="adm-savebar__inner">
-      <p class="adm-status" id="saveStatus" role="status">No unsaved changes.</p>
-      <button class="btn btn--primary" id="saveBtn" type="button">Save &amp; publish</button>
+  <!-- ============ EDITOR APP ============ -->
+  <div class="adm-app" id="app">
+    <header class="adm-bar">
+      <div class="adm-bar__brand"><img src="assets/logo/gdc-mark.png" alt="" /><span id="barName">editor</span></div>
+      <select class="adm-pagesel" id="pageSel" aria-label="Choose a page to edit"></select>
+      <button class="adm-iconbtn" id="undoBtn" type="button" title="Undo" disabled aria-label="Undo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-1"/></svg>
+      </button>
+      <div class="adm-spacer"></div>
+      <button class="adm-btn" id="previewBtn" type="button" title="See a before / after preview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="adm-btn--label">Preview</span>
+      </button>
+      <button class="adm-btn adm-btn--primary" id="publishBtn" type="button" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+        <span class="adm-btn--label">Save &amp; publish</span>
+      </button>
+      <button class="adm-iconbtn" id="logoutBtn" type="button" title="Log out" aria-label="Log out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+    </header>
+    <div class="adm-stage" id="stage">
+      <div class="adm-loading" id="stageLoading"><div><div class="adm-spin"></div>Loading your site…</div></div>
+      <div class="adm-banner hidden" id="draftBanner">
+        <span class="grow" id="draftText">You have unsaved changes from last time.</span>
+        <button class="adm-btn" id="draftRestore" type="button">Restore</button>
+        <button class="adm-btn" id="draftDiscard" type="button">Discard</button>
+      </div>
+      <!-- iframe injected here -->
     </div>
   </div>
+
+  <div class="adm-toast" id="toast" role="status"></div>
 
   <script src="admin-config.js"></script>
   <script src="admin.js" defer></script>
