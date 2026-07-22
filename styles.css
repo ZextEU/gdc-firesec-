@@ -935,7 +935,7 @@ a.project { cursor: pointer; }
 .clients-band .section__head h2::after { background: var(--gold); }
 .clients-band .section__head p { color: rgba(255,255,255,.72); }
 .client-logo { flex: none; display: grid; place-items: center; height: 92px; width: 210px; padding: 12px 20px; }
-.client-logo img { max-height: 58px; max-width: 100%; object-fit: contain; opacity: .9; transition: opacity .2s var(--ease); }
+.client-logo img { max-height: 58px; width: auto; height: auto; max-width: 100%; object-fit: contain; opacity: .9; transition: opacity .2s var(--ease); }
 .client-logo:hover img { opacity: 1; }
 .client-logo__name { font-family: var(--font-head); font-weight: 700; font-size: 1.06rem; color: #fff;
   text-align: center; line-height: 1.14; letter-spacing: .01em; opacity: .9; }

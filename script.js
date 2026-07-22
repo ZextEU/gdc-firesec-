@@ -74,9 +74,15 @@
       const startLoad = () => {
         if (started) return;
         started = true;
-        // Promote each <source> data-src -> src, then let the browser pick the
-        // best format (WebM/VP9 where supported, MP4/H.264 fallback) and fetch.
-        heroSources.forEach((s) => { s.src = s.dataset.src; });
+        // Promote ONLY the single best-supported format so the browser fetches
+        // one file, not both. (Leaving both <source> src set can make some
+        // engines download every format — doubling the payload.)
+        let picked = false;
+        heroSources.forEach((s) => {
+          if (picked) return;
+          if (heroVideo.canPlayType(s.type || "")) { s.src = s.dataset.src; picked = true; }
+        });
+        if (!picked && heroSources[0]) heroSources[0].src = heroSources[0].dataset.src;
         heroVideo.load();
         // Keep attempting across every readiness milestone until one sticks.
         ["loadeddata", "canplay", "canplaythrough"].forEach((ev) =>
