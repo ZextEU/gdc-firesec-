@@ -379,6 +379,7 @@ strong { font-weight: 700; }
 /* ---------------- About / split ---------------- */
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .split--rev .split__media { order: 2; }
+.split__media, .split__copy { min-width: 0; }
 .split__media { position: relative; }
 .split__panel {
   border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
@@ -881,6 +882,8 @@ a.project { cursor: pointer; }
   /* about split: tighten the media/badge stack */
   .split { gap: 28px; }
   .split__list { margin: 18px 0 22px; }
+  /* let long CTA labels wrap instead of overflowing on narrow screens */
+  .split__copy .btn { white-space: normal; text-align: center; max-width: 100%; }
 
   /* stats: 2-up stays denser than 1-up here */
   .stats { grid-template-columns: repeat(2, 1fr); gap: 26px 18px; }
