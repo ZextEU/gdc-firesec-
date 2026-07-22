@@ -36,6 +36,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'" />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" /></noscript>
+  <link rel="preload" as="image" href="assets/video/hero-poster.jpg" fetchpriority="high" />
   <link rel="stylesheet" href="styles.min.css" />
   <script>
     /* Apply saved/system theme before first paint to avoid a flash */
@@ -134,7 +135,7 @@
     <!-- ============ HERO ============ -->
     <section class="hero hero--photo">
       <div class="hero__bg" aria-hidden="true">
-        <video class="hero__video" muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true">
+        <video class="hero__video" muted loop playsinline preload="auto" poster="assets/video/hero-poster.jpg" disablepictureinpicture aria-hidden="true">
           <source data-src="assets/video/skyline-hero.mp4" type="video/mp4" />
         </video>
       </div>
