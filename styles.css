@@ -404,6 +404,12 @@ strong { font-weight: 700; }
 .split__badge .num { font-family: var(--font-head); font-weight: 800; font-size: 2.1rem; color: var(--blue); line-height: 1; }
 [data-theme="dark"] .split__badge .num { color: var(--blue-300); }
 .split__badge .lbl { font-size: .9rem; color: var(--slate); font-weight: 500; max-width: 130px; }
+.brand-lockup { display: grid; place-items: center; gap: 14px; padding: 48px 40px; background: var(--blue-25); border: 1px solid var(--line); border-radius: var(--radius); }
+[data-theme="dark"] .brand-lockup { background: #0d1a2b; }
+.brand-lockup img { width: 130px; height: auto; }
+.brand-lockup__name { font-family: var(--font-head); text-align: center; line-height: 1.02; }
+.brand-lockup__name strong { display: block; font-size: 2rem; font-weight: 800; color: var(--head); letter-spacing: .02em; }
+.brand-lockup__name small { font-size: .82rem; letter-spacing: .2em; text-transform: uppercase; color: var(--slate); }
 .split__copy h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin-bottom: 8px; }
 .split__copy p { color: var(--slate); margin-bottom: 16px; }
 .split__list { list-style: none; display: grid; gap: 12px; margin: 22px 0 28px; }
