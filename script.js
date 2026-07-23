@@ -438,5 +438,21 @@
     };
     if (prev) prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
     if (next) next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+
+    /* gentle auto-advance so reviews pan on their own; pause on hover/touch */
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce) {
+      let timer = null;
+      const advance = () => {
+        const maxScroll = track.scrollWidth - track.clientWidth - 4;
+        if (track.scrollLeft >= maxScroll) track.scrollTo({ left: 0, behavior: "smooth" });
+        else track.scrollBy({ left: step(), behavior: "smooth" });
+      };
+      const start = () => { if (!timer) timer = setInterval(advance, 4500); };
+      const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+      start();
+      ["mouseenter", "touchstart", "focusin"].forEach((e) => track.addEventListener(e, stop, { passive: true }));
+      ["mouseleave", "touchend"].forEach((e) => track.addEventListener(e, start, { passive: true }));
+    }
   });
 })();

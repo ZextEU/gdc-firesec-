@@ -940,6 +940,9 @@ a.project { cursor: pointer; }
 .client-logo__name { font-family: var(--font-head); font-weight: 700; font-size: 1.06rem; color: #fff;
   text-align: center; line-height: 1.14; letter-spacing: .01em; opacity: .9; }
 .client-logo:hover .client-logo__name { opacity: 1; }
+.client-logo--named { display: flex; flex-direction: column; gap: 6px; }
+.client-logo--named img { max-height: 44px; }
+.client-logo--named span { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.78); white-space: nowrap; line-height: 1; }
 @keyframes clients-scroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 9px)); } }
 @media (prefers-reduced-motion: reduce) { .clients-track { animation: none; flex-wrap: wrap; justify-content: center; } }
 
