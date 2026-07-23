@@ -439,20 +439,32 @@
     if (prev) prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
     if (next) next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
 
-    /* gentle auto-advance so reviews pan on their own; pause on hover/touch */
+    /* gentle continuous pan; clone cards for a seamless loop, pause on hover/touch */
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!reduce) {
-      let timer = null;
-      const advance = () => {
-        const maxScroll = track.scrollWidth - track.clientWidth - 4;
-        if (track.scrollLeft >= maxScroll) track.scrollTo({ left: 0, behavior: "smooth" });
-        else track.scrollBy({ left: step(), behavior: "smooth" });
+      const originals = [...track.children];
+      originals.forEach((c) => {
+        const cl = c.cloneNode(true);
+        cl.setAttribute("aria-hidden", "true");
+        cl.classList.remove("reveal");
+        track.appendChild(cl);
+      });
+      let half = track.scrollWidth / 2;
+      window.addEventListener("resize", () => { half = track.scrollWidth / 2; });
+      let paused = false;
+      let pos = track.scrollLeft; // float accumulator (scrollLeft itself rounds to int)
+      const speed = 0.45; // px per frame ≈ a slow, readable drift
+      const tick = () => {
+        if (!paused && half) {
+          pos += speed;
+          if (pos >= half) pos -= half;
+          track.scrollLeft = pos;
+        }
+        requestAnimationFrame(tick);
       };
-      const start = () => { if (!timer) timer = setInterval(advance, 4500); };
-      const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
-      start();
-      ["mouseenter", "touchstart", "focusin"].forEach((e) => track.addEventListener(e, stop, { passive: true }));
-      ["mouseleave", "touchend"].forEach((e) => track.addEventListener(e, start, { passive: true }));
+      requestAnimationFrame(tick);
+      ["mouseenter", "touchstart", "focusin", "pointerdown"].forEach((e) => track.addEventListener(e, () => { paused = true; }, { passive: true }));
+      ["mouseleave", "touchend"].forEach((e) => track.addEventListener(e, () => { pos = track.scrollLeft; paused = false; }, { passive: true }));
     }
   });
 })();

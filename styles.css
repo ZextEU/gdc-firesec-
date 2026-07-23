@@ -951,8 +951,8 @@ a.project { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .clients-track { animation: none; flex-wrap: wrap; justify-content: center; } }
 
 /* --- Testimonials carousel: swipeable scroll-snap track + arrows --- */
-.reviews-carousel { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
-  padding: 4px 2px 14px; scrollbar-width: none; scroll-behavior: smooth; }
+.reviews-carousel { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: none;
+  padding: 4px 2px 14px; scrollbar-width: none; }
 .reviews-carousel::-webkit-scrollbar { display: none; }
 .reviews-carousel .review { flex: 0 0 min(430px, 84%); scroll-snap-align: center; margin: 0; }
 .carousel-nav { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
