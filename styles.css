@@ -333,9 +333,12 @@ strong { font-weight: 700; }
   transition: border-color .25s var(--ease), box-shadow .25s var(--ease), background-color .25s;
 }
 .svc-detail:hover { border-color: var(--line-2); box-shadow: var(--shadow); }
-.svc-detail__head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.svc-detail__head { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
 .svc-detail__head .svc__ico { margin-bottom: 0; width: 52px; height: 52px; flex: none; }
 .svc-detail__head .svc__ico svg { width: 26px; height: 26px; }
+.svc-detail__head h1, .svc-detail__head h2 { font-size: clamp(1.7rem, 3.2vw, 2.25rem); line-height: 1.12; margin: 0; }
+.svc-detail__lead { color: var(--slate); font-size: 1.14rem; line-height: 1.5; margin: 0 0 18px; }
+.split__copy > .eyebrow { margin-bottom: 10px; }
 .svc-detail h2 { font-size: 1.55rem; }
 .svc-detail__copy > p { color: var(--slate); margin-bottom: 12px; }
 .svc-detail__copy .svc__link { margin-top: 10px; }
