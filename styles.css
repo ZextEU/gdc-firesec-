@@ -209,7 +209,8 @@ strong { font-weight: 700; }
   content: ""; position: absolute; top: -30%; right: -10%; width: 44%; height: 160%;
   background: radial-gradient(closest-side, rgba(46,139,230,.12), transparent 70%); pointer-events: none;
 }
-.page-hero__inner { position: relative; max-width: 780px; padding: 72px 0 64px; }
+.page-hero__inner { position: relative; max-width: 780px; padding: 52px 0 40px; }
+.page-hero + .section { padding-top: 30px; }
 .page-hero h1 { font-size: clamp(2.1rem, 4.6vw, 3rem); font-weight: 800; line-height: 1.1; }
 .page-hero h1 span { color: var(--blue); }
 [data-theme="dark"] .page-hero h1 span, [data-theme="dark"] .hero h1 span { color: var(--blue-300); }
@@ -871,7 +872,7 @@ a.project { cursor: pointer; }
   .hero__facts { padding: 6px 20px 8px; }
   .hero__facts li { padding: 13px 0; gap: 12px; }
   .hero__card-cta { padding: 14px 20px 20px; }
-  .page-hero__inner { padding: 44px 0 40px; }
+  .page-hero__inner { padding: 30px 0 24px; }
 
   /* cards: consistent, roomier internal padding, comfortable gaps */
   .svc-grid, .svc-grid--four, .projects, .reviews, .accreds, .sectors, .steps { gap: 14px; }
