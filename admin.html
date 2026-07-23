@@ -115,6 +115,12 @@
     .adm-confirm { display: flex; gap: 10px; align-items: flex-start; font-size: .92rem; color: var(--ink); margin-bottom: 16px; cursor: pointer; }
     .adm-confirm input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--blue); flex: none; }
     .adm-modal__actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .adm-newcase { display: grid; gap: 14px; margin: 4px 0 18px; }
+    .adm-field { display: grid; gap: 5px; }
+    .adm-field > span { font-size: .82rem; font-weight: 600; color: var(--slate); }
+    .adm-newcase__in { width: 100%; padding: 11px 13px; border: 1.5px solid var(--line-2); border-radius: 9px; font-family: inherit; font-size: .95rem; background: var(--field-bg); color: var(--ink); }
+    .adm-newcase__in:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,92,171,.15); }
+    textarea.adm-newcase__in { min-height: 70px; resize: vertical; }
     .adm-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 58vh; }
     .adm-compare figure { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 0; }
     .adm-compare figcaption { font-family: var(--font-head); font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 5px 2px 7px; }
@@ -226,6 +232,10 @@
       <select class="adm-pagesel" id="pageSel" aria-label="Choose a page to edit"></select>
       <button class="adm-iconbtn" id="undoBtn" type="button" title="Undo" disabled aria-label="Undo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-1"/></svg>
+      </button>
+      <button class="adm-btn" id="newCaseBtn" type="button" title="Add a new case study" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+        <span class="adm-btn--label">New case study</span>
       </button>
       <div class="adm-spacer"></div>
       <button class="adm-btn" id="previewBtn" type="button" title="See a before / after preview">

@@ -85,8 +85,28 @@
         stampIds(docs[p.file].doc);
       }
     } catch (err) { return setLogin(String(err.message || err), "err"); }
+    // auto-discover any project-*.html not listed in config, so new case
+    // studies always show up in the editor (this session and future ones)
+    try {
+      const dir = (BASE || "").replace(/\/$/, "");
+      const res = await gh(`/repos/${OWNER}/${REPO}/contents/${dir || "."}?ref=${BRANCH}`);
+      if (res.ok) {
+        const files = await res.json();
+        for (const f of files) {
+          if (/^project-.+\.html$/.test(f.name) && !PAGES.some((p) => p.file === f.name)) {
+            const data = await loadFile(BASE + f.name); if (!data) continue;
+            const html = b64decode(data.content);
+            docs[f.name] = { doc: new DOMParser().parseFromString(html, "text/html"), original: html, sha: data.sha, dirty: false, undo: [] };
+            stampIds(docs[f.name].doc);
+            const nm = f.name.replace(/^project-/, "").replace(/\.html$/, "").replace(/-/g, " ");
+            PAGES.push({ file: f.name, label: "Case: " + nm.replace(/\b\w/g, (c) => c.toUpperCase()).slice(0, 16) });
+          }
+        }
+      }
+    } catch (e) {}
     $("#signin").style.display = "none";
     $("#app").classList.add("on");
+    $("#newCaseBtn").style.display = "";
     buildPageSelect();
     openPage(PAGES[0].file);
     maybeTour();
@@ -470,6 +490,92 @@
     const next = eln("button", "adm-btn adm-btn--primary", i === TOUR.length - 1 ? "Start editing" : "Next"); next.type = "button"; next.onclick = () => runTour(i + 1);
     btns.appendChild(skip); btns.appendChild(next); rowc.appendChild(btns); card.appendChild(rowc);
     root.appendChild(card); document.body.appendChild(root);
+  }
+
+  /* ---------- new case study ---------- */
+  const slugify = (s) => (s || "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "project";
+
+  $("#newCaseBtn").addEventListener("click", () => {
+    if (anyDirty() && !confirm("You have unsaved changes elsewhere. They'll be kept — continue and add a new case study?")) return;
+    const { ov, modal } = overlay("Add a new case study");
+    modal.appendChild(eln("p", "adm-modal__note", "Creates a new project page (with photo placeholders) and adds it to your Projects page. You can then edit the text and swap the photos like any other page."));
+    const form = eln("div", "adm-newcase");
+    const mk = (labelText, ph, tag) => {
+      const w = eln("label", "adm-field"); w.appendChild(eln("span", null, labelText));
+      const i = document.createElement(tag || "input"); if (tag !== "textarea") i.type = "text";
+      i.placeholder = ph; i.className = "adm-newcase__in"; w.appendChild(i); form.appendChild(w); return i;
+    };
+    const nameI = mk("Project / site name", "e.g. The York, Portstewart");
+    const sectorI = mk("Sector", "e.g. Commercial · Hospitality");
+    const introI = mk("One-line summary", "e.g. Full CCTV and fire alarm upgrade for a busy seafront venue.", "textarea");
+    modal.appendChild(form);
+    const row = eln("div", "adm-modal__actions");
+    const go = eln("button", "adm-btn adm-btn--primary", "Create case study"); go.type = "button";
+    const cancel = eln("button", "adm-btn", "Cancel"); cancel.type = "button"; cancel.onclick = () => ov.remove();
+    go.onclick = async () => {
+      const name = nameI.value.trim(); if (!name) { nameI.focus(); return toast("Enter a project name.", "err"); }
+      go.disabled = true; toast("Creating case study…");
+      try { await createCaseStudy(name, sectorI.value.trim() || "Commercial", introI.value.trim()); ov.remove(); }
+      catch (err) { toast("Couldn't create it: " + (err.message || err), "err"); go.disabled = false; }
+    };
+    row.appendChild(go); row.appendChild(cancel); modal.appendChild(row);
+    nameI.focus();
+  });
+
+  async function createCaseStudy(name, sector, intro) {
+    let slug = slugify(name), file = "project-" + slug + ".html", n = 2;
+    while (docs[file]) { file = "project-" + slug + "-" + n + ".html"; n++; }
+    slug = file.replace(/^project-/, "").replace(/\.html$/, "");
+
+    const tmplFile = PAGES.map((p) => p.file).find((f) => /^project-/.test(f) && docs[f]);
+    if (!tmplFile) throw new Error("no existing case study to base it on");
+    const doc = docs[tmplFile].doc.cloneNode(true);
+    doc.querySelectorAll("[data-pxid],[data-pxlist],[data-pixr-edited]").forEach((n) => { n.removeAttribute("data-pxid"); n.removeAttribute("data-pxlist"); n.removeAttribute("data-pixr-edited"); });
+
+    const url = "https://www.gdcfiresec.com/" + file.replace(/\.html$/, "");
+    const desc = intro || (name + " — a fire & security project by GDC Fire & Security.");
+    const t = doc.querySelector("title"); if (t) t.textContent = name + " — Case Study | GDC Fire & Security";
+    const can = doc.querySelector('link[rel="canonical"]'); if (can) can.setAttribute("href", url);
+    doc.querySelectorAll('meta[property="og:url"]').forEach((m) => m.setAttribute("content", url));
+    doc.querySelectorAll('meta[name="description"],meta[property="og:description"],meta[name="twitter:description"]').forEach((m) => m.setAttribute("content", desc));
+    doc.querySelectorAll('meta[property="og:title"],meta[name="twitter:title"]').forEach((m) => m.setAttribute("content", name + " — Case Study | GDC Fire & Security"));
+
+    const main = doc.querySelector("main");
+    main.querySelectorAll("h1").forEach((h) => (h.textContent = name));
+    main.querySelectorAll(".eyebrow").forEach((e) => { const a = e.querySelector("a"); if (a) a.textContent = sector; else e.textContent = sector; });
+    const lead = main.querySelector(".page-hero__lead"); if (lead) lead.textContent = intro || "Add a short overview of this project.";
+    const bodyP = [...main.querySelectorAll(".split__copy p")].filter((p) => !p.classList.contains("eyebrow") && !p.classList.contains("page-hero__lead"));
+    const ph = ["Describe the scope of works — what GDC designed, installed and delivered for this project.", "Describe the outcome — the systems now in place and the difference they make for the client."];
+    bodyP.forEach((p, i) => (p.textContent = ph[i] || ph[ph.length - 1]));
+    let pi = 0;
+    main.querySelectorAll("img[data-img]").forEach((im) => { pi++; im.setAttribute("src", "assets/photos/projects/" + slug + "-" + pi + ".jpg"); im.setAttribute("data-img", ""); im.setAttribute("alt", name + " — GDC Fire & Security project"); });
+
+    const html = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML + "\n";
+    await saveFile(BASE + file, b64encode(html), null, "Add case study: " + name + " (via site editor)");
+
+    // add a card to the Projects page grid
+    const pdoc = docs["projects.html"];
+    if (pdoc && pdoc.doc.querySelector(".pgrid a.pcard")) {
+      const grid = pdoc.doc.querySelector(".pgrid");
+      const card = grid.querySelector("a.pcard").cloneNode(true);
+      card.querySelectorAll("[data-pxid],[data-pixr-edited]").forEach((x) => { x.removeAttribute("data-pxid"); x.removeAttribute("data-pixr-edited"); });
+      card.setAttribute("href", "/" + file.replace(/\.html$/, ""));
+      const h = card.querySelector(".pcard__bar h3, h3"); if (h) h.textContent = name;
+      const cimg = card.querySelector("img"); if (cimg) { cimg.setAttribute("src", "assets/photos/projects/" + slug + "-1.jpg"); cimg.setAttribute("alt", name + " — GDC Fire & Security project"); }
+      grid.insertBefore(card, grid.firstElementChild);
+      const body = serialise(pdoc.doc, true);
+      const res = await saveFile(BASE + "projects.html", b64encode(body), pdoc.sha, "Add " + name + " to projects (via site editor)");
+      pdoc.sha = res.content.sha; pdoc.original = body; pdoc.dirty = false; stampIds(pdoc.doc); clearDraft("projects.html");
+    }
+
+    // register + open the new page for editing
+    docs[file] = { doc: new DOMParser().parseFromString(html, "text/html"), original: html, sha: null, dirty: false, undo: [] };
+    try { const d = await loadFile(BASE + file); if (d) docs[file].sha = d.sha; } catch (e) {}
+    stampIds(docs[file].doc);
+    PAGES.push({ file, label: "Case: " + name.slice(0, 16) });
+    buildPageSelect();
+    openPage(file);
+    toast("Case study created & live. Now edit the text and add photos.", "ok");
   }
 
   /* ---------- paid add-on gate ---------- */
