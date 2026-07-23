@@ -774,6 +774,9 @@ a.project { cursor: pointer; }
 .contact__photo { position: relative; margin-top: 26px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); aspect-ratio: 4/3; background: linear-gradient(160deg, var(--navy), var(--blue-700)); box-shadow: var(--shadow); }
 .contact__photo .ph-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.22); }
 .contact__photo .ph-fallback svg { width: 54px; height: 54px; }
+.contact__map { margin-top: 24px; }
+.contact__map iframe { display: block; width: 100%; height: 260px; border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+.contact__map .btn { margin-top: 12px; }
 
 /* ---------------- Legal prose ---------------- */
 .legal { max-width: 760px; }
