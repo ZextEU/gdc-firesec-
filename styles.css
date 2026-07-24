@@ -190,6 +190,8 @@ strong { font-weight: 700; }
 .section--soft { background: var(--bg-soft); }
 .section--navy { background: var(--navy); color: #fff; }
 .section__head { max-width: 680px; margin: 0 auto 52px; text-align: center; }
+.section--tight-top { padding-top: 36px; }
+.section__head .page-hero__actions { justify-content: center; margin-top: 22px; }
 .eyebrow {
   display: inline-block; font-family: var(--font-head); font-weight: 700;
   font-size: .8rem; letter-spacing: .14em; text-transform: uppercase;
