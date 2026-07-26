@@ -151,6 +151,11 @@ strong { font-weight: 700; }
 
 .brand { display: flex; align-items: center; gap: 11px; }
 .brand__mark-img { height: 42px; width: auto; flex: none; }
+/* Official full logo lockup (gdc-horizontal.png) used in header + footer */
+.brand__logo { height: 42px; width: auto; flex: none; display: block; }
+.brand__logo--footer { height: 40px; background: #fff; padding: 9px 14px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.22); }
+/* Keep the light logo legible if the header sits on a dark surface (dark theme) */
+[data-theme="dark"] .header .brand__logo { background: #fff; padding: 6px 10px; border-radius: 10px; }
 .brand__text { display: flex; flex-direction: column; line-height: 1; }
 .brand__text strong { font-family: var(--font-head); font-weight: 800; font-size: 1.42rem; color: var(--brand); letter-spacing: .02em; }
 .brand__text small { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--slate); font-weight: 600; margin-top: 4px; }
@@ -211,8 +216,8 @@ strong { font-weight: 700; }
   content: ""; position: absolute; top: -30%; right: -10%; width: 44%; height: 160%;
   background: radial-gradient(closest-side, rgba(46,139,230,.12), transparent 70%); pointer-events: none;
 }
-.page-hero__inner { position: relative; max-width: 780px; padding: 52px 0 40px; }
-.page-hero + .section { padding-top: 30px; }
+.page-hero__inner { position: relative; max-width: 780px; padding: 30px 0 24px; }
+.page-hero + .section { padding-top: 18px; }
 .page-hero h1 { font-size: clamp(2.1rem, 4.6vw, 3rem); font-weight: 800; line-height: 1.1; }
 .page-hero h1 span { color: var(--blue); }
 [data-theme="dark"] .page-hero h1 span, [data-theme="dark"] .hero h1 span { color: var(--blue-300); }
@@ -225,7 +230,7 @@ strong { font-weight: 700; }
   content: ""; position: absolute; top: -10%; right: -8%; width: 46%; height: 120%;
   background: radial-gradient(closest-side, rgba(46,139,230,.12), transparent 70%); pointer-events: none;
 }
-.hero__inner { display: grid; grid-template-columns: 1.08fr .92fr; gap: 56px; align-items: center; padding-block: 80px 84px; position: relative; }
+.hero__inner { display: grid; grid-template-columns: 1.08fr .92fr; gap: 56px; align-items: center; padding-block: 56px 60px; position: relative; }
 .hero__eyebrow {
   display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-head); font-weight: 600;
   font-size: .86rem; color: var(--accent-deep); background: var(--surface); border: 1px solid var(--line-2);
@@ -731,7 +736,7 @@ a.project { cursor: pointer; }
 .hero--photo { border-bottom: 0; background: #081627; }
 .hero__bg { position: absolute; inset: 0; }
 .hero__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(7,22,40,.88) 0%, rgba(7,22,40,.72) 45%, rgba(7,22,40,.45) 100%); }
-.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 68%; } /* keep the skyline, not the sky, in frame */
+.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 58%; } /* tighter crop — trim the empty sky &amp; ground, keep the building in frame */
 /* Looping skyline video sits over the poster image and fades in once it can play.
    It is lazy-loaded from JS (see script.js) so it never blocks first paint / LCP. */
 .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 68%; opacity: 0; transition: opacity .8s var(--ease); pointer-events: none; }
@@ -1020,11 +1025,8 @@ a.project { cursor: pointer; }
 .pcard__media { position: relative; aspect-ratio: 3 / 2; }
 .pcard .ph-img { transition: opacity .5s var(--ease), transform .5s var(--ease); }
 .pcard:hover .ph-img.is-loaded { transform: scale(1.05); }
-.pcard__overlay { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center;
-  background: linear-gradient(0deg, rgba(10,37,64,.74), rgba(10,37,64,.28)); opacity: 0; transition: opacity .25s var(--ease); }
-.pcard:hover .pcard__overlay, .pcard:focus-visible .pcard__overlay { opacity: 1; }
-.pcard__overlay span { font-family: var(--font-head); font-weight: 700; color: #fff; font-size: 1rem;
-  display: inline-flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,.9); border-radius: 999px; padding: 11px 22px; }
+/* Hover "View case study" overlay bubbles removed — cards use a clean lift + arrow-slide instead */
+.pcard__overlay { display: none !important; }
 .pcard__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 22px; }
 .pcard__bar h3 { font-size: 1.12rem; margin: 0; }
 .pcard__arrow { color: var(--blue); flex: none; transition: transform .2s var(--ease); }
@@ -1034,7 +1036,21 @@ a.project { cursor: pointer; }
 @media (max-width: 900px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .pgrid { grid-template-columns: 1fr; } }
 
+/* Non-clickable photo tile (projects shown as a photo only — no case study) */
+.ptile { display: block; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-sm); }
+.ptile .ph-wrap { aspect-ratio: 3 / 2; }
+.ptile__bar { padding: 16px 22px; }
+.ptile__bar h3 { font-size: 1.1rem; margin: 0; }
+.ptile__bar span { display: block; margin-top: 2px; font-size: .82rem; color: var(--slate); }
+
 /* ============ Case study — two feature photos + photo grid ============ */
+/* Feature photos sit in a narrower, centred column so they read as editorial, not full-bleed */
+.cs-media { max-width: 880px; margin-inline: auto; }
+.cs-media .ph-wrap { aspect-ratio: 16 / 10; }
+.cs-gallery { max-width: 980px; margin-inline: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.cs-gallery .ph-wrap { aspect-ratio: 4 / 3; }
+.cs-gallery__head { max-width: 980px; margin: 0 auto 18px; }
+@media (max-width: 760px) { .cs-gallery { grid-template-columns: repeat(2, 1fr); } }
 .cs-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .cs-duo .ph-wrap { aspect-ratio: 4 / 3; }
 .cs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }

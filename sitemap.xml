@@ -61,11 +61,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.gdcfiresec.com/project-ramada-hotel</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.gdcfiresec.com/project-redeemer-central</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
@@ -126,17 +121,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.gdcfiresec.com/project-deichmann</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.gdcfiresec.com/project-castleridge</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.gdcfiresec.com/project-mellon</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -161,16 +146,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.gdcfiresec.com/project-applegreen</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.gdcfiresec.com/project-blackline</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.gdcfiresec.com/project-diamond-complex</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
@@ -182,6 +157,46 @@
   </url>
   <url>
     <loc>https://www.gdcfiresec.com/project-branch-road</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-queens-105-university</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-hendrix</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-fight-academy-ireland</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-queens-39-fitzroy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-fosters-tyres</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-viet-by-vee</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-3en-cloud</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.gdcfiresec.com/project-gdc-interiors</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
