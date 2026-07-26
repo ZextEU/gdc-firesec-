@@ -312,6 +312,15 @@ strong { font-weight: 700; }
   padding: 32px 28px; transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s, background-color .25s;
 }
 .svc:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-2); }
+/* Photo-topped service card: the photo bleeds to the card edges, icon sits below */
+.svc--photo { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.svc__media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: linear-gradient(160deg, var(--navy), var(--blue-700)); }
+.svc__media .ph-fallback svg { width: 46px; height: 46px; }
+.svc--photo .svc__body { padding: 24px 28px 28px; display: flex; flex-direction: column; flex: 1; }
+.svc--photo .svc__ico { width: 44px; height: 44px; margin: -46px 0 16px; position: relative; z-index: 2; border: 3px solid var(--surface); }
+.svc--photo .svc__link { margin-top: auto; }
+.svc:hover .svc__media .ph-img.is-loaded { transform: scale(1.05); }
+.svc__media .ph-img { transition: opacity .5s var(--ease), transform .5s var(--ease); }
 .svc__ico { width: 56px; height: 56px; border-radius: 12px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; margin-bottom: 20px; transition: background .2s, color .2s, transform .2s var(--ease); }
 [data-theme="dark"] .svc__ico { color: var(--blue-300); }
 .svc__ico svg { width: 28px; height: 28px; }
