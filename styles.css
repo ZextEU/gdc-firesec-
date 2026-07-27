@@ -235,6 +235,9 @@ strong { font-weight: 700; }
   background: radial-gradient(closest-side, rgba(46,139,230,.12), transparent 70%); pointer-events: none;
 }
 .hero__inner { display: grid; grid-template-columns: 1.08fr .92fr; gap: 56px; align-items: center; padding-block: 56px 60px; position: relative; }
+/* TEMP: when the trust card is hidden, let the hero copy breathe as a single column */
+.hero__inner:not(:has(.hero__card)) { grid-template-columns: 1fr; }
+.hero__inner:not(:has(.hero__card)) .hero__copy { max-width: 760px; }
 .hero__eyebrow {
   display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-head); font-weight: 600;
   font-size: .86rem; color: var(--accent-deep); background: var(--surface); border: 1px solid var(--line-2);
