@@ -87,7 +87,7 @@ window.PIXRWEB_EDITOR = {
     // SHA-256 hashes of accepted unlock codes:
     unlockHashes: [
       "349084cdbb3e9f3d0e21f2cad3fb48f662921ef0461124848a3dffabafdeaaf5", // Pixrweb override (change me)
-      "bfc3461ac0f1c8f57863c4d43e854ff89d92805585c641a4a4e9461bee7cc569", // GDC client unlock code
+      "8eeabc3dec3892a6d50799835fe73d7a56a9101801b310a44952fe9c9fd403b5", // GDC client unlock code
     ],
   },
 };
