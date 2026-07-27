@@ -191,11 +191,15 @@ strong { font-weight: 700; }
 .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
 /* ---------------- Section scaffolding ---------------- */
-.section { padding: 88px 0; }
+.section { padding: 68px 0; }
 .section--soft { background: var(--bg-soft); }
 .section--navy { background: var(--navy); color: #fff; }
-.section__head { max-width: 680px; margin: 0 auto 52px; text-align: center; }
-.section--tight-top { padding-top: 36px; }
+.section__head { max-width: 680px; margin: 0 auto 44px; text-align: center; }
+.section--tight-top { padding-top: 30px; }
+/* First section under the header sits high so the hero image/first paragraph is fully visible straight away */
+#main > .section:first-child { padding-top: 30px; }
+/* Detail pages stack heading / hero photo / copy as separate sections — keep the heading close to its photo */
+#main > .section:first-child:has(+ .section[style*="padding-top:0"]) { padding-bottom: 28px; }
 .section__head .page-hero__actions { justify-content: center; margin-top: 22px; }
 .eyebrow {
   display: inline-block; font-family: var(--font-head); font-weight: 700;
