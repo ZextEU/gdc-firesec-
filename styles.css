@@ -220,13 +220,13 @@ strong { font-weight: 700; }
   content: ""; position: absolute; top: -30%; right: -10%; width: 44%; height: 160%;
   background: radial-gradient(closest-side, rgba(46,139,230,.12), transparent 70%); pointer-events: none;
 }
-.page-hero__inner { position: relative; max-width: 780px; padding: 30px 0 24px; }
-.page-hero + .section { padding-top: 18px; }
-.page-hero h1 { font-size: clamp(2.1rem, 4.6vw, 3rem); font-weight: 800; line-height: 1.1; }
+.page-hero__inner { position: relative; max-width: 780px; padding: 22px 0 20px; }
+.page-hero + .section { padding-top: 16px; }
+.page-hero h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; line-height: 1.1; }
 .page-hero h1 span { color: var(--blue); }
 [data-theme="dark"] .page-hero h1 span, [data-theme="dark"] .hero h1 span { color: var(--blue-300); }
-.page-hero__lead { color: var(--slate); font-size: 1.12rem; margin-top: 16px; max-width: 660px; }
-.page-hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.page-hero__lead { color: var(--slate); font-size: 1.05rem; margin-top: 12px; max-width: 660px; }
+.page-hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 22px; }
 
 /* ---------------- Hero ---------------- */
 .hero { position: relative; background: linear-gradient(180deg, var(--blue-25), var(--bg)); border-bottom: 1px solid var(--line); overflow: hidden; }
@@ -317,8 +317,20 @@ strong { font-weight: 700; }
 .svc {
   position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 32px 28px; transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s, background-color .25s;
+  display: block; text-decoration: none; color: inherit;
 }
 .svc:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-2); }
+/* Photo service cards are whole-card links: reveal a "Learn more" prompt on hover, same as project cards */
+.svc--photo .svc__media::after {
+  content: "Learn more →";
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: 12px;
+  background: linear-gradient(180deg, rgba(10,37,64,.28), rgba(10,37,64,.72));
+  color: #fff; font-family: var(--font-head); font-weight: 600; font-size: 1.02rem; letter-spacing: .01em;
+  opacity: 0; transition: opacity .25s var(--ease);
+}
+.svc--photo:hover .svc__media::after, .svc--photo:focus-visible .svc__media::after { opacity: 1; }
+@media (hover: none) { .svc--photo .svc__media::after { content: none; } }
 /* Photo-topped service card: the photo bleeds to the card edges, icon sits below */
 .svc--photo { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
 .svc__media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: linear-gradient(160deg, var(--navy), var(--blue-700)); }
@@ -904,7 +916,7 @@ a.project { cursor: pointer; }
   .hero__facts { padding: 6px 20px 8px; }
   .hero__facts li { padding: 13px 0; gap: 12px; }
   .hero__card-cta { padding: 14px 20px 20px; }
-  .page-hero__inner { padding: 30px 0 24px; }
+  .page-hero__inner { padding: 20px 0 18px; }
 
   /* cards: consistent, roomier internal padding, comfortable gaps */
   .svc-grid, .svc-grid--four, .projects, .reviews, .accreds, .sectors, .steps { gap: 14px; }
