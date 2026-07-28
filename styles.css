@@ -1073,10 +1073,11 @@ a.project { cursor: pointer; }
 /* Feature photos sit in a narrower, centred column so they read as editorial, not full-bleed */
 .cs-media { max-width: 880px; margin-inline: auto; }
 .cs-media .ph-wrap { aspect-ratio: 16 / 10; }
-.cs-gallery { max-width: 980px; margin-inline: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.cs-gallery .ph-wrap { aspect-ratio: 4 / 3; }
+/* Centered wrap so a lone trailing photo (e.g. 4th, or a single) sits centered, never stranded left */
+.cs-gallery { max-width: 980px; margin-inline: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.cs-gallery .ph-wrap { aspect-ratio: 4 / 3; flex: 0 1 calc((100% - 28px) / 3); }
 .cs-gallery__head { max-width: 980px; margin: 0 auto 18px; }
-@media (max-width: 760px) { .cs-gallery { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .cs-gallery .ph-wrap { flex-basis: calc((100% - 14px) / 2); } }
 .cs-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .cs-duo .ph-wrap { aspect-ratio: 4 / 3; }
 .cs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
