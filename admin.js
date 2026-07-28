@@ -542,11 +542,37 @@
 
     const main = doc.querySelector("main");
     main.querySelectorAll("h1").forEach((h) => (h.textContent = name));
-    main.querySelectorAll(".eyebrow").forEach((e) => { const a = e.querySelector("a"); if (a) a.textContent = sector; else e.textContent = sector; });
+    // Only the page-hero breadcrumb eyebrow carries the sector — leave the
+    // section eyebrows ("Client brief" / "Deliverables") intact so a new case
+    // study keeps the same layout as the rest of the site.
+    const heroEye = main.querySelector(".page-hero__inner .eyebrow, .page-hero .eyebrow");
+    if (heroEye) {
+      const a = heroEye.querySelector("a");
+      if (a && a.nextSibling && a.nextSibling.nodeType === 3) a.nextSibling.textContent = " · " + sector;
+      else if (a) a.insertAdjacentText("afterend", " · " + sector);
+      else heroEye.textContent = sector;
+    }
     const lead = main.querySelector(".page-hero__lead"); if (lead) lead.textContent = intro || "Add a short overview of this project.";
     const bodyP = [...main.querySelectorAll(".split__copy p")].filter((p) => !p.classList.contains("eyebrow") && !p.classList.contains("page-hero__lead"));
-    const ph = ["Describe the scope of works — what GDC designed, installed and delivered for this project.", "Describe the outcome — the systems now in place and the difference they make for the client."];
+    // Placeholders for the Client brief (first two) then Deliverables (rest).
+    const ph = [
+      "Describe the client's brief — the site or building, the challenge, and what they needed protected.",
+      "Add any extra context — constraints, timescales, or what mattered most to the client.",
+      "Describe what GDC delivered — the systems designed, installed and commissioned for this project.",
+      "Describe the outcome — the protection now in place and the ongoing support GDC provides.",
+    ];
     bodyP.forEach((p, i) => (p.textContent = ph[i] || ph[ph.length - 1]));
+    // Reset the "Systems installed" checklist to generic starters (it's editable).
+    const sysList = main.querySelector(".svc-detail__list");
+    if (sysList) {
+      const generic = ["Fire detection", "CCTV & security", "Commissioning & certification", "Servicing & maintenance"];
+      [...sysList.querySelectorAll("li")].filter((li) => !li.classList.contains("svc-detail__list-title")).forEach((li, i) => {
+        const svg = li.querySelector("svg");
+        li.textContent = "";
+        if (svg) li.appendChild(svg);
+        li.appendChild(doc.createTextNode(" " + (generic[i] || "System installed")));
+      });
+    }
     let pi = 0;
     main.querySelectorAll("img[data-img]").forEach((im) => { pi++; im.setAttribute("src", "assets/photos/projects/" + slug + "-" + pi + ".jpg"); im.setAttribute("data-img", ""); im.setAttribute("alt", name + " — GDC Fire & Security project"); });
 
