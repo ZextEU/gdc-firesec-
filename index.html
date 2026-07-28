@@ -134,9 +134,10 @@
     <!-- ============ HERO ============ -->
     <section class="hero hero--photo">
       <div class="hero__bg" aria-hidden="true">
-        <video class="hero__video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" onloadeddata="this.classList.add('is-playing')" onplaying="this.classList.add('is-playing')">
+        <video class="hero__video" muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true" onloadeddata="this.classList.add('is-playing')" onplaying="this.classList.add('is-playing')">
           <source src="assets/video/skyline-hero-min.mp4" type="video/mp4" />
         </video>
+        <script>(function(){var v=document.querySelector('.hero__video');if(!v)return;if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;var p=v.play();if(p&&p.catch)p.catch(function(){});})();</script>
       </div>
       <div class="container hero__inner">
         <div class="hero__copy">
