@@ -37,7 +37,7 @@ window.PIXRWEB_EDITOR = {
     { file: "project-deichmann.html", label: "Case: Deichmann" },
     { file: "project-castleridge.html", label: "Case: Castleridge " },
     { file: "project-mellon.html", label: "Case: Mellon Prope" },
-    { file: "project-kme.html", label: "Case: KME Steel" },
+    { file: "project-kme.html", label: "Case: KME Steelworks" },
     { file: "project-branniff.html", label: "Case: Branniff Joi" },
     { file: "project-tobar-mhuire.html", label: "Case: Tobar Mhuire" },
     { file: "project-wing-it.html", label: "Case: Wing It NI" },
