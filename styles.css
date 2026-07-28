@@ -560,6 +560,10 @@ strong { font-weight: 700; }
 .footer__brand .brand__text small { color: rgba(255,255,255,.55); }
 .footer__brand .brand__mark-img--footer { height: 52px; }
 .footer__brand p { margin-top: 16px; font-size: .94rem; max-width: 320px; }
+.footer__social { display: flex; gap: 12px; margin-top: 20px; }
+.footer__social a { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,.09); color: rgba(255,255,255,.82); transition: background .2s, color .2s, transform .2s var(--ease); }
+.footer__social a:hover { background: var(--blue); color: #fff; transform: translateY(-2px); }
+.footer__social svg { width: 18px; height: 18px; }
 .footer__col h3 { color: #fff; font-family: var(--font-head); font-size: 1rem; font-weight: 700; letter-spacing: .04em; margin-bottom: 16px; }
 .footer__col ul { list-style: none; display: grid; gap: 10px; }
 .footer__col a, .footer__col li { color: rgba(255,255,255,.72); font-size: .94rem; transition: color .2s; }
