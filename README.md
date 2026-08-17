@@ -65,15 +65,19 @@ Contact, an "Areas we cover" section on the home page, and a full sitemap.
 
 ## 🗂 Structure
 
+The site is the repository root — no build step, no sub-folder.
+
 ```
-GDC/
+.
 ├── index.html     # Home
 ├── services.html  # Services (detail per service + process)
 ├── about.html     # About (story, values, accreditations)
 ├── projects.html  # Projects (mini case studies)
 ├── contact.html   # Contact (form + FAQ)
+├── project-*.html # One page per case study (auto-discovered by the editor)
 ├── styles.css     # Blue/white corporate design system
 ├── script.js      # Header, mobile nav, reveal, counters, form
+├── admin.html · admin.js · admin-config.js   # Client editor (see below)
 ├── robots.txt
 ├── sitemap.xml
 ├── vercel.json    # cleanUrls + security headers + asset caching
@@ -148,11 +152,13 @@ The client can:
 2. Give the token to the client — they paste it once at `/admin` (stored in
    their browser only).
 
-> ⚠️ **Security note:** a Contents token grants write access to the *whole
-> repository*. While GDC lives in this multi-site repo, only hand the token to
-> trusted clients — or better, move `GDC/` to its own repository (update
-> `OWNER`/`REPO`/`BASE` at the top of `admin.js`) so the client token can only
-> ever touch their own site. Tokens can be revoked/rotated any time on GitHub.
+> ✅ **Security note:** a Contents token grants write access to the *whole
+> repository* it is scoped to. This site now has its own repository
+> (`ZextEU/gdc-firesec-`) — split out of the Pixrweb multi-site repo — so a token
+> issued for it can only ever touch GDC's own site, never any other client's.
+> Scope every client token to *Only select repositories → this repo*, and never
+> reuse a token issued for the old monorepo. Tokens can be revoked/rotated any
+> time on GitHub.
 
 ---
 
@@ -171,11 +177,12 @@ Internal links use clean URLs (`/services`, `/about`, …), so use a server that
 resolves them to the matching `.html` file (as Vercel does in production):
 
 ```bash
-npx serve GDC
+npx serve .
 # visit http://localhost:3000
 ```
 
 ## 🌐 Deploy
 
-Point Vercel / Netlify / Cloudflare Pages at this folder — no build command,
-output directory = `GDC`.
+Point Vercel / Netlify / Cloudflare Pages at this repository — **no build
+command**, root directory = repo root, output directory = repo root.
+`vercel.json` supplies clean URLs, security headers and asset caching.

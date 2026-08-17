@@ -8,9 +8,9 @@ window.PIXRWEB_EDITOR = {
 
   /* repository this site lives in */
   owner: "ZextEU",
-  repo: "Pixrweb",
+  repo: "gdc-firesec-",
   branch: "main",
-  base: "GDC/", // folder within the repo ("" if the site is the repo root)
+  base: "", // folder within the repo ("" if the site is the repo root)
 
   /* Core pages. Every file listed here MUST exist in the repo — a missing one
      stops the editor loading. Case-study project pages are deliberately NOT
