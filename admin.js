@@ -28,6 +28,44 @@
   }
   function setLogin(msg, kind) { const n = $("#loginStatus"); n.textContent = msg; n.className = "adm-status" + (kind ? " " + kind : ""); }
 
+  /* ---------- where the access key lives ----------
+     The key is a GitHub token that can write to this repository, so it is
+     easily the most valuable thing on the page. Two rules follow from that:
+
+       1. It lives in sessionStorage by default, so it dies with the tab.
+          "Remember on this device" moves it to localStorage but stamps an
+          expiry, so an abandoned laptop stops being a way in after half a
+          day rather than forever.
+       2. Neither store defends against script injection on this origin —
+          any script that runs here can read both. The real protection is
+          the Content-Security-Policy in vercel.json; keep it tight.
+
+     Sessions also time out while idle (see IDLE_MS below). */
+  const REMEMBER_MS = 12 * 60 * 60 * 1000;   // "remember me" lifetime
+  const IDLE_MS = 30 * 60 * 1000;            // sign out after this long untouched
+
+  function readToken() {
+    let raw = "";
+    try { raw = sessionStorage.getItem(TKEY) || localStorage.getItem(TKEY) || ""; } catch (e) { return ""; }
+    if (!raw) return "";
+    // Legacy plain-string entries from before expiry stamps existed.
+    if (raw.charAt(0) !== "{") return raw;
+    let rec; try { rec = JSON.parse(raw); } catch (e) { clearToken(); return ""; }
+    if (!rec || !rec.t) { clearToken(); return ""; }
+    if (rec.exp && Date.now() > rec.exp) { clearToken(); return ""; }
+    return rec.t;
+  }
+  function writeToken(t, remember) {
+    const rec = JSON.stringify({ t, exp: remember ? Date.now() + REMEMBER_MS : 0 });
+    try {
+      sessionStorage.setItem(TKEY, rec);
+      if (remember) localStorage.setItem(TKEY, rec); else localStorage.removeItem(TKEY);
+    } catch (e) {}
+  }
+  function clearToken() {
+    try { sessionStorage.removeItem(TKEY); localStorage.removeItem(TKEY); } catch (e) {}
+  }
+
   /* ---------- GitHub API (proven, unchanged behaviour) ---------- */
   let token = "";
   async function gh(path, opts) {
@@ -74,7 +112,10 @@
         : "GitHub returned an unexpected error (" + res.status + "). Please try again or contact Pixrweb.";
       token = ""; return setLogin(why, "err");
     }
-    try { remember ? localStorage.setItem(TKEY, token) : localStorage.removeItem(TKEY); } catch (e) {}
+    writeToken(token, !!remember);
+    // Don't leave the key sitting in the DOM once it has been accepted.
+    const ti = $("#tokenInput"); if (ti) { ti.value = ""; ti.type = "password"; }
+    startIdleTimer();
     setLogin("Loading your site…");
     try {
       for (const p of PAGES) {
@@ -120,9 +161,33 @@
   });
   $("#logoutBtn").addEventListener("click", () => {
     if (anyDirty() && !confirm("You have unsaved changes. Log out and keep them saved as a draft on this device?")) return;
-    try { localStorage.removeItem(TKEY); } catch (e) {}
-    location.reload();
+    signOut();
   });
+
+  function signOut() {
+    token = "";          // drop it from memory as well as storage
+    clearToken();
+    location.reload();
+  }
+
+  /* Idle sign-out. Unsaved work is already mirrored to a per-page draft in
+     localStorage by markDirty(), so nothing is lost — the client just has
+     to paste their key again when they come back to the machine. */
+  let idleTimer = null;
+  function startIdleTimer() {
+    const bump = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        if (!token) return;
+        alert("You've been signed out of the editor after 30 minutes of inactivity. Any unsaved changes have been kept as a draft on this device.");
+        signOut();
+      }, IDLE_MS);
+    };
+    ["click", "keydown", "pointerdown"].forEach((ev) =>
+      document.addEventListener(ev, bump, { passive: true })
+    );
+    bump();
+  }
 
   /* ---------- identify + stamp editable nodes ---------- */
   function isRichText(elm) { return [...elm.children].some((c) => c.matches && c.matches(EDITABLE) === false && c.textContent.trim() && c.tagName !== "svg" && c.tagName !== "SVG"); }
@@ -162,6 +227,9 @@
     const old = $("#stage iframe"); if (old) old.remove();
     const frame = document.createElement("iframe");
     frame.className = "adm-frame"; frame.id = "frame";
+    // No allow-scripts: renderHTML() also strips <script>, so the page being
+    // edited cannot run code even though it shares this origin. Adding
+    // allow-scripts here would hand it the access key in storage.
     frame.setAttribute("sandbox", "allow-same-origin allow-popups");
     frame.srcdoc = renderHTML(docs[file].doc);
     frame.addEventListener("load", () => { $("#stageLoading").style.display = "none"; wireFrame(file, frame.contentDocument); });
@@ -292,14 +360,36 @@
   }
 
   /* ---------- photos ---------- */
+  /* Photo uploads write to a path taken from the page's own markup. That
+     markup is ours, but the write goes to the GitHub API with a token that
+     can reach the whole repository, so the path is checked rather than
+     trusted: relative, no traversal, and an image extension. Anything else
+     could overwrite a page or a script instead of a picture. */
+  const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
+  const MAX_UPLOAD = 12 * 1024 * 1024;
+  function safeRepoPath(p) {
+    const s = String(p || "").trim();
+    if (!s || s.length > 200) return null;
+    if (/^[a-z]+:|^\/\/|^\//i.test(s)) return null;            // absolute or protocol-relative
+    if (s.split("/").some((seg) => seg === "..")) return null;  // traversal
+    if (!/^[A-Za-z0-9][A-Za-z0-9._\-/]*$/.test(s)) return null; // conservative charset
+    if (!/\.(jpe?g|png|webp|gif|avif)$/i.test(s)) return null;  // images only
+    return s;
+  }
+
   function pickPhoto(file, iframeImg) {
-    const input = document.createElement("input"); input.type = "file"; input.accept = "image/*";
+    const input = document.createElement("input"); input.type = "file";
+    input.accept = PHOTO_TYPES.join(",");
     input.addEventListener("change", () => { if (input.files && input.files[0]) uploadPhoto(file, iframeImg, input.files[0]); });
     input.click();
   }
   function uploadPhoto(file, iframeImg, blob) {
-    const id = iframeImg.getAttribute("data-pxid");
-    const src = iframeImg.getAttribute("src");
+    const src = safeRepoPath(iframeImg.getAttribute("src"));
+    if (!src) return toast("That photo slot can't be updated automatically — please contact Pixrweb.", "err");
+    if (PHOTO_TYPES.indexOf(blob.type) === -1)
+      return toast("Please choose a JPG, PNG, WebP or GIF image.", "err");
+    if (blob.size > MAX_UPLOAD)
+      return toast("That photo is too large (max " + Math.round(MAX_UPLOAD / 1048576) + "MB). Please pick a smaller one.", "err");
     toast("Optimising photo…");
     const reader = new FileReader();
     reader.onload = () => {
@@ -415,11 +505,25 @@
     const { modal } = overlay("Preview — " + label(file) + " · " + changeCount(file) + " change(s)");
     modal.appendChild(eln("p", "adm-modal__note", "Left: your site as it is live now. Right: after your edits, outlined in amber. Nothing is public until you press Save & publish."));
     const wrap = eln("div", "adm-compare");
+    /* Both panes are rendered with scripts removed and no allow-scripts in
+       the sandbox — two independent reasons nothing in the previewed page
+       can execute. allow-same-origin has to stay: srcdoc frames inherit the
+       page's CSP, and 'self' matches nothing from an opaque origin, so
+       dropping it would stop the preview loading its own CSS and photos. */
     const pane = (cap, html, hi) => {
       const fig = document.createElement("figure"); fig.appendChild(eln("figcaption", hi ? "after" : "before", cap));
       const fr = document.createElement("iframe"); fr.setAttribute("sandbox", "allow-same-origin");
-      html = html.replace("</head>", '<base href="/" />' + (hi ? '<style>[data-pixr-edited]{outline:3px dashed #F5A623 !important;outline-offset:3px;background:rgba(245,166,35,.12) !important;}</style>' : "") + "</head>");
-      fr.srcdoc = html; fig.appendChild(fr); return fig;
+      const pdoc = new DOMParser().parseFromString(html, "text/html");
+      pdoc.querySelectorAll("script").forEach((s) => s.remove());
+      const phead = pdoc.querySelector("head");
+      const pbase = pdoc.createElement("base"); pbase.href = "/"; phead.insertBefore(pbase, phead.firstChild);
+      if (hi) {
+        const hs = pdoc.createElement("style");
+        hs.textContent = "[data-pixr-edited]{outline:3px dashed #F5A623 !important;outline-offset:3px;background:rgba(245,166,35,.12) !important;}";
+        phead.appendChild(hs);
+      }
+      fr.srcdoc = "<!DOCTYPE html>\n" + pdoc.documentElement.outerHTML;
+      fig.appendChild(fr); return fig;
     };
     wrap.appendChild(pane("Before — live now", docs[file].original, false));
     wrap.appendChild(pane("After — your edits", serialise(docs[file].doc, false), true));
@@ -652,8 +756,8 @@
   }
   function startSignin() {
     showOnly("signin");
-    let saved = ""; try { saved = localStorage.getItem(TKEY) || ""; } catch (e) {}
-    if (saved) { $("#tokenInput").value = saved; signIn(saved, true); }
+    const saved = readToken();          // expired or malformed entries are purged for us
+    if (saved) signIn(saved, true);     // note: never written back into the visible input
   }
 
   /* ---------- boot: code helper → gate → sign-in ---------- */

@@ -207,6 +207,124 @@
   };
   document.querySelectorAll("img[data-img]").forEach(upgrade);
 
+  /* --- Enquiry validation + submission guard -------------------------
+     Both the contact-page form and the quick-quote panel post straight to
+     Web3Forms; there is no server of ours in between. So everything here
+     is about keeping malformed input and accidental double-taps out of
+     the inbox — treat it as data hygiene, not a security boundary. The
+     controls that actually stop a determined abuser are set on the
+     Web3Forms side (hCaptcha, allowed domains, their own rate limits),
+     because anyone can POST to their API without loading this page.
+
+     What this does enforce, on every field that reaches an email:
+       · length caps, so nothing unbounded is sent
+       · a character allowlist per field type
+       · no CR/LF or control characters, which are what mail-header and
+         log-injection payloads rely on
+       · the hidden honeypot, silently dropped if a bot ticks it       */
+  const LIMIT = { name: 80, phone: 24, email: 254, message: 2000 };
+  const RE = {
+    // one @, a dotted domain, no spaces, quotes or angle brackets
+    email: /^[^\s@<>"'\\;]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,24}$/,
+    // digits plus the usual separators — the digit count is checked separately
+    phone: /^[0-9+()\u2010-\u2015.\-\s]+$/,
+    // a name should not contain markup, URLs or mail-header punctuation
+    nameBad: /[<>{}[\]\\|`~^=*_@#$%]|https?:|www\./i,
+  };
+  // Strip C0/C1 control characters and collapse runs of whitespace.
+  const clean = (s, keepBreaks) => {
+    const stripped = String(s == null ? "" : s).replace(
+      keepBreaks ? /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g : /[\u0000-\u001F\u007F-\u009F]/g,
+      " "
+    );
+    return (keepBreaks ? stripped.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n") : stripped.replace(/\s+/g, " ")).trim();
+  };
+  const digitCount = (s) => (s.match(/\d/g) || []).length;
+
+  /* Returns { ok, error, values } — values are the cleaned strings that
+     should be sent, so the caller never forwards the raw input. */
+  function validateEnquiry(form) {
+    const get = (n) => (form.elements[n] ? form.elements[n].value : "");
+    const v = {
+      name: clean(get("name")).slice(0, LIMIT.name),
+      phone: clean(get("phone")).slice(0, LIMIT.phone),
+      email: clean(get("email")).slice(0, LIMIT.email),
+      message: clean(get("message"), true).slice(0, LIMIT.message),
+      service: clean(get("service")).slice(0, 80),
+    };
+    const fail = (error, field) => ({ ok: false, error, field, values: v });
+
+    if (v.name.length < 2) return fail("Please add your name.", "name");
+    if (RE.nameBad.test(v.name)) return fail("Please enter your name using letters only.", "name");
+
+    if (!v.phone) return fail("Please add a contact number.", "phone");
+    if (!RE.phone.test(v.phone) || digitCount(v.phone) < 7 || digitCount(v.phone) > 15)
+      return fail("That number doesn't look right — please check it.", "phone");
+
+    // Email is optional; validate it only when one was actually typed.
+    if (v.email && !RE.email.test(v.email)) return fail("That email address doesn't look right.", "email");
+
+    if (v.message.length > LIMIT.message)
+      return fail("Please shorten your message a little.", "message");
+
+    return { ok: true, values: v };
+  }
+
+  /* Honeypot: a hidden checkbox no human can see or tab to. If it is
+     ticked the submission is dropped, but we still show the success
+     message so a bot cannot tell it failed. */
+  const trapped = (form) => !!(form.elements.botcheck && form.elements.botcheck.checked);
+
+  /* Per-browser send throttle. Stops double-taps and casual hammering of
+     the inbox; it is trivially bypassed by anyone who cares, which is why
+     the real limit has to be configured at Web3Forms. */
+  const SEND_KEY = "gdc-sent";
+  const THROTTLE = { gapMs: 20000, perHour: 5 };
+  function sendHistory() {
+    let raw = "";
+    try { raw = sessionStorage.getItem(SEND_KEY) || ""; } catch (e) { return []; }
+    const cutoff = Date.now() - 3600000;
+    return raw.split(",").map(Number).filter((t) => t && t > cutoff);
+  }
+  function throttleError() {
+    const hist = sendHistory();
+    if (hist.length >= THROTTLE.perHour)
+      return "You've sent us a few requests already — please call " + PHONE + " and we'll pick it up straight away.";
+    if (hist.length && Date.now() - hist[hist.length - 1] < THROTTLE.gapMs)
+      return "That's already on its way to us — please give us a moment.";
+    return null;
+  }
+  function recordSend() {
+    try { sessionStorage.setItem(SEND_KEY, sendHistory().concat(Date.now()).join(",")); } catch (e) {}
+  }
+
+  /* Build the payload by hand from the validated values rather than
+     posting the raw FormData, so only fields we know about are sent. */
+  function enquiryPayload(form, values, extra) {
+    const body = new FormData();
+    ["access_key", "subject", "from_name"].forEach((k) => {
+      if (form.elements[k]) body.append(k, form.elements[k].value);
+    });
+    Object.keys(values).forEach((k) => { if (values[k]) body.append(k, values[k]); });
+    if (extra) Object.keys(extra).forEach((k) => body.append(k, extra[k]));
+    return body;
+  }
+
+  const isConfigured = (form) => {
+    const k = form.elements.access_key;
+    return !!(k && k.value && k.value.indexOf("YOUR_WEB3FORMS") === -1);
+  };
+
+  async function deliver(form, values, extra) {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: enquiryPayload(form, values, extra),
+    });
+    const data = await res.json();
+    return !!data.success;
+  }
+
   /* --- Quick contact: side tab, FAB, pop-up panel + assistant --- */
   const cPanel = document.getElementById("contactPanel");
   if (cPanel) {
@@ -255,30 +373,47 @@
     /* mini quote form — same delivery as the main contact form */
     const mini = document.getElementById("miniQuote");
     const mqNote = document.getElementById("mqNote");
+    let miniBusy = false;
     mini.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const name = mini.name.value.trim();
-      const phoneNo = mini.phone.value.trim();
+      if (miniBusy) return;
       mqNote.className = "cpanel__note";
-      if (!name || !phoneNo) { mqNote.textContent = "Please add your name and number."; mqNote.classList.add("is-err"); return; }
-      const key = mini.querySelector('[name="access_key"]');
-      const configured = key && key.value && key.value.indexOf("YOUR_WEB3FORMS") === -1;
-      if (!configured) {
-        mqNote.textContent = "Thanks " + name + "! We'll call you back shortly.";
-        mqNote.classList.add("is-ok");
-        mini.reset();
+      const say = (msg, ok) => { mqNote.textContent = msg; mqNote.classList.add(ok ? "is-ok" : "is-err"); };
+
+      const check = validateEnquiry(mini);
+      if (!check.ok) {
+        say(check.error, false);
+        const bad = mini.elements[check.field];
+        if (bad && bad.focus) bad.focus();
+        return;
+      }
+      const name = check.values.name;
+
+      // Silently absorb bots so they get no signal to retry.
+      if (trapped(mini)) { say("Thanks " + name + "! We'll call you back shortly.", true); mini.reset(); return; }
+
+      const blocked = throttleError();
+      if (blocked) return say(blocked, false);
+
+      if (!isConfigured(mini)) {
+        say("Sorry — the online form isn't available right now. Please call " + PHONE + " and we'll help straight away.", false);
         console.warn("[GDC] Quick-quote form is not configured: set a Web3Forms access_key.");
         return;
       }
+
+      miniBusy = true;
+      const btn = mini.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      mqNote.textContent = "Sending…";
       try {
-        const res = await fetch("https://api.web3forms.com/submit", { method: "POST", headers: { Accept: "application/json" }, body: new FormData(mini) });
-        const data = await res.json();
-        mqNote.textContent = data.success ? "Thanks " + name + "! We'll call you back shortly." : "Sorry — something went wrong. Please call " + PHONE + ".";
-        mqNote.classList.add(data.success ? "is-ok" : "is-err");
-        if (data.success) mini.reset();
+        const ok = await deliver(mini, check.values, { subject_form: "Quick quote panel" });
+        if (ok) { recordSend(); say("Thanks " + name + "! We'll call you back shortly.", true); mini.reset(); }
+        else say("Sorry — something went wrong. Please call " + PHONE + ".", false);
       } catch (err) {
-        mqNote.textContent = "Network error — please call " + PHONE + ".";
-        mqNote.classList.add("is-err");
+        say("Network error — please call " + PHONE + ".", false);
+      } finally {
+        miniBusy = false;
+        if (btn) btn.disabled = false;
       }
     });
 
@@ -349,7 +484,10 @@
     };
     chatForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const q = chatInput.value.trim();
+      // Questions are only ever matched against the table above and echoed
+      // back through textContent, but cap and clean them anyway so nothing
+      // unbounded or control-laden reaches the log.
+      const q = clean(chatInput.value).slice(0, 300);
       if (!q) return;
       chatInput.value = "";
       ask(q);
@@ -376,51 +514,50 @@
   const form = document.getElementById("quoteForm");
   const note = document.getElementById("formNote");
   if (form) {
+    let busy = false;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const name = form.name.value.trim();
-      const phone = form.phone.value.trim();
+      if (busy) return;
       note.className = "form__note";
+      const say = (msg, ok) => { note.textContent = msg; note.classList.add(ok ? "is-ok" : "is-err"); };
 
-      if (!name || !phone) {
-        note.textContent = "Please add your name and a contact number.";
-        note.classList.add("is-err");
+      const check = validateEnquiry(form);
+      if (!check.ok) {
+        say(check.error, false);
+        const bad = form.elements[check.field];
+        if (bad && bad.focus) bad.focus();
         return;
       }
+      const name = check.values.name;
 
-      const keyField = form.querySelector('[name="access_key"]');
-      const configured = keyField && keyField.value && keyField.value.indexOf("YOUR_WEB3FORMS") === -1;
+      if (trapped(form)) { say("Thanks " + name + "! Request received — we'll be in touch shortly.", true); form.reset(); return; }
 
-      if (!configured) {
-        note.textContent = "Thanks " + name + "! Request received — we'll be in touch shortly.";
-        note.classList.add("is-ok");
-        form.reset();
+      const blocked = throttleError();
+      if (blocked) return say(blocked, false);
+
+      if (!isConfigured(form)) {
+        say("Sorry — the online form isn't available right now. Please call " + PHONE + " or email us and we'll come straight back to you.", false);
         console.warn("[GDC] Contact form is not configured: set a Web3Forms access_key to deliver enquiries.");
         return;
       }
 
       const submitBtn = form.querySelector('button[type="submit"]');
+      busy = true;
       note.textContent = "Sending…";
       if (submitBtn) submitBtn.disabled = true;
       try {
-        const res = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(form),
-        });
-        const data = await res.json();
-        if (data.success) {
-          note.textContent = "Thanks " + name + "! Your request is in — we'll be in touch shortly.";
-          note.classList.add("is-ok");
+        const ok = await deliver(form, check.values, { subject_form: "Contact page" });
+        if (ok) {
+          recordSend();
+          say("Thanks " + name + "! Your request is in — we'll be in touch shortly.", true);
           form.reset();
         } else {
-          note.textContent = "Sorry — something went wrong. Please call " + PHONE + ".";
-          note.classList.add("is-err");
+          say("Sorry — something went wrong. Please call " + PHONE + ".", false);
         }
       } catch (err) {
-        note.textContent = "Network error — please call " + PHONE + " or try again.";
-        note.classList.add("is-err");
+        say("Network error — please call " + PHONE + " or try again.", false);
       } finally {
+        busy = false;
         if (submitBtn) submitBtn.disabled = false;
       }
     });

@@ -165,9 +165,58 @@ The client can:
 ## ✏️ Other launch steps
 
 - **Contact form** — set a free [Web3Forms](https://web3forms.com) `access_key`
-  in `index.html` (search `YOUR_WEB3FORMS_ACCESS_KEY`). Until then the form shows
-  a friendly confirmation but does **not** send an enquiry.
+  in every page (search `YOUR_WEB3FORMS_ACCESS_KEY`, 38 files). **Until this is
+  done no enquiry reaches anyone** — the form now says so plainly and points the
+  visitor at the phone number, rather than showing a false confirmation.
 - **Stats** — adjust `data-count` values on `.stat__num` elements.
+
+---
+
+## 🔒 Security
+
+The site is static — HTML, CSS and one script on a CDN. There is no server, no
+database and no first-party API, which decides what can and cannot be enforced
+here.
+
+### Enforced in this repo
+
+| Control | Where |
+|---|---|
+| Content-Security-Policy (no `unsafe-inline` scripts; inline code pinned by SHA-256 hash) | `vercel.json` |
+| `frame-ancestors`, `base-uri`, `object-src 'none'`, `form-action` allowlist | `vercel.json` |
+| HSTS w/ preload, `nosniff`, Referrer-Policy, Permissions-Policy, COOP | `vercel.json` |
+| `/admin` set to `no-store` + `noindex` | `vercel.json`, `robots.txt` |
+| Enquiry validation — length caps, per-field character allowlists, control/CRLF stripping | `script.js` |
+| Honeypot field, submit de-duplication, per-browser send throttle | `script.js` |
+| Editor key in `sessionStorage`, 12h cap on "remember", 30-minute idle sign-out | `admin.js` |
+| Editor upload checks — MIME allowlist, 12 MB cap, repo-path traversal guard | `admin.js` |
+| Edited pages rendered with scripts stripped **and** an iframe sandbox with no `allow-scripts` | `admin.js` |
+
+> **Changing an inline `<script>` or an `on…=` attribute in any page breaks the
+> CSP** until its hash is updated in `vercel.json`. Hash the *committed* bytes
+> (LF), not the Windows working copy (CRLF), or every page will silently fail to
+> theme itself.
+
+### Not enforceable here — configure it upstream
+
+- **Rate limiting.** There is no endpoint of ours to limit. Enquiries go
+  straight from the visitor's browser to `api.web3forms.com` with a public
+  access key, so anyone can POST to that endpoint without ever loading this
+  site. The throttle in `script.js` stops double-taps and casual abuse only.
+  Real limits must be set in the **Web3Forms dashboard**: enable hCaptcha,
+  restrict allowed domains to `gdcfiresec.com`, and set their spam/rate rules.
+- **The `/admin` paywall is not a security control.** `isUnlocked()` compares a
+  value in `localStorage` against `access.unlockHashes` in `admin-config.js` —
+  and those hashes ship in this public repo, so the check can be satisfied by
+  anyone who reads the file. It gates the *editor UI* only: publishing still
+  requires a valid GitHub token, so a bypass costs revenue, not site integrity.
+  Making it real needs a server-side check, which this architecture has no place
+  for. The hashes are also unsalted SHA-256 of short codes — assume they are
+  brute-forceable and do not reuse those codes anywhere else.
+- **Repository access.** The editor's fine-grained token should be scoped to
+  this repository only, with **Contents: Read and write** and nothing else, and
+  given the shortest expiry the client will tolerate. Anyone holding it can
+  publish to the live site.
 
 ---
 
