@@ -164,10 +164,14 @@ The client can:
 
 ## ✏️ Other launch steps
 
-- **Contact form** — set a free [Web3Forms](https://web3forms.com) `access_key`
-  in every page (search `YOUR_WEB3FORMS_ACCESS_KEY`, 38 files). **Until this is
-  done no enquiry reaches anyone** — the form now says so plainly and points the
-  visitor at the phone number, rather than showing a false confirmation.
+- **Contact form** — ✅ live. A [Web3Forms](https://web3forms.com) `access_key`
+  is set on every page (38 fields across 37 files) and enquiries are delivered
+  to **info@gdcfiresec.com**. To change the destination inbox, create a new key
+  at web3forms.com and search/replace the current one. If a page is ever added
+  with the `YOUR_WEB3FORMS_ACCESS_KEY` placeholder, its form refuses to send and
+  points the visitor at the phone number rather than showing a false
+  confirmation. Spam controls (domain allowlist, hCaptcha) live in the Web3Forms
+  dashboard — see Security below.
 - **Stats** — adjust `data-count` values on `.stat__num` elements.
 
 ---
