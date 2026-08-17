@@ -149,6 +149,7 @@
     $("#app").classList.add("on");
     $("#newCaseBtn").style.display = "";
     buildPageSelect();
+    buildLockSwitches();
     openPage(PAGES[0].file);
     maybeTour();
   }
@@ -437,6 +438,90 @@
     toast(conf.name + " removed.", "ok");
   }
 
+  /* ---------- pause switches (`locks` in admin-config.js) ----------
+     A switch per lock in the top bar. Pausing takes the href off every
+     matching card and drops a note above them; the markup is otherwise
+     untouched, so switching back is an exact restore. An <a> without an
+     href isn't a link — it can't be clicked, tabbed to or followed by a
+     crawler — so this needs no script on the live site. */
+  const LOCKS = CFG.locks || [];
+  const lockUI = new Map();
+
+  const lockPages = (lk) => (lk.pages || []).filter((p) => docs[p.file]);
+  /* "some", not "every": if an undo leaves one page paused and another live,
+     the switch reads as paused, so one click puts every page back online. */
+  function isLocked(lk) { return lockPages(lk).some((p) => docs[p.file].doc.body.hasAttribute(lk.flag)); }
+
+  function buildLockSwitches() {
+    LOCKS.forEach((lk) => {
+      if (!lockPages(lk).length) return;
+      const btn = eln("button", "adm-btn adm-lock"); btn.type = "button";
+      btn.appendChild(eln("i", "adm-lock__dot"));
+      const txt = eln("span", "adm-btn--label");
+      btn.appendChild(txt);
+      btn.addEventListener("click", () => toggleLock(lk));
+      $("#newCaseBtn").insertAdjacentElement("afterend", btn);
+      lockUI.set(lk, { btn, txt });
+      paintLock(lk);
+    });
+  }
+  function paintLock(lk) {
+    const ui = lockUI.get(lk); if (!ui) return;
+    const paused = isLocked(lk);
+    ui.btn.classList.toggle("is-paused", paused);
+    ui.txt.textContent = lk.label + ": " + (paused ? "paused" : "live");
+    ui.btn.title = (paused ? lk.pausedHint || "" : lk.liveHint || "") +
+      " Click to " + (paused ? "switch them back on." : "pause them.");
+  }
+
+  function setLinkLocked(a, paused) {
+    if (paused) {
+      const href = a.getAttribute("href");
+      if (href) { a.setAttribute("data-href", href); a.removeAttribute("href"); }
+      a.classList.add("is-locked");
+    } else {
+      const href = a.getAttribute("data-href");
+      if (href) { a.setAttribute("href", href); a.removeAttribute("data-href"); }
+      a.classList.remove("is-locked");
+    }
+    a.setAttribute("data-pixr-edited", "");
+  }
+
+  function applyLockNote(lk, page, paused) {
+    const doc = docs[page.file].doc;
+    [...doc.querySelectorAll('.lock-note[data-lock="' + lk.id + '"]')].forEach((n) => n.remove());
+    if (!paused || !lk.note || !page.noteBefore) return;
+    const anchor = doc.querySelector(page.noteBefore); if (!anchor || !anchor.parentNode) return;
+    const p = doc.createElement("p");
+    p.className = "lock-note"; p.setAttribute("data-lock", lk.id); p.setAttribute("role", "status");
+    p.textContent = lk.note;
+    anchor.parentNode.insertBefore(p, anchor);
+  }
+
+  function toggleLock(lk) {
+    const paused = !isLocked(lk);
+    const pages = lockPages(lk);
+    if (paused && !confirm(
+      "Pause " + lk.label.toLowerCase() + " on your website?\n\n" +
+      "The cards stay where they are but can't be opened, and a short note says they're being updated. " +
+      "Switch it back on any time.\n\nNothing changes on the live site until you press Save & publish."
+    )) return;
+    pages.forEach((p) => {
+      const d = docs[p.file];
+      pushUndo(p.file);
+      if (paused) d.doc.body.setAttribute(lk.flag, ""); else d.doc.body.removeAttribute(lk.flag);
+      [...d.doc.querySelectorAll(lk.links)].forEach((a) => setLinkLocked(a, paused));
+      applyLockNote(lk, p, paused);
+      stampIds(d.doc);
+      markDirty(p.file);
+    });
+    paintLock(lk);
+    reopen(currentFile);
+    toast(paused
+      ? lk.label + " paused — press Save & publish to put it live."
+      : lk.label + " switched back on — press Save & publish to put it live.", "ok");
+  }
+
   /* ---------- dirty / undo / drafts ---------- */
   function markDirty(file) { docs[file].dirty = true; refreshBar(); saveDraft(file); }
   function pushUndo(file) { const d = docs[file]; d.undo.push(serialise(d.doc, false)); if (d.undo.length > 40) d.undo.shift(); refreshBar(); }
@@ -445,6 +530,7 @@
     const d = docs[currentFile]; if (!d.undo.length) return;
     d.doc = new DOMParser().parseFromString(d.undo.pop(), "text/html"); stampIds(d.doc);
     d.dirty = !isPristine(currentFile); saveDraft(currentFile); reopen(currentFile);
+    LOCKS.forEach(paintLock);          // an undo can move a pause switch
     toast("Undone.");
   });
   function isPristine(file) { return serialise(docs[file].doc, true) === normalise(docs[file].original); }
@@ -692,6 +778,9 @@
       card.setAttribute("href", "/" + file.replace(/\.html$/, ""));
       const h = card.querySelector(".pcard__bar h3, h3"); if (h) h.textContent = name;
       const cimg = card.querySelector("img"); if (cimg) { cimg.setAttribute("src", "assets/photos/projects/" + slug + "-1.jpg"); cimg.setAttribute("alt", name + " — GDC Fire & Security project"); }
+      // a card added while the section is paused has to be paused too,
+      // otherwise the new one would be the only clickable card on the page
+      LOCKS.forEach((lk) => { if (isLocked(lk) && card.matches(lk.links)) setLinkLocked(card, true); });
       grid.insertBefore(card, grid.firstElementChild);
       const body = serialise(pdoc.doc, true);
       const res = await saveFile(BASE + "projects.html", b64encode(body), pdoc.sha, "Add " + name + " to projects (via site editor)");

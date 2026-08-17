@@ -129,6 +129,26 @@ The editor is now a **reusable Pixrweb product** in three files:
 - **View this page ↗** link per tab; drag-and-drop or click photo replacement
   with automatic resize/compression
 - Plain-language errors (sign-in explains exactly what's wrong with a key)
+- **Pause switches** — see below
+
+### Pause switches (temporarily closing a section)
+
+The top bar carries a switch per entry in `locks` (`admin-config.js`) —
+currently one: **Projects: live / paused**. Paused means every project card
+(`a.pcard` on `/projects`, `a.project` on the home page) has its `href` parked
+on `data-href` and gains `.is-locked`, `<body>` is stamped
+`data-locked-projects`, and an editable `.lock-note` paragraph appears above
+the grid. An `<a>` with no `href` is not a link, so the cards can't be clicked,
+tabbed into or crawled — no runtime JS, no redirects. Switching back restores
+every `href` byte-for-byte.
+
+Cards stay visible (photo, name, a "Being updated" chip) so the page still
+reads as a body of work. The case-study pages themselves remain reachable by
+direct URL and are still in `sitemap.xml` — pausing hides the way in from the
+site, not from Google.
+
+Currently **paused** — GDC asked for the case studies to be closed on
+17 Aug 2026 while the write-ups are corrected.
 
 ### Original notes
 

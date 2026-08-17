@@ -50,6 +50,29 @@ window.PIXRWEB_EDITOR = {
     { page: "news.html", selector: ".projects", item: "article.project", label: "News posts", name: "Post" },
   ],
 
+  /* -----------------------------------------------------------------
+     Pause switches. Each one shows as a toggle in the editor's top bar.
+     Paused = every matching link on the listed pages loses its href (so
+     the cards stay on the site but can't be opened or tabbed into) and a
+     short note appears above them. Switching it back restores every link
+     exactly as it was. Nothing goes live until Save & publish, as usual.
+     ----------------------------------------------------------------- */
+  locks: [
+    {
+      id: "projects",
+      label: "Projects",
+      flag: "data-locked-projects",     // marker left on <body>
+      links: "a.pcard, a.project",      // the cards to make non-clickable
+      note: "Our project case studies are being updated and will be back shortly. For details of any job shown here, please call 028 9622 3008.",
+      pages: [
+        { file: "projects.html", noteBefore: ".pgrid" },
+        { file: "index.html", noteBefore: ".projects" },
+      ],
+      liveHint: "Project cards open their case study as normal.",
+      pausedHint: "Project cards are visible but can't be opened.",
+    },
+  ],
+
   editable:
       "h1, h2, h3, summary, p, blockquote, figcaption, " +
     ".project__tag, .project__scope li, .areas li, " +

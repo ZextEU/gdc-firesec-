@@ -77,6 +77,12 @@
     .adm-btn--primary[disabled] { opacity: .5; cursor: default; }
     .adm-btn[disabled] { opacity: .4; cursor: default; }
     .adm-btn.is-dirty::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--adm-amber); }
+    /* pause switch (Projects: live / paused) */
+    .adm-lock__dot { width: 9px; height: 9px; border-radius: 50%; flex: none; background: #1f8a4c; box-shadow: 0 0 0 3px rgba(31,138,76,.15); }
+    .adm-lock.is-paused { border-color: var(--adm-amber); color: #8a6100; }
+    .adm-lock.is-paused:hover { border-color: var(--adm-amber); color: #8a6100; }
+    .adm-lock.is-paused .adm-lock__dot { background: var(--adm-amber); box-shadow: 0 0 0 3px rgba(245,166,35,.2); }
+    [data-theme="dark"] .adm-lock.is-paused { color: var(--adm-amber); }
     .adm-iconbtn { flex: none; width: 40px; height: 40px; border-radius: 9px; border: 1.5px solid var(--line-2); background: var(--surface);
       color: var(--head); cursor: pointer; display: grid; place-items: center; }
     .adm-iconbtn:hover { border-color: var(--blue); color: var(--blue); }
@@ -149,6 +155,8 @@
       .adm-bar__brand span, .adm-btn--label { display: none; }
       .adm-pagesel { max-width: 130px; font-size: .86rem; padding: 7px 9px; }
       .adm-btn { padding: 9px 12px; }
+      /* a lone dot means nothing — keep the words while a section is paused */
+      .adm-lock.is-paused .adm-btn--label { display: inline; font-size: .82rem; }
     }
   </style>
 </head>

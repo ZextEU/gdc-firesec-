@@ -1107,3 +1107,27 @@ a.project { cursor: pointer; }
 @media (max-width: 760px) { .cs-duo { grid-template-columns: 1fr; } .cs-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .split--top { align-items: start; }
+
+/* ============ Temporarily paused cards (site-editor toggle) ============
+   The editor's "Projects" switch takes the href off every project card and
+   stamps data-locked-projects on <body>. An <a> with no href is not a link,
+   so a paused card can't be clicked or tabbed into — no JS, no redirect,
+   nothing to undo but the attribute. These rules stop it *looking*
+   clickable and say why. Flicking the switch back restores every href. */
+.lock-note {
+  display: flex; align-items: flex-start; gap: 12px; margin: 0 0 26px;
+  background: var(--blue-25); border: 1px solid var(--line); border-left: 4px solid var(--blue);
+  border-radius: var(--radius-sm); padding: 15px 20px; color: var(--slate); font-size: .95rem;
+}
+[data-theme="dark"] .lock-note { border-left-color: var(--blue-300); }
+.is-locked { cursor: default; }
+.pcard.is-locked:hover, .project.is-locked:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--line); }
+.is-locked:hover .ph-img.is-loaded { transform: none; }
+.pcard.is-locked .pcard__media::after { opacity: 0; }
+.pcard.is-locked .pcard__arrow, .project.is-locked .project__more { display: none; }
+.is-locked .ph-img { filter: grayscale(.45); }
+.is-locked .ph-wrap::before {
+  content: "Being updated"; position: absolute; z-index: 3; left: 12px; top: 12px;
+  background: rgba(10,37,64,.86); color: #fff; font-family: var(--font-head); font-weight: 700;
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px;
+}
