@@ -68,8 +68,13 @@ window.PIXRWEB_EDITOR = {
         { file: "projects.html", noteBefore: ".pgrid" },
         { file: "index.html", noteBefore: ".projects" },
       ],
+      /* While paused, the case-study pages themselves ask Google not to
+         index them, so search stops sending people to wording that's being
+         corrected. Matched on filename, so new case studies are covered
+         too, and each page's live value is stashed for an exact restore. */
+      noindex: { match: "^project-.+\\.html$", content: "noindex, follow" },
       liveHint: "Project cards open their case study as normal.",
-      pausedHint: "Project cards are visible but can't be opened.",
+      pausedHint: "Project cards are visible but can't be opened, and the case studies are hidden from Google.",
     },
   ],
 

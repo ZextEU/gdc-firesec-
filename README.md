@@ -143,9 +143,13 @@ tabbed into or crawled — no runtime JS, no redirects. Switching back restores
 every `href` byte-for-byte.
 
 Cards stay visible (photo, name, a "Being updated" chip) so the page still
-reads as a body of work. The case-study pages themselves remain reachable by
-direct URL and are still in `sitemap.xml` — pausing hides the way in from the
-site, not from Google.
+reads as a body of work.
+
+Pausing also flips every `project-*.html` to `robots: noindex, follow`,
+stashing each page's live value on `data-robots-live` so switching back
+restores it exactly. They stay in `sitemap.xml` on purpose — Google has to
+crawl a page to see its `noindex`. The pages themselves are still reachable
+by direct URL (nothing 404s or redirects), they're just no longer advertised.
 
 Currently **paused** — GDC asked for the case studies to be closed on
 17 Aug 2026 while the write-ups are corrected.

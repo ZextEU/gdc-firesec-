@@ -498,6 +498,30 @@
     anchor.parentNode.insertBefore(p, anchor);
   }
 
+  /* Pausing the cards hides the way in from the site; it does nothing about
+     people arriving from Google. So the pages behind the cards also get a
+     noindex while paused, with their live value stashed on the tag so
+     switching back is a restore rather than a guess. */
+  function noindexPages(lk) {
+    if (!lk.noindex || !lk.noindex.match) return [];
+    const re = new RegExp(lk.noindex.match);
+    return Object.keys(docs).filter((f) => re.test(f));
+  }
+  function setNoindex(file, lk, paused) {
+    const m = docs[file].doc.querySelector('meta[name="robots"]');
+    if (!m) return false;
+    if (paused) {
+      if (m.hasAttribute("data-robots-live")) return false;   // already paused
+      m.setAttribute("data-robots-live", m.getAttribute("content") || "");
+      m.setAttribute("content", lk.noindex.content);
+    } else {
+      if (!m.hasAttribute("data-robots-live")) return false;  // already live
+      m.setAttribute("content", m.getAttribute("data-robots-live"));
+      m.removeAttribute("data-robots-live");
+    }
+    return true;
+  }
+
   function toggleLock(lk) {
     const paused = !isLocked(lk);
     const pages = lockPages(lk);
@@ -514,6 +538,10 @@
       applyLockNote(lk, p, paused);
       stampIds(d.doc);
       markDirty(p.file);
+    });
+    noindexPages(lk).forEach((f) => {
+      pushUndo(f);
+      if (setNoindex(f, lk, paused)) markDirty(f); else docs[f].undo.pop();
     });
     paintLock(lk);
     reopen(currentFile);
