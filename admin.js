@@ -397,10 +397,25 @@
       const image = new Image();
       image.onload = async () => {
         try {
-          const MAX = 1600, scale = Math.min(1, MAX / image.width);
-          const c = document.createElement("canvas"); c.width = Math.round(image.width * scale); c.height = Math.round(image.height * scale);
-          c.getContext("2d").drawImage(image, 0, 0, c.width, c.height);
-          const dataUrl = c.toDataURL("image/jpeg", 0.85), b64 = dataUrl.split(",")[1];
+          /* Every trip through the canvas is a fresh JPEG generation: detail
+             goes soft and the colour profile is dropped. A JPEG that's
+             already web-sized doesn't need one, so it goes up untouched.
+             Anything bigger (or not a JPEG) is resized once, at a quality
+             high enough not to show. */
+          const MAX = 1600, PASS_MAX = 2 * 1024 * 1024;
+          const passThrough = blob.type === "image/jpeg" && image.width <= MAX && blob.size <= PASS_MAX;
+          let dataUrl;
+          if (passThrough) {
+            dataUrl = reader.result;
+          } else {
+            const scale = Math.min(1, MAX / image.width);
+            const c = document.createElement("canvas"); c.width = Math.round(image.width * scale); c.height = Math.round(image.height * scale);
+            const ctx = c.getContext("2d");
+            ctx.imageSmoothingQuality = "high";
+            ctx.drawImage(image, 0, 0, c.width, c.height);
+            dataUrl = c.toDataURL("image/jpeg", 0.92);
+          }
+          const b64 = dataUrl.split(",")[1];
           const existing = await loadFile(BASE + src);
           await saveFile(BASE + src, b64, existing && existing.sha, "Update photo " + src + " via site editor");
           iframeImg.src = dataUrl;                             // instant preview in stage

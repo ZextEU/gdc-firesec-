@@ -1125,7 +1125,8 @@ a.project { cursor: pointer; }
 .is-locked:hover .ph-img.is-loaded { transform: none; }
 .pcard.is-locked .pcard__media::after { opacity: 0; }
 .pcard.is-locked .pcard__arrow, .project.is-locked .project__more { display: none; }
-.is-locked .ph-img { filter: grayscale(.45); }
+/* No greying of the photos here: the chip and the dead hover already say
+   "paused", and desaturating the work reads as poor photography. */
 .is-locked .ph-wrap::before {
   content: "Being updated"; position: absolute; z-index: 3; left: 12px; top: 12px;
   background: rgba(10,37,64,.86); color: #fff; font-family: var(--font-head); font-weight: 700;

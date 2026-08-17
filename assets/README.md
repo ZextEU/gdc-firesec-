@@ -9,6 +9,15 @@ image), so it always looks finished.
 > (or WebP) at the sizes below. Large files are fine — but compressing to roughly
 > the listed size keeps the site fast.
 
+> ⚠️ **Never send photos through WhatsApp.** WhatsApp re-compresses every image
+> (typically to 1200×1600 at around JPEG quality 70) and strips its colour
+> profile, which is why a photo can look soft, blocky and washed-out on the site
+> even though it looked fine on the phone. Nothing on the website can undo that —
+> the detail is gone before the file arrives. Send originals by AirDrop, email
+> ("Actual Size"), Google Drive or WeTransfer, or in WhatsApp attach them as
+> **Document** rather than Photo. Every photo currently in
+> `assets/photos/projects/` has been through a compressor like this.
+
 ---
 
 ## 1. Logo  ✓ added  → `assets/logo/`
