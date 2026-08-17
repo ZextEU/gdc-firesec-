@@ -306,6 +306,12 @@
       if (form.elements[k]) body.append(k, form.elements[k].value);
     });
     Object.keys(values).forEach((k) => { if (values[k]) body.append(k, values[k]); });
+    /* Reply-to so hitting Reply in the inbox goes to the enquirer. Only set it
+       when an email was given (the field is optional) — an empty or malformed
+       value would make Web3Forms reject the whole submission. The address has
+       already passed RE.email, which bars the spaces, quotes, angle brackets
+       and semicolons a header-injection attempt would need. */
+    if (values.email) body.append("replyto", values.email);
     if (extra) Object.keys(extra).forEach((k) => body.append(k, extra[k]));
     return body;
   }
