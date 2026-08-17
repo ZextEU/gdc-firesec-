@@ -596,6 +596,12 @@ strong { font-weight: 700; }
 .split__panel .ph-img { border-radius: inherit; }
 .split__panel-mark { z-index: 0; }
 
+/* Per-photo framing — these two shots are tall portraits, so the default
+   centre crop cuts the top off the unit. Nudge the focal point up so the
+   keypad / sounder sits centred in the card & split-panel frames. */
+.ph-img[src$="services/access-control.jpg"] { object-position: 50% 42%; }
+.ph-img[src$="services/intruder-monitoring.jpg"] { object-position: 50% 36%; }
+
 /* Projects — mini case studies */
 .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .projects--two { grid-template-columns: repeat(2, 1fr); max-width: 900px; margin-inline: auto; }
